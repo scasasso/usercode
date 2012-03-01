@@ -13,7 +13,7 @@ chmod +x CMGTools/Common/scripts/*.py
 scram b -j 4 
 
 # Then co from UserCode/scasasso
-cvs co -d HZZ4lAnalysis UserCode/scasasso/HZZAnalysis
+cvs co -d HZZ4lAnalysis UserCode/scasasso/HZZ4lAnalysis
 scram b -j 4
 
 # Produce CMGTuple (by now from PF2PATs provided in the tutorial, DoubleMu-like trigger)
