@@ -19,4 +19,4 @@ process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string('HZZ4l_DummyTree.root')
                                    )
 
-process.p = cms.Path(process.demo)
+process.p = cms.Path(process.DummySelection)

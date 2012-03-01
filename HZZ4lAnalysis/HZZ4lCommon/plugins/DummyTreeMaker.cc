@@ -13,7 +13,7 @@
 //
 // Original Author:  Stefano Casasso,,,
 //         Created:  Tue Feb 28 14:33:03 CET 2012
-// $Id$
+// $Id: DummyTreeMaker.cc,v 1.1 2012/02/29 17:30:01 scasasso Exp $
 //
 //
 
@@ -109,7 +109,7 @@ DummyTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
    //Get Higgs Collection
    edm::Handle< std::vector<cmg::DiObject<cmg::DiObject<cmg::Muon, cmg::Muon>, cmg::DiObject<cmg::Muon, cmg::Muon> > > > higgsHandle;
-   iEvent.getByLabel(std::string("higgsSequence"),higgsHandle);
+   iEvent.getByLabel(std::string("higgs4muSequence"),higgsHandle);
 
    myDummyTree->resetStruct();
    HZZ4lSummary &ev = myDummyTree->getEvent();
