@@ -10,8 +10,6 @@
 
 #include "AnalysisDataFormats/CMGTools/interface/GenericTypes.h"
 
-#include "HZZ4lAnalysis/DataFormats/interface/HiggsCandidate.h"
-
 
 namespace cmg{
 
@@ -21,12 +19,6 @@ namespace cmg{
   typedef cmg::DiObject<cmg::DiElectron,cmg::DiElectron> DiElectronDiElectron;
   typedef cmg::DiObject<cmg::DiElectron,cmg::DiMuon> DiElectronDiMuon;
   typedef cmg::DiObject<cmg::DiGenParticle,cmg::DiGenParticle> DiGenParticleDiGenParticle;
-
-  /* COMMENTED BECAUSE HIGGSCANDIDATEFACTORY CLASS NOT YET IMPLEMENTED
-  typedef cmg::HiggsCandidate<cmg::DiMuon,cmg::DiMuon> DiMuonDiMuonHiggs;
-  typedef cmg::HiggsCandidate<cmg::DiElectron,cmg::DiElectron> DiElectronDiElectronHiggs;
-  typedef cmg::HiggsCandidate<cmg::DiGenParticle,cmg::DiGenParticle> DiGenParticleDiGenParticleHiggs;
-  */
 
 
 }

@@ -13,8 +13,4 @@ DEFINE_FWK_MODULE(DiElectronDiMuonPOProducer);
 
 DEFINE_FWK_MODULE(DiGenParticleDiGenParticlePOProducer);
 
-/* COMMENTED BECAUSE HIGGSCANDIDATEFACTORY CLASS NOT YET IMPLEMENTED
-DEFINE_FWK_MODULE(DiGenParticleDiGenParticleHiggsPOProducer);
-DEFINE_FWK_MODULE(DiMuonDiMuonHiggsPOProducer);
-DEFINE_FWK_MODULE(DiElectronDiElectronHiggsPOProducer);
-*/
+
