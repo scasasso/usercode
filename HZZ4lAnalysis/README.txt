@@ -27,5 +27,5 @@ root -l HZZ4l_DummyTree.root
 
 # (very) Dummy analyzer pyroot-based running on CMGTuples
 python DummyAnalyzer.py
-display 
+display ZCandMass.png
 
