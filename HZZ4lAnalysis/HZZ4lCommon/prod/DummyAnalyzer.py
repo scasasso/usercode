@@ -1,3 +1,7 @@
+#### Example of PyROOT macro (not framework-aware) running on CMGTuple
+#### Usage: python DummyAnalyzer.py
+
+
 from ROOT import *
 import os, sys
 from CMGTools.RootTools.Style import *
