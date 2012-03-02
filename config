@@ -1,0 +1,35 @@
+#
+#Usage:
+#ssh -Nfq lxtunnel; ssh lxcms135
+#ssh -Nfq lxtunnel; ssh cmstotk03
+
+Host totunnel
+HostName zoroastro.to.infn.it
+User scasasso
+LocalForward 8777 cmsfarm01.to.infn.it:22
+LocalForward 8778 cmsfarm03.to.infn.it:22
+
+Host cmsfarm01.to.infn.it
+HostName localhost
+User scasasso
+Port 8777
+
+Host cmsfarm03.to.infn.it
+HostName localhost
+User casasso
+Port 8778
+
+Host lxtunnel
+HostName lxplus.cern.ch
+User scasasso
+LocalForward 11111 lxcms135.cern.ch:22 
+LocalForward 11112 cmstotk03.cern.ch:22
+
+Host lxcms135.cern.ch
+HostName localhost
+Port 11111
+
+Host cmstotk03.cern.ch
+HostName localhost
+Port 11112
+
