@@ -18,6 +18,21 @@ cmgDiElectronDiElectron = cms.EDFilter(
     )
     )
 
+# Build cmg::DiElectronDiElectronHiggs candidates
+diElectronDiElectronHiggsFactory = cms.PSet(
+       inputs = cms.InputTag("cmgDiElectronDiElectron")
+)
+
+cmgDiElectronDiElectronHiggs = cms.EDFilter(
+    "DiElectronDiElectronHiggsPOProducer",
+    cfg = diElectronDiElectronHiggsFactory.clone(),
+    cuts = cms.PSet( 
+    )
+    
+    )
+
+
 higgs4eSequence = (
-    cmgDiElectronDiElectron
+    cmgDiElectronDiElectron +
+    cmgDiElectronDiElectronHiggs
     )
