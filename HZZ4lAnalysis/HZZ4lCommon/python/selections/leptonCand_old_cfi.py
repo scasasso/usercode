@@ -18,9 +18,9 @@ cicSuperTightID = addCiCIDSelection('eidSuperTight')
 #Electron Candidates
 electronCand = cms.PSet(
     cicTight = cicTightID.clone(), #waiting to pass to MVA
-    numberOfHits = cms.string('sourcePtr().gsfTrack().trackerExpectedHitsInner().numberOfHits()<=1'),
+    #numberOfHits = cms.string('sourcePtr().gsfTrack().trackerExpectedHitsInner().numberOfHits()<=1'),
     looseiso = cms.string('relIso() < 0.7'), #ASAP: implement hCalIso + eCalIso + UserIso / pT
-    sip = cms.string('sourcePtr().dB() < 100.'),
+    #sip = cms.string('sourcePtr().dB() < 100.'),#complaint about reco::Track reference (v3 PAT should fix it?)
     pt = cms.string('pt() > 7'),
     eta = cms.string('abs(eta()) < 2.5')
     )
@@ -28,8 +28,8 @@ electronCand = cms.PSet(
 #Muon Candidates
 muonCand = cms.PSet(
     isGlobal = cms.string('isGlobal()'),
-    numberOfValidHits = cms.string('sourcePtr().numberOfValidHits() > 10'),
-    sip = cms.string('sourcePtr().dB() < 100.'),
+    #numberOfValidHits = cms.string('sourcePtr().numberOfValidHits() > 10'), #complaint about reco::Track reference (v3 PAT should fix it?)
+    #sip = cms.string('sourcePtr().dB() < 100.'),#complaint about reco::Track reference (v3 PAT should fix it?)
     looseiso = cms.string('relIso() < 0.7'), #ASAP: implement hCalIso + eCalIso + UserIso / pT
     pt = cms.string('pt() > 5'),
     eta = cms.string('abs(eta()) < 2.4')
