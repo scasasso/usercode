@@ -26,6 +26,6 @@ cmsRun dummytreemaker_cfg.py
 root -l HZZ4l_DummyTree.root
 
 # (very) Dummy analyzer pyroot-based running on CMGTuples
-python DummyAnalyzer.py
-display ZCandMass.png
+python DummyAnalyzer2.py
+root -l DummyHistos.root
 
