@@ -20,7 +20,7 @@ def main():
     outputroot = TFile( outfilename, "RECREATE")
 
     handle4mu = Handle ("vector<cmg::DiObject<cmg::DiObject<cmg::Muon,cmg::Muon>,cmg::DiObject<cmg::Muon,cmg::Muon> > >")
-    label4mu =  ("higgs4muSequence")
+    label4mu =  ("cmgDiMuonDiMuon")
 
     histogram = {}
 
