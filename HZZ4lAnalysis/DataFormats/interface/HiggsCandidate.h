@@ -1,5 +1,5 @@
-#ifndef HIGGSCNADIDATE_H_
-#define HIGGSCNADIDATE_H_
+#ifndef HIGGSCANDIDATE_H_
+#define HIGGSCANDIDATE_H_
 
 #include "AnalysisDataFormats/CMGTools/interface/DiObject.h"
 
