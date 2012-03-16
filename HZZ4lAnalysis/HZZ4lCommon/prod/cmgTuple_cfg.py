@@ -26,9 +26,9 @@ process.setName_("CMG")
 
 #Setup options 
 options = VarParsing.VarParsing()
-options.register('maxEvents',5000,VarParsing.VarParsing.multiplicity.singleton,VarParsing.VarParsing.varType.int,"Number of events to process (-1 for all)")
+options.register('maxEvents',-1,VarParsing.VarParsing.multiplicity.singleton,VarParsing.VarParsing.varType.int,"Number of events to process (-1 for all)")
+options.register('sample','HZZSkim',VarParsing.VarParsing.multiplicity.singleton,VarParsing.VarParsing.varType.string,"Sample to be processed")
 options.parseArguments()
-
 
 # Pick up the data files (H->ZZ skim).
 process.source = datasetToSource(
@@ -37,10 +37,9 @@ process.source = datasetToSource(
     "patTuple_PF2PAT_.*root"
     )
 
-
 # One can limit the number of files to avoid some of the CASTOR
 # overhead (i.e., faster start-up).
-nFilesMax = 10
+nFilesMax = 5
 print "WARNING: Restricting input to the first %d files (of the %d found)" % \
       (nFilesMax, len(process.source.fileNames))
 if len(process.source.fileNames) > nFilesMax:
@@ -76,6 +75,13 @@ process.out.dropMetaData = cms.untracked.string("PRIOR")
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string("histograms_HZZ4l.root"))
 
+# Add RhoCorrIso to pat::Muon and pat::Electron
+process.RhoCorrIsoSequence = cms.EDProducer("IsoRhoCorrProducer",
+                                            muonSrc = cms.untracked.InputTag("selectedPatMuonsAK5"),
+                                            electronSrc = cms.untracked.InputTag("selectedPatElectronsAK5"),
+                                            rhoSrc = cms.untracked.InputTag("kt6PFJetsAK5","rho","PAT")
+                                            )
+
 # Load the default analysis sequence.
 process.load("HZZ4lAnalysis.HZZ4lCommon.analysis_cff")
 
@@ -87,13 +93,6 @@ process.load("HZZ4lAnalysis.HZZ4lCommon.analysis_cff")
 # Switch on production of trigger objects.
 process.cmgTriggerObject.cfg.useTriggerObjects = cms.untracked.bool(True)
 
-# Select events with 2 jets ...
-# process.cmgPFJetCount.minNumber = 2
-# with pT > 50.
-# process.cmgPFJetSel.cut = "pt()>50"
-# and MET larger than 50
-# process.cmgPFMETSel.cut = "pt()>50"
-
 ##########
 
 runOnMC = False
@@ -103,6 +102,7 @@ if runOnMC:
     process.outpath += process.runInfoAccounting
 
 process.p = cms.Path(
+    process.RhoCorrIsoSequence +
     process.analysisSequence
     )
 
