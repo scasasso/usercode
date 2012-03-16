@@ -21,7 +21,7 @@ cicSuperTightID = addCiCIDSelection('eidSuperTight')
 electronCand = cms.PSet(
     cicTight = cicTightID.clone(), #waiting to pass to MVA
     numberOfHits = cms.string('sourcePtr().gsfTrack().trackerExpectedHitsInner().numberOfHits()<=1'),
-    looseiso = cms.string('relIso() < 0.7'), #ASAP: implement hCalIso + eCalIso + UserIso / pT
+    looseiso = cms.string('sourcePtr.userFloat("RhoCorrIso") < 0.7'),
     sip = cms.string('sourcePtr().dB()/sourcePtr().edB() < 100.'),
     pt = cms.string('pt() > 7'),
     eta = cms.string('abs(eta()) < 2.5')
@@ -30,9 +30,9 @@ electronCand = cms.PSet(
 #Muon Candidates
 muonCand = cms.PSet(
     isGlobal = cms.string('isGlobal()'),
-    #numberOfValidHits = cms.string('sourcePtr().numberOfValidHits() > 10'), #complaint about reco::Track reference (v3 PAT should fix it?)
+    numberOfValidHits = cms.string('isGlobal() && sourcePtr().numberOfValidHits() > 10'), #need to get rid of the complaint of undefined ref to reco::Track. It's really the safest choice to ask the muon to be Global?
     sip = cms.string('sourcePtr().dB()/sourcePtr().edB() < 100.'),
-    looseiso = cms.string('relIso() < 0.7'), #ASAP: implement hCalIso + eCalIso + UserIso / pT
+    looseiso = cms.string('sourcePtr.userFloat("RhoCorrIso") < 0.7'),
     pt = cms.string('pt() > 5'),
     eta = cms.string('abs(eta()) < 2.4')
     )
