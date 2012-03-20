@@ -2,16 +2,13 @@ import FWCore.ParameterSet.Config as cms
 
 # Build cmg::DiElectronDiMuon candidates
 dielectrondimuonFactory = cms.PSet(
-       leg1Collection = cms.InputTag("cmgDiElectron"),
-       leg2Collection = cms.InputTag("cmgDiMuon"),
+       leg1Collection = cms.InputTag("zEECand"),
+       leg2Collection = cms.InputTag("zMMCand"),
        metCollection = cms.InputTag("")
 )
 
 
-from HZZ4lAnalysis.HZZ4lCommon.selections.zmumu_cfi import zmumu
-from HZZ4lAnalysis.HZZ4lCommon.selections.zee_cfi import zee
-
-cmgDiElectronDiMuon = cms.EDFilter(
+EEMMCand = cms.EDFilter(
     "DiElectronDiMuonPOProducer",
     cfg = dielectrondimuonFactory.clone(),
     cuts = cms.PSet( 
@@ -21,7 +18,7 @@ cmgDiElectronDiMuon = cms.EDFilter(
 
 # Build cmg::DiElectronDiMuonHiggs candidates
 diElectronDiMuonHiggsFactory = cms.PSet(
-       inputs = cms.InputTag("cmgDiElectronDiMuon")
+       inputs = cms.InputTag("EEMMCand")
 )
 
 cmgDiElectronDiMuonHiggs = cms.EDFilter(
@@ -32,9 +29,6 @@ cmgDiElectronDiMuonHiggs = cms.EDFilter(
     
     )
 
-
-
 higgs2e2muSequence = (
-    cmgDiElectronDiMuon +
     cmgDiElectronDiMuonHiggs
     )
