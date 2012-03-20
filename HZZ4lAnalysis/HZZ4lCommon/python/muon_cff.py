@@ -19,7 +19,8 @@ cmgMuon = cms.EDFilter("MuonPOProducer",
     cuts = cms.PSet(
     isomuon = isolation.clone(),
     vbtfmuon = vbtfmuon.clone(),
-    leptonCand = muonCand.clone()
+    leptonCand = muonCand.clone(),
+    leptonCandLoose = muonCandLoose.clone()
     )    
 )
 
@@ -30,8 +31,16 @@ cmgMuonSel = cms.EDFilter(
     cut = cms.string('getSelection(\"cuts_leptonCand\")')
     )
 
+# Skim cmg::Muon collections to get the loose muon candidates
+softMuons = cms.EDFilter(
+    "CmgMuonSelector",
+    src = cms.InputTag( "cmgMuon" ),
+    cut = cms.string('getSelection(\"cuts_leptonCandLoose\")')
+    )
+
 #Final sequence
 muonSequence = cms.Sequence(
     cmgMuon +
+    softMuons +
     cmgMuonSel
     )

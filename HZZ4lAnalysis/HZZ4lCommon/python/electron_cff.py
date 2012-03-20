@@ -44,7 +44,8 @@ cmgElectron = cms.EDFilter("ElectronPOProducer",
     tightIP       = cicTightIP.clone(),
     superTightIP  = cicSuperTightIP.clone(),
     isoelectron = isolation.clone(),
-    leptonCand = electronCand.clone()
+    leptonCand = electronCand.clone(),
+    leptonCandLoose = electronCandLoose.clone()
     )
 )
 
@@ -55,8 +56,16 @@ cmgElectronSel = cms.EDFilter(
     cut = cms.string('getSelection(\"cuts_leptonCand\")')
     )
 
+# Skim cmg::Electron collections to get the loose electron candidates
+softElectrons = cms.EDFilter(
+    "CmgElectronSelector",
+    src = cms.InputTag("cmgElectron"),
+    cut = cms.string('getSelection(\"cuts_leptonCandLoose\")')
+    )
+
 # Final sequence
 electronSequence = cms.Sequence(
-    cmgElectron + 
+    cmgElectron +
+    softElectrons +
     cmgElectronSel
     )
