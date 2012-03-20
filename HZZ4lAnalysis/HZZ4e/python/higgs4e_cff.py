@@ -2,15 +2,13 @@ import FWCore.ParameterSet.Config as cms
 
 #Build cmg::DiElectronDiElectron candidates
 dielectrondielectronFactory = cms.PSet(
-       leg1Collection = cms.InputTag("cmgDiElectron"),
-       leg2Collection = cms.InputTag("cmgDiElectron"),
+       leg1Collection = cms.InputTag("zEECand"),
+       leg2Collection = cms.InputTag("zEECand"),
        metCollection = cms.InputTag("")
 )
 
 
-from HZZ4lAnalysis.HZZ4lCommon.selections.zee_cfi import zee
-
-cmgDiElectronDiElectron = cms.EDFilter(
+EEEECand = cms.EDFilter(
     "DiElectronDiElectronPOProducer",
     cfg = dielectrondielectronFactory.clone(),
     cuts = cms.PSet(
@@ -20,7 +18,7 @@ cmgDiElectronDiElectron = cms.EDFilter(
 
 # Build cmg::DiElectronDiElectronHiggs candidates
 diElectronDiElectronHiggsFactory = cms.PSet(
-       inputs = cms.InputTag("cmgDiElectronDiElectron")
+       inputs = cms.InputTag("EEEECand")
 )
 
 cmgDiElectronDiElectronHiggs = cms.EDFilter(
@@ -33,6 +31,5 @@ cmgDiElectronDiElectronHiggs = cms.EDFilter(
 
 
 higgs4eSequence = (
-    cmgDiElectronDiElectron +
     cmgDiElectronDiElectronHiggs
     )

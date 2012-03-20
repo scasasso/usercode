@@ -2,15 +2,13 @@ import FWCore.ParameterSet.Config as cms
 
 # Build cmg::DiMuonDiMuon candidates
 dimuondimuonFactory = cms.PSet(
-       leg1Collection = cms.InputTag("cmgDiMuon"),
-       leg2Collection = cms.InputTag("cmgDiMuon"),
+       leg1Collection = cms.InputTag("zMMCand"),
+       leg2Collection = cms.InputTag("zMMCand"),
        metCollection = cms.InputTag("")
 )
 
 
-from HZZ4lAnalysis.HZZ4lCommon.selections.zmumu_cfi import zmumu
-
-cmgDiMuonDiMuon = cms.EDFilter(
+MMMMCand = cms.EDFilter(
     "DiMuonDiMuonPOProducer",
     cfg = dimuondimuonFactory.clone(),
     cuts = cms.PSet( 
@@ -20,7 +18,7 @@ cmgDiMuonDiMuon = cms.EDFilter(
 
 # Build cmg::DiMuonDiMuonHiggs candidates
 diMuonDiMuonHiggsFactory = cms.PSet(
-       inputs = cms.InputTag("cmgDiMuonDiMuon")
+       inputs = cms.InputTag("MMMMCand")
 )
 
 cmgDiMuonDiMuonHiggs = cms.EDFilter(
@@ -31,9 +29,6 @@ cmgDiMuonDiMuonHiggs = cms.EDFilter(
     
     )
 
-
-
 higgs4muSequence = (
-    cmgDiMuonDiMuon +
     cmgDiMuonDiMuonHiggs
     )
