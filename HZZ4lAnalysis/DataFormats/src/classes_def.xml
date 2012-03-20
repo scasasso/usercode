@@ -11,6 +11,26 @@
   <class name="edm::Wrapper<cmg::EMu>"/>
   <class name="edm::Wrapper<std::vector<cmg::EMu> >"/>
 
+  <class name="cmg::DiMuonMu"/>
+  <class name="std::vector<cmg::DiMuonMu>"/>
+  <class name="edm::Wrapper<cmg::DiMuonMu>"/>
+  <class name="edm::Wrapper<std::vector<cmg::DiMuonMu> >"/>
+
+  <class name="cmg::DiMuonE"/>
+  <class name="std::vector<cmg::DiMuonE>"/>
+  <class name="edm::Wrapper<cmg::DiMuonE>"/>
+  <class name="edm::Wrapper<std::vector<cmg::DiMuonE> >"/>
+
+  <class name="cmg::DiElectronE"/>
+  <class name="std::vector<cmg::DiElectronE>"/>
+  <class name="edm::Wrapper<cmg::DiElectronE>"/>
+  <class name="edm::Wrapper<std::vector<cmg::DiElectronE> >"/>
+
+  <class name="cmg::DiElectronMu"/>
+  <class name="std::vector<cmg::DiElectronMu>"/>
+  <class name="edm::Wrapper<cmg::DiElectronMu>"/>
+  <class name="edm::Wrapper<std::vector<cmg::DiElectronMu> >"/>
+
   <class name="cmg::DiMuonDiMuon"/>
   <class name="std::vector<cmg::DiMuonDiMuon>"/>
   <class name="edm::Wrapper<cmg::DiMuonDiMuon>"/>
@@ -25,6 +45,16 @@
   <class name="std::vector<cmg::DiElectronDiMuon>"/>
   <class name="edm::Wrapper<cmg::DiElectronDiMuon>"/>
   <class name="edm::Wrapper<std::vector<cmg::DiElectronDiMuon> >"/>
+
+  <class name="cmg::DiMuonEMu"/>
+  <class name="std::vector<cmg::DiMuonEMu>"/>
+  <class name="edm::Wrapper<cmg::DiMuonEMu>"/>
+  <class name="edm::Wrapper<std::vector<cmg::DiMuonEMu> >"/>
+
+  <class name="cmg::DiElectronEMu"/>
+  <class name="std::vector<cmg::DiElectronEMu>"/>
+  <class name="edm::Wrapper<cmg::DiElectronEMu>"/>
+  <class name="edm::Wrapper<std::vector<cmg::DiElectronEMu> >"/>
 
   <class name="cmg::DiGenParticleDiGenParticle"/>
   <class name="std::vector<cmg::DiGenParticleDiGenParticle>"/>
