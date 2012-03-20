@@ -75,7 +75,7 @@ void IsoRhoCorrProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
 
   edm::Handle<double> rhoHandle;
   iEvent.getByLabel(rhoSrc_, rhoHandle);
-  double rho = rhoHandle.product();
+  double rho = *rhoHandle;
 
   auto_ptr<vector<pat::Muon> > muonColl( new vector<pat::Muon> (*muonHandle) );
   auto_ptr<vector<pat::Electron> > electronColl( new vector<pat::Electron> (*electronHandle) );
@@ -96,8 +96,8 @@ void IsoRhoCorrProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
     
     Int_t ifid = (eta < 1.479) ? 0 : 1;
     
-    ecalIso = ecalIso - AreaEcal[ifid] * rho;
-    hcalIso = hcalIso - AreaHcal[ifid] * rho;
+    ecalIso = ecalIso - AreaEcal[ifid]*rho;
+    hcalIso = hcalIso - AreaHcal[ifid]*rho;
 
     RhoCorrIso = (ecalIso + hcalIso + trackIso)/m.pt();
 
