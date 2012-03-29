@@ -16,9 +16,15 @@ MMMMCand = cms.EDFilter(
     )
     )
 
+MMMMCandSel = cms.EDFilter(
+    "DiMuonDiMuonSelector",
+    src = cms.InputTag("MMMMCand"),
+    cut = cms.string("getSelection(\"cuts_mass\")")
+    )
+
 # Build cmg::DiMuonDiMuonHiggs candidates
 diMuonDiMuonHiggsFactory = cms.PSet(
-       inputs = cms.InputTag("MMMMCand")
+       inputs = cms.InputTag("MMMMCandSel")
 )
 
 cmgDiMuonDiMuonHiggs = cms.EDFilter(
@@ -29,6 +35,12 @@ cmgDiMuonDiMuonHiggs = cms.EDFilter(
     
     )
 
+cmgDiMuonDiMuonHiggsLD = cms.EDProducer(
+    "DiMuonDiMuonHiggsLDProducer",
+    src = cms.InputTag("cmgDiMuonDiMuonHiggs")
+    )
+
 higgs4muSequence = (
-    cmgDiMuonDiMuonHiggs
+    cmgDiMuonDiMuonHiggs +
+    cmgDiMuonDiMuonHiggsLD
     )
