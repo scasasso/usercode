@@ -29,3 +29,6 @@ DEFINE_FWK_MODULE(DiMuonDiMuonHiggsPOProducer);
 DEFINE_FWK_MODULE(DiElectronDiElectronHiggsPOProducer);
 DEFINE_FWK_MODULE(DiElectronDiMuonHiggsPOProducer);
 
+//Di Objects selectors
+DEFINE_FWK_MODULE(CmgEMuSelector);
+

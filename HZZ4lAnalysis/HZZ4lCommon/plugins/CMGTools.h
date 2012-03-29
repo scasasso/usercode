@@ -4,6 +4,23 @@
 
 #include "HZZ4lAnalysis/HZZ4lCommon/interface/CompoundFactories.h"
 #include "CMGTools/Common/plugins/PhysicsObjectProducer.h"
+#include "CMGTools/Common/interface/GenericPhysicsObjectSelectorDefinition.h"
+
+#include "CMGTools/Common/interface/CutSummaryAnalyzer.h"
+#include "CMGTools/Common/plugins/RunInfoAccountingAnalyzer.h"
+#include "CMGTools/Common/plugins/LeadingObjectsSelector.h"
+#include "CMGTools/Common/plugins/IndexObjectsSelector.h"
+#include "CMGTools/Common/plugins/PhysicsObjectPrinter.h"
+
+#include "CommonTools/UtilAlgos/interface/StringCutObjectSelector.h"
+#include "CommonTools/UtilAlgos/interface/SingleObjectSelector.h"
+#include "CommonTools/UtilAlgos/interface/ObjectSelector.h"
+#include "CommonTools/UtilAlgos/interface/SingleElementCollectionSelector.h"
+
+#include "CMGTools/Common/plugins/CollectionSizeProducer.h"
+
+#include "CMGTools/Common/plugins/JetEnergyCorrector.h"
+
 
 
 typedef PhysicsObjectProducer<cmg::DiGenParticleFactory> DiGenParticlePOProducer;
@@ -31,5 +48,7 @@ typedef PhysicsObjectProducer<cmg::DiMuonDiMuonHiggsFactory> DiMuonDiMuonHiggsPO
 typedef PhysicsObjectProducer<cmg::DiElectronDiElectronHiggsFactory> DiElectronDiElectronHiggsPOProducer;
 typedef PhysicsObjectProducer<cmg::DiElectronDiMuonHiggsFactory> DiElectronDiMuonHiggsPOProducer;
 
+//DiObject generic selector
+typedef ObjectSelector<cmg::GenericPhysicsObjectSelectorDefinition<cmg::EMu> > CmgEMuSelector;
 
 #endif
