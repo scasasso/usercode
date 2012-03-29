@@ -1,5 +1,5 @@
-#ifndef HIGGSCANDIDATE_H_
-#define HIGGSCANDIDATE_H_
+#ifndef HIGGSCNADIDATE_H_
+#define HIGGSCNADIDATE_H_
 
 #include "AnalysisDataFormats/CMGTools/interface/DiObject.h"
 
@@ -23,7 +23,9 @@ namespace cmg {
       phistarZ1_(UnSet(Double_t)),
       phistarZ2_(UnSet(Double_t)),
       userFloatLabels_(),
-      userFloats_(){      
+      userFloats_(),
+      userBoolLabels_(),
+      userBools_(){
     }
     HiggsCandidate(const HiggsCandidate<TL1,TL2>& other):
       DiObject<TL1,TL2>(other),
@@ -36,8 +38,11 @@ namespace cmg {
       phistarZ1_(other.phistarZ1_),
       phistarZ2_(other.phistarZ2_),
       userFloatLabels_(other.userFloatLabels_),
-      userFloats_(other.userFloats_){
-    }
+      userFloats_(other.userFloats_),
+      userBoolLabels_(other.userBoolLabels_),
+      userBools_(other.userBools_){
+      }
+      
     HiggsCandidate(const DiObject<TL1,TL2>& other):
       DiObject<TL1,TL2>(other),
       costhetastar_(UnSet(Double_t)),
@@ -49,8 +54,10 @@ namespace cmg {
       phistarZ1_(UnSet(Double_t)),
       phistarZ2_(UnSet(Double_t)),
       userFloatLabels_(),
-      userFloats_(){
-   }
+      userFloats_(),
+      userBoolLabels_(),
+      userBools_(){
+    }
 
     virtual ~HiggsCandidate(){}
 
@@ -71,7 +78,18 @@ namespace cmg {
     bool hasUserFloat( const std::string & key ) const {
       return std::find(userFloatLabels_.begin(), userFloatLabels_.end(), key) != userFloatLabels_.end();
     }
-        
+
+    
+    bool userBool( const std::string & key ) const;
+    bool userBool( const char* key ) const {return userBool(std::string(key));};
+    void addUserBool( const  std::string & label, bool data );
+    const std::vector<std::string> & userBoolNames() const  { return userBoolLabels_; }
+    bool hasUserBool( const char * key ) const { return hasUserBool(std::string(key)); }
+    bool hasUserBool( const std::string & key ) const {
+      return std::find(userBoolLabels_.begin(), userBoolLabels_.end(), key) != userBoolLabels_.end();
+    }
+    
+  
   private:
     Double_t costhetastar_;
     Double_t helphi_;
@@ -84,6 +102,9 @@ namespace cmg {
 
     std::vector<std::string>      userFloatLabels_;
     std::vector<float>            userFloats_;
+
+    std::vector<std::string>      userBoolLabels_;
+    std::vector<bool>            userBools_;
 
     friend class cmg::HiggsCandidateFactory<TL1,TL2>;
     
@@ -104,6 +125,24 @@ namespace cmg {
   {
     userFloatLabels_.push_back(label);
     userFloats_.push_back( data );
+  }
+
+  
+  template< typename TL1, typename TL2 >
+  bool HiggsCandidate<TL1,TL2>::userBool( const std::string &key ) const
+  {
+    std::vector<std::string>::const_iterator it = std::find(userBoolLabels_.begin(), userBoolLabels_.end(), key);
+    if (it != userBoolLabels_.end()) {
+    return userBools_[it - userBoolLabels_.begin()];
+    }
+    return 0.0;
+  }
+  
+  template< typename TL1, typename TL2 >
+  void HiggsCandidate<TL1,TL2>::addUserBool( const std::string & label, bool data )
+  {
+    userBoolLabels_.push_back(label);
+    userBools_.push_back( data );
   }
   
 }
