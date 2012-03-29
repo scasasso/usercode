@@ -3,7 +3,7 @@ import FWCore.ParameterSet.Config as cms
 # Build cmg::Electron object
 from CMGTools.Common.factories.cmgLepton_cfi import leptonFactory
 electronFactory = cms.PSet(
-       inputCollection = cms.InputTag("selectedPatElectronsAK5"),
+       inputCollection = cms.InputTag("RhoCorrIsoSequence"),
        leptonFactory = leptonFactory.clone()
        )
 
@@ -44,8 +44,9 @@ cmgElectron = cms.EDFilter("ElectronPOProducer",
     tightIP       = cicTightIP.clone(),
     superTightIP  = cicSuperTightIP.clone(),
     isoelectron = isolation.clone(),
+    leptonCandLoose = electronCandLoose.clone(),
     leptonCand = electronCand.clone(),
-    leptonCandLoose = electronCandLoose.clone()
+    leptonCandTight = electronCandTight.clone()
     )
 )
 
@@ -63,9 +64,17 @@ softElectrons = cms.EDFilter(
     cut = cms.string('getSelection(\"cuts_leptonCandLoose\")')
     )
 
+# Skim cmg::Electron collections to get the tight electron candidates
+tightElectrons = cms.EDFilter(
+    "CmgElectronSelector",
+    src = cms.InputTag("cmgElectron"),
+    cut = cms.string('getSelection(\"cuts_leptonCandTight\")')
+    )
+
 # Final sequence
 electronSequence = cms.Sequence(
     cmgElectron +
     softElectrons +
-    cmgElectronSel
+    cmgElectronSel +
+    tightElectrons
     )
