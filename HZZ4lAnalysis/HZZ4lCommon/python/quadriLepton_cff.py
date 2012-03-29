@@ -7,7 +7,7 @@ from HZZ4lAnalysis.HZZ2e2mu.higgs2e2mu_cff import *
 
 mmemFactory = diObjectFactory.clone(
        leg1Collection = cms.InputTag("zMMCand"),
-       leg2Collection = cms.InputTag("EMuCand"),
+       leg2Collection = cms.InputTag("cmgEMuCand"),
        metCollection = cms.InputTag("")
        )
 
@@ -21,7 +21,7 @@ zMMemCand = cms.EDFilter(
 
 eeemFactory = diObjectFactory.clone(
        leg1Collection = cms.InputTag("zEECand"),
-       leg2Collection = cms.InputTag("EMuCand"),
+       leg2Collection = cms.InputTag("cmgEMuCand"),
        metCollection = cms.InputTag("")
        )
 
@@ -36,8 +36,11 @@ zEEemCand = cms.EDFilter(
 
 quadriLeptonSequence = (
     MMMMCand +
+    MMMMCandSel +
     EEEECand +
+    EEEECandSel +
     EEMMCand +
+    EEMMCandSel +
     zMMemCand +
     zEEemCand
     )

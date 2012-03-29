@@ -9,13 +9,23 @@ softLeptons = cms.EDProducer(
     ),
     )
 
-# Build ll candidates (no charge requirements, loose cuts on leptons) mergin EMu, DiMuon, DiElectron collections
-diLeps = cms.EDProducer(
+# Build DiLepton candidates (no charge requirements) merging cmg EMu, DiMuon, DiElectron collections
+cmgDiLepton = cms.EDProducer(
     "CandViewMerger",
     src = cms.VInputTag(
     cms.InputTag("cmgDiMuon"),
     cms.InputTag("cmgDiElectron"),
-    cms.InputTag("EMuCand")
+    cms.InputTag("cmgEMuCand")
+    ),
+    )
+
+# Skim cmgDiLepton to create the diLeps collection (loose cuts on leptons)
+diLeps = cms.EDProducer(
+    "CandViewMerger",
+    src = cms.VInputTag(
+    cms.InputTag("MMCand"),
+    cms.InputTag("EECand"),
+    cms.InputTag("EMCand")
     ),
     )
 
@@ -62,6 +72,7 @@ leptonMergingSequence = cms.Sequence(
 
 #Final sequence for dileptons
 dileptonMergingSequence = cms.Sequence(
+    cmgDiLepton +
     diLeps
     )
 
