@@ -70,25 +70,6 @@ template<typename T, typename U> void cmg::HiggsCandidateFactory<T, U>::set(cons
   //TO DO: implement the choice of Z1
   //*********************************
 
-  bool SymmetricChannel(false);
-  if ( in.leg1().daughter(0)->isElectron() ){ //Z1 is electron-flavour
-    if ( in.leg2().daughter(0)->isElectron() ) SymmetricChannel = true;
-    else SymmetricChannel = false;
-  }
-  else { // Z1 is muon-flavour
-    // Redundant check (if Z1 is muon-flavour Z2 should be muon-flavour too)
-    if ( in.leg2().daughter(0)->isElectron() ) SymmetricChannel = false;
-    else SymmetricChannel = true;
-  }
-
-  
-  /*
-  if ( SymmetricChannel ){
-    if ( in.leg1().phi() > in.leg2().phi() ) continue;
-    else in.leg1() = in.leg
-  }
-  */
-
   // create boosters to various objects
   CenterOfMassBooster boostX( in );
   CenterOfMassBooster boostZ1( in.leg1() );
