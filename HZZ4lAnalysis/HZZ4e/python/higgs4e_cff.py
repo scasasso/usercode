@@ -16,9 +16,16 @@ EEEECand = cms.EDFilter(
     )
     )
 
+EEEECandSel = cms.EDFilter(
+    "DiElectronDiElectronSelector",
+    src = cms.InputTag("EEEECand"),
+    cut = cms.string("getSelection(\"cuts_mass\")")
+    )
+
+
 # Build cmg::DiElectronDiElectronHiggs candidates
 diElectronDiElectronHiggsFactory = cms.PSet(
-       inputs = cms.InputTag("EEEECand")
+       inputs = cms.InputTag("EEEECandSel")
 )
 
 cmgDiElectronDiElectronHiggs = cms.EDFilter(
@@ -29,7 +36,12 @@ cmgDiElectronDiElectronHiggs = cms.EDFilter(
     
     )
 
+cmgDiElectronDiElectronHiggsLD = cms.EDProducer(
+    "DiElectronDiElectronHiggsLDProducer",
+    src = cms.InputTag("cmgDiElectronDiElectronHiggs")
+    )
 
 higgs4eSequence = (
-    cmgDiElectronDiElectronHiggs
+    cmgDiElectronDiElectronHiggs +
+    cmgDiElectronDiElectronHiggsLD
     )
