@@ -16,8 +16,8 @@ from CMGTools.Common.trigger_cff import *
 from HZZ4lAnalysis.HZZ4lCommon.cmgCandMerge_cfi import *
 
 cmgObjectSequence = cms.Sequence(
-    jetSequence +
-    metSequence +
+    #jetSequence +
+    #metSequence +
     muonSequence +
     electronSequence +
     leptonMergingSequence +
@@ -27,9 +27,9 @@ cmgObjectSequence = cms.Sequence(
     trileptonMergingSequence +
     quadriLeptonSequence +
     quadrileptonMergingSequence +
-    tauSequence +
-    higgsSequence +
-    triggerSequence
+    #tauSequence +
+    higgsSequence
+    #triggerSequence
     )
 
 
