@@ -14,7 +14,7 @@
 #include "CommonTools/CandUtils/interface/CenterOfMassBooster.h"
 #include "CommonTools/CandUtils/interface/cloneDecayTree.h"
 #include <cmath>
-
+#include "TLorentzVector.h"
 
 namespace cmg{
 
@@ -57,6 +57,236 @@ template< typename T, typename U > typename cmg::HiggsCandidateFactory<T,U>::eve
   return result;
 }
 
+//new implementation (Sara Mon 2 Apr) to be 100% consistent with PDF definition
+template<typename T, typename U> void cmg::HiggsCandidateFactory<T, U>::set(const cmg::DiObject<T,U>& in, cmg::HiggsCandidate<T,U>* const obj) const{
+	
+  //will convert to TLorentzVector
+  math::XYZTLorentzVector leg1 = obj->leg1().p4();
+  math::XYZTLorentzVector leg2 = obj->leg2().p4();
+  math::XYZTLorentzVector leg11 = obj->leg1().leg1().p4();
+  math::XYZTLorentzVector leg12 = obj->leg1().leg2().p4();
+  math::XYZTLorentzVector leg21 = obj->leg2().leg1().p4();
+  math::XYZTLorentzVector leg22 = obj->leg2().leg2().p4();
+
+  TLorentzVector Z1(leg1.x(),leg1.y(),leg1.z(),leg1.t());
+  TLorentzVector Z2(leg2.x(),leg2.y(),leg2.z(),leg2.t()) ;
+  TLorentzVector thep4H = Z1+Z2;
+  
+  //define Z1 as the one nearest to nominal Z mass
+  const double PDGZmass = 91.2;
+  TLorentzVector thep4Z1; TLorentzVector thep4M11; TLorentzVector thep4M12;
+  TLorentzVector thep4Z2; TLorentzVector thep4M21; TLorentzVector thep4M22;
+  
+  
+  if ( fabs(PDGZmass-Z1.M()) > fabs(PDGZmass-Z2.M()) ){	  			
+    thep4Z1 = Z2; 
+    if(obj->leg2().leg1().charge()<0){
+      thep4M11 = TLorentzVector(leg21.x(),leg21.y(),leg21.z(),leg21.t());// obj->leg2().leg1().p4(); 
+      thep4M12 = TLorentzVector(leg22.x(),leg22.y(),leg22.z(),leg22.t());//obj->leg2().leg2().p4();
+    }
+    else{
+      thep4M11 = TLorentzVector(leg22.x(),leg22.y(),leg22.z(),leg22.t());//obj->leg2().leg2().p4();
+      thep4M12 = TLorentzVector(leg21.x(),leg21.y(),leg21.z(),leg21.t());// obj->leg2().leg1().p4(); 
+    }
+      
+    thep4Z2 = Z1; 
+    if(obj->leg1().leg1().charge()<0){
+      thep4M21 = TLorentzVector(leg11.x(),leg11.y(),leg11.z(),leg11.t());//obj->leg1().leg1().p4(); 
+      thep4M22 = TLorentzVector(leg12.x(),leg12.y(),leg12.z(),leg12.t());//obj->leg1().leg2().p4();
+    }
+    else{
+      thep4M21 = TLorentzVector(leg12.x(),leg12.y(),leg12.z(),leg12.t());//obj->leg1().leg2().p4(); 
+      thep4M22 = TLorentzVector(leg11.x(),leg11.y(),leg11.z(),leg11.t());//obj->leg1().leg1().p4();
+    }
+  }
+  else {
+    thep4Z1 = Z1; 
+    if(obj->leg1().leg1().charge()<0){
+      thep4M11 =TLorentzVector(leg11.x(),leg11.y(),leg11.z(),leg11.t());// obj->leg1().leg1().p4(); 
+      thep4M12 = TLorentzVector(leg12.x(),leg12.y(),leg12.z(),leg12.t());//obj->leg1().leg2().p4();
+    }
+    else{
+      thep4M11 = TLorentzVector(leg12.x(),leg12.y(),leg12.z(),leg12.t());//obj->leg1().leg2().p4(); 
+      thep4M12 = TLorentzVector(leg11.x(),leg11.y(),leg11.z(),leg11.t());//obj->leg1().leg1().p4();
+    }
+   thep4Z2 = Z2; 
+   if(obj->leg2().leg1().charge()<0){
+     thep4M21 = TLorentzVector(leg21.x(),leg21.y(),leg21.z(),leg21.t());// obj->leg2().leg1().p4(); 
+     thep4M22 = TLorentzVector(leg22.x(),leg22.y(),leg22.z(),leg22.t());//obj->leg2().leg2().p4();
+   }
+   else{
+     thep4M21 = TLorentzVector(leg22.x(),leg22.y(),leg22.z(),leg22.t());//obj->leg2().leg2().p4(); 
+     thep4M22 = TLorentzVector(leg21.x(),leg21.y(),leg21.z(),leg21.t());//obj->leg2().leg1().p4();
+   }
+  }
+  double norm;
+  double costheta1=-99;
+  double costheta2=-99;
+  double phi=-99; 
+  double costhetastar=-99; 
+  double phistar1=-99 ;
+  double phistar2 =-99;
+  double phistar12 = -99; 
+  double phi1=-99; 
+  double phi2=-99;
+  
+  TVector3 boostX = -(thep4H.BoostVector());
+  TLorentzVector thep4Z1inXFrame( thep4Z1 );
+  TLorentzVector thep4Z2inXFrame( thep4Z2 );	
+  thep4Z1inXFrame.Boost( boostX );
+  thep4Z2inXFrame.Boost( boostX );
+  TVector3 theZ1X_p3 = TVector3( thep4Z1inXFrame.X(), thep4Z1inXFrame.Y(), thep4Z1inXFrame.Z() );
+  TVector3 theZ2X_p3 = TVector3( thep4Z2inXFrame.X(), thep4Z2inXFrame.Y(), thep4Z2inXFrame.Z() );
+  
+  // calculate phi1, phi2, costhetastar
+  phi1 = theZ1X_p3.Phi();
+  phi2 = theZ2X_p3.Phi();
+  
+  ///////////////////////////////////////////////
+  // check for z1/z2 convention, redefine all 4 vectors with convention
+  ///////////////////////////////////////////////	
+  TLorentzVector p4H, p4Z1, p4M11, p4M12, p4Z2, p4M21, p4M22;
+  p4H = thep4H;
+  if ((phi1 < 0)&&(phi1 >= -TMath::Pi())){
+    p4Z1 = thep4Z2; p4M11 = thep4M21; p4M12 = thep4M22;
+    p4Z2 = thep4Z1; p4M21 = thep4M11; p4M22 = thep4M12;		
+    costhetastar = theZ2X_p3.CosTheta();
+  }
+  else{
+    p4Z1 = thep4Z1; p4M11 = thep4M11; p4M12 = thep4M12;
+    p4Z2 = thep4Z2; p4M21 = thep4M21; p4M22 = thep4M22;
+    costhetastar = theZ1X_p3.CosTheta();
+  }
+  
+  
+  //std::cout << "phi1: " << phi1 << ", phi2: " << phi2 << std::endl;
+	
+  // now helicity angles................................
+  // ...................................................
+  TVector3 boostZ1 = -(p4Z1.BoostVector());
+  TLorentzVector p4Z2Z1(p4Z2);
+  p4Z2Z1.Boost(boostZ1);
+  //find the decay axis
+  /////TVector3 unitx_1 = -Hep3Vector(p4Z2Z1);
+  TVector3 unitx_1( -p4Z2Z1.X(), -p4Z2Z1.Y(), -p4Z2Z1.Z() );
+  norm = 1/(unitx_1.Mag());
+  unitx_1*=norm;
+  //boost daughters of z2
+  TLorentzVector p4M21Z1(p4M21);
+  TLorentzVector p4M22Z1(p4M22);
+  p4M21Z1.Boost(boostZ1);
+  p4M22Z1.Boost(boostZ1);
+  //create z and y axes
+  /////TVector3 unitz_1 = Hep3Vector(p4M21Z1).cross(Hep3Vector(p4M22Z1));
+  TVector3 p4M21Z1_p3( p4M21Z1.X(), p4M21Z1.Y(), p4M21Z1.Z() );
+  TVector3 p4M22Z1_p3( p4M22Z1.X(), p4M22Z1.Y(), p4M22Z1.Z() );
+  TVector3 unitz_1 = p4M21Z1_p3.Cross( p4M22Z1_p3 );
+  norm = 1/(unitz_1.Mag());
+  unitz_1 *= norm;
+  TVector3 unity_1 = unitz_1.Cross(unitx_1);
+	
+  //caculate theta1
+  TLorentzVector p4M11Z1(p4M11);
+  p4M11Z1.Boost(boostZ1);
+  TVector3 p3M11( p4M11Z1.X(), p4M11Z1.Y(), p4M11Z1.Z() );
+  TVector3 unitM11 = p3M11.Unit();
+  double x_m11 = unitM11.Dot(unitx_1); double y_m11 = unitM11.Dot(unity_1); double z_m11 = unitM11.Dot(unitz_1);
+  TVector3 M11_Z1frame(y_m11, z_m11, x_m11);
+  costheta1 = M11_Z1frame.CosTheta();
+  //std::cout << "theta1: " << M11_Z1frame.Theta() << std::endl;
+  //////-----------------------old way of calculating phi---------------/////////
+  phi = M11_Z1frame.Phi();
+	
+  //set axes for other system
+  TVector3 boostZ2 = -(p4Z2.BoostVector());
+  TLorentzVector p4Z1Z2(p4Z1);
+  p4Z1Z2.Boost(boostZ2);
+  TVector3 unitx_2( -p4Z1Z2.X(), -p4Z1Z2.Y(), -p4Z1Z2.Z() );
+  norm = 1/(unitx_2.Mag());
+  unitx_2*=norm;
+  //boost daughters of z2
+  TLorentzVector p4M11Z2(p4M11);
+  TLorentzVector p4M12Z2(p4M12);
+  p4M11Z2.Boost(boostZ2);
+  p4M12Z2.Boost(boostZ2);
+  TVector3 p4M11Z2_p3( p4M11Z2.X(), p4M11Z2.Y(), p4M11Z2.Z() );
+  TVector3 p4M12Z2_p3( p4M12Z2.X(), p4M12Z2.Y(), p4M12Z2.Z() );
+  TVector3 unitz_2 = p4M11Z2_p3.Cross( p4M12Z2_p3 );
+  norm = 1/(unitz_2.Mag());
+  unitz_2*=norm;
+  TVector3 unity_2 = unitz_2.Cross(unitx_2);
+  //calcuate theta2
+  TLorentzVector p4M21Z2(p4M21);
+  p4M21Z2.Boost(boostZ2);
+  TVector3 p3M21( p4M21Z2.X(), p4M21Z2.Y(), p4M21Z2.Z() );
+  TVector3 unitM21 = p3M21.Unit();
+  double x_m21 = unitM21.Dot(unitx_2); double y_m21 = unitM21.Dot(unity_2); double z_m21 = unitM21.Dot(unitz_2);
+  TVector3 M21_Z2frame(y_m21, z_m21, x_m21);
+  costheta2 = M21_Z2frame.CosTheta();
+	
+  // calculate phi
+  //calculating phi_n
+  TLorentzVector n_p4Z1inXFrame( p4Z1 );
+  TLorentzVector n_p4M11inXFrame( p4M11 );
+  n_p4Z1inXFrame.Boost( boostX );
+  n_p4M11inXFrame.Boost( boostX );        
+  TVector3 n_p4Z1inXFrame_unit = n_p4Z1inXFrame.Vect().Unit();
+  TVector3 n_p4M11inXFrame_unit = n_p4M11inXFrame.Vect().Unit();  
+  TVector3 n_unitz_1( n_p4Z1inXFrame_unit );
+  //// y-axis is defined by neg lepton cross z-axis
+  //// the subtle part is here...
+  //////////TVector3 n_unity_1 = n_p4M11inXFrame_unit.Cross( n_unitz_1 );
+  TVector3 n_unity_1 = n_unitz_1.Cross( n_p4M11inXFrame_unit );
+  TVector3 n_unitx_1 = n_unity_1.Cross( n_unitz_1 );
+	
+  TLorentzVector n_p4M21inXFrame( p4M21 );
+  n_p4M21inXFrame.Boost( boostX );
+  TVector3 n_p4M21inXFrame_unit = n_p4M21inXFrame.Vect().Unit();
+  //rotate into other plane
+  TVector3 n_p4M21inXFrame_unitprime( n_p4M21inXFrame_unit.Dot(n_unitx_1), n_p4M21inXFrame_unit.Dot(n_unity_1), n_p4M21inXFrame_unit.Dot(n_unitz_1) );
+	
+  ///////-----------------new way of calculating phi-----------------///////
+  //double phi_n =  n_p4M21inXFrame_unitprime.Phi();
+  /// and then calculate phistar1
+  TVector3 n_p4PartoninXFrame_unit( 0.0, 0.0, 1.0 );
+  TVector3 n_p4PartoninXFrame_unitprime( n_p4PartoninXFrame_unit.Dot(n_unitx_1), n_p4PartoninXFrame_unit.Dot(n_unity_1), n_p4PartoninXFrame_unit.Dot(n_unitz_1) );
+  // negative sign is for arrow convention in paper
+  phistar1 = (n_p4PartoninXFrame_unitprime.Phi());
+	
+  // and the calculate phistar2
+  TLorentzVector n_p4Z2inXFrame( p4Z2 );
+  n_p4Z2inXFrame.Boost( boostX );
+  TVector3 n_p4Z2inXFrame_unit = n_p4Z2inXFrame.Vect().Unit();
+  ///////TLorentzVector n_p4M21inXFrame( p4M21 );
+  //////n_p4M21inXFrame.Boost( boostX );        
+  ////TVector3 n_p4M21inXFrame_unit = n_p4M21inXFrame.Vect().Unit();  
+  TVector3 n_unitz_2( n_p4Z2inXFrame_unit );
+  //// y-axis is defined by neg lepton cross z-axis
+  //// the subtle part is here...
+  //////TVector3 n_unity_2 = n_p4M21inXFrame_unit.Cross( n_unitz_2 );
+  TVector3 n_unity_2 = n_unitz_2.Cross( n_p4M21inXFrame_unit );
+  TVector3 n_unitx_2 = n_unity_2.Cross( n_unitz_2 );
+  TVector3 n_p4PartoninZ2PlaneFrame_unitprime( n_p4PartoninXFrame_unit.Dot(n_unitx_2), n_p4PartoninXFrame_unit.Dot(n_unity_2), n_p4PartoninXFrame_unit.Dot(n_unitz_2) );
+  phistar2 = (n_p4PartoninZ2PlaneFrame_unitprime.Phi());
+	
+  double phistar12_0 = phistar1 + phistar2;
+  if (phistar12_0 > TMath::Pi()) phistar12 = phistar12_0 - 2*TMath::Pi();
+  else if (phistar12_0 < (-1.)*TMath::Pi()) phistar12 = phistar12_0 + 2*TMath::Pi();
+  else phistar12 = phistar12_0;
+	
+  obj->costhetastar_ = costhetastar;
+  obj->helphi_ = phi;
+  obj->helphiZ1_ = phi1;
+  obj->helphiZ2_ = phi2;
+  obj->helcosthetaZ1_ = costheta1;
+  obj->helcosthetaZ2_ = costheta2;
+  obj->phistarZ1_ = phistar1;
+  obj->phistarZ2_ = phistar2; 
+}
+
+
+
+/* initial implementation on the example of 2l2j
 template<typename T, typename U> void cmg::HiggsCandidateFactory<T, U>::set(const cmg::DiObject<T,U>& in, cmg::HiggsCandidate<T,U>* const obj) const{
   double costhetastar=-77.0;
   double helphi=-77.0;
@@ -66,9 +296,9 @@ template<typename T, typename U> void cmg::HiggsCandidateFactory<T, U>::set(cons
   double helcosthetaZ2=-77.0;
   double phistarZ1=+33.0, phistarZ2=-33.0;
 
-  //*********************************
+  ///////////////////////////////////////
   //TO DO: implement the choice of Z1
-  //*********************************
+  //////////////////////////////////////
 
   // create boosters to various objects
   CenterOfMassBooster boostX( in );
@@ -165,18 +395,18 @@ template<typename T, typename U> void cmg::HiggsCandidateFactory<T, U>::set(cons
   boostZ1.set(*XboostedZ1);
   const reco::Candidate& lepton_neg_Z1=(*Z1boostedZ1->daughter(negLeptInd_Z1));
   helcosthetaZ1 = (-1.0*(lepton_neg_Z1.p4().x()* XboostedZ1->p4().x()+
-			  lepton_neg_Z1.p4().y()* XboostedZ1->p4().y()+
-			  lepton_neg_Z1.p4().z()* XboostedZ1->p4().z())/
-		    (lepton_neg_Z1.p4().P()* XboostedZ1->p4().P())  );
+			 lepton_neg_Z1.p4().y()* XboostedZ1->p4().y()+
+			 lepton_neg_Z1.p4().z()* XboostedZ1->p4().z())/
+		   (lepton_neg_Z1.p4().P()* XboostedZ1->p4().P())  );
 
   //calc cosThetaZ2
   std::auto_ptr<reco::Candidate> XboostedZ2 =cloneDecayTree( in );
   boostZ2.set(*XboostedZ2);
   const reco::Candidate& lepton_neg_Z2=(*Z2boostedZ2->daughter(negLeptInd_Z2));
   helcosthetaZ2 = fabs((lepton_neg_Z2.p4().x()* XboostedZ2->p4().x()+
-			 lepton_neg_Z2.p4().y()* XboostedZ2->p4().y()+
-			 lepton_neg_Z2.p4().z()* XboostedZ2->p4().z())/
-			(lepton_neg_Z2.p4().P()* XboostedZ2->p4().P())  );
+			lepton_neg_Z2.p4().y()* XboostedZ2->p4().y()+
+			lepton_neg_Z2.p4().z()* XboostedZ2->p4().z())/
+		       (lepton_neg_Z2.p4().P()* XboostedZ2->p4().P())  );
 
   //sanity check
   if(fabs(helphi+helphiZ1+helphiZ2) > 0.001){
@@ -186,14 +416,14 @@ template<typename T, typename U> void cmg::HiggsCandidateFactory<T, U>::set(cons
     }
   }
 
-    obj->costhetastar_ = costhetastar;
-    obj->helphi_ = helphi;
-    obj->helphiZ1_ = helphiZ1;
-    obj->helphiZ2_ = helphiZ2;
-    obj->helcosthetaZ1_ = helcosthetaZ1;
-    obj->helcosthetaZ2_ = helcosthetaZ2;
-    obj->phistarZ1_ = phistarZ1;
-    obj->phistarZ2_ = phistarZ2; 
+  obj->costhetastar_ = costhetastar;
+  obj->helphi_ = helphi;
+  obj->helphiZ1_ = helphiZ1;
+  obj->helphiZ2_ = helphiZ2;
+  obj->helcosthetaZ1_ = helcosthetaZ1;
+  obj->helcosthetaZ2_ = helcosthetaZ2;
+  obj->phistarZ1_ = phistarZ1;
+  obj->phistarZ2_ = phistarZ2; 
 }
-
+*/
 #endif
