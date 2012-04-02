@@ -85,11 +85,21 @@ void LDProducer<higgstype>::produce(edm::Event & iEvent, const edm::EventSetup &
     double mzz = ahiggs.mass();
     double m1 = ahiggs.leg1().mass();
     double m2 = ahiggs.leg2().mass();
+    //Must be in synch with definition in HiggsCandidateFactory.h and with the PDF definition
+    if(ahiggs.leg1().mass()>ahiggs.leg2().mass()){
+       m1 = ahiggs.leg1().mass();
+       m2 = ahiggs.leg2().mass(); 
+    }
+    else{
+       m1 = ahiggs.leg2().mass();
+       m2 = ahiggs.leg1().mass(); 
+    }
+      
     double costhetastar = ahiggs.costhetastar();
     double helcosthetaZl1 = ahiggs.helcosthetaZl1();
     double helcosthetaZl2 = ahiggs.helcosthetaZl2();
     double helphi = ahiggs.helphi();
-    double helphiZl1 = ahiggs.helphiZl1();
+    double helphiZl1 = ahiggs.phistarZl1();
 
 
     pair<double,double> P = likelihoodDiscriminant(mzz, m1, m2, costhetastar, helcosthetaZl1, helcosthetaZl2, helphi, helphiZl1, f);
@@ -218,7 +228,7 @@ pair<double,double> LDProducer<higgstype>::likelihoodDiscriminant (double mZZ, d
   string varName[6]={"m1/m2","costhetastar","costheta1","coshteta2","phi","phi1"};
   for(int iVar=0; iVar<6; iVar++){
 
-    if(P[iVar]==0 && (m1+m2)<mZZ && m2>20 && mZZ>110 && mZZ<180)
+    if(P[iVar]==0 && (m1+m2)<mZZ && m2>12 && mZZ>100 && mZZ<180)
 	cout << " uh oh... Probability of " << varName[iVar] << " is zero." << endl;
   }
   // - - - - - - - - - - - - - - - - - - - - - 
