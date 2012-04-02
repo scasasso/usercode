@@ -27,15 +27,15 @@ process.setName_("CMG")
 #Setup options 
 options = VarParsing.VarParsing()
 options.register('maxEvents',-1,VarParsing.VarParsing.multiplicity.singleton,VarParsing.VarParsing.varType.int,"Number of events to process (-1 for all)")
-options.register('sample','HZZSkim',VarParsing.VarParsing.multiplicity.singleton,VarParsing.VarParsing.varType.string,"Sample to be processed")
 options.parseArguments()
 
-# Pick up the data files (H->ZZ skim).
+
+Pick up the data files (ggHZZTo4l).
 process.source = datasetToSource(
     "cmgtools",
-    "/DoubleMu/Run2011A-HZZ-PromptSkim-v6/AOD/PAT_CMG_V2_4_0",
-    "patTuple_PF2PAT_.*root"
-    )
+    "/GluGluToHToZZTo4L_M-120_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM/V4/PAT_CMG_4_0_0",
+    "tree_CMG_.*root"
+   )
 
 # One can limit the number of files to avoid some of the CASTOR
 # overhead (i.e., faster start-up).
@@ -77,8 +77,8 @@ process.TFileService = cms.Service("TFileService",
 
 # Add RhoCorrIso to pat::Muon and pat::Electron
 process.RhoCorrIsoSequence = cms.EDProducer("IsoRhoCorrProducer",
-                                            muonSrc = cms.untracked.InputTag("selectedPatMuonsAK5"),
-                                            electronSrc = cms.untracked.InputTag("selectedPatElectronsAK5"),
+                                            muonSrc = cms.untracked.InputTag("selectedPatMuons"),
+                                            electronSrc = cms.untracked.InputTag("selectedPatElectrons"),
                                             rhoSrc = cms.untracked.InputTag("kt6PFJetsAK5","rho","PAT")
                                             )
 
