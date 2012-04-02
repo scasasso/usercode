@@ -28,7 +28,7 @@ namespace cmg{
 
     //need to override from Factory to insert "typename"
     typedef typename cmg::Factory<typename cmg::HiggsCandidate<T,U> >::event_ptr event_ptr;
-    virtual event_ptr create(const edm::Event&, const edm::EventSetup&) const;
+    virtual event_ptr create(const edm::Event&, const edm::EventSetup&);
     
     ///Set angular variables etc
     virtual void set(const cmg::DiObject<T,U>& pair, cmg::HiggsCandidate<T,U>* const obj) const;
@@ -39,7 +39,7 @@ namespace cmg{
 
 
 }
-template< typename T, typename U > typename cmg::HiggsCandidateFactory<T,U>::event_ptr cmg::HiggsCandidateFactory<T,U>::create(const edm::Event& iEvent, const edm::EventSetup&) const{
+template< typename T, typename U > typename cmg::HiggsCandidateFactory<T,U>::event_ptr cmg::HiggsCandidateFactory<T,U>::create(const edm::Event& iEvent, const edm::EventSetup&) {
   
   typedef  std::vector< cmg::HiggsCandidate<T,U> > collection;
   typedef  edm::View< cmg::DiObject<T,U> > diOcollection;
