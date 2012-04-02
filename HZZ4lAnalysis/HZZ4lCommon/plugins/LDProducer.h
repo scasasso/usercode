@@ -192,7 +192,7 @@ pair<double,double> LDProducer<higgstype>::likelihoodDiscriminant (double mZZ, d
   RooRealVar* costheta1_rrv = new RooRealVar("costheta1","cos#theta_{1}",-1,1);  
   RooRealVar* costheta2_rrv = new RooRealVar("costheta2","cos#theta_{2}",-1,1);
   RooRealVar* phi_rrv= new RooRealVar("phi","#Phi",-3.1415,3.1415);
-  RooRealVar* mzz_rrv= new RooRealVar("mzz","mZZ",110,180);
+  RooRealVar* mzz_rrv= new RooRealVar("mzz","mZZ",100,180);
   AngularPdfFactory *SMHiggs = new AngularPdfFactory(z1mass_rrv,z2mass_rrv,costheta1_rrv,costheta2_rrv,phi_rrv,mzz_rrv);
   SMHiggs->makeSMHiggs();
   SMHiggs->makeParamsConst(true);
