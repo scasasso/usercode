@@ -187,6 +187,13 @@ vector<double> LDProducer<higgstype>::my8DTemplate(bool normalized,double mZZ, d
   P_norm.push_back(Pmzzphi_norm);
   P_norm.push_back(Pmzzphi1_norm);
 
+  delete h_mzz;
+  delete h_mzzm1m2;
+  delete h_mzzcosthetastar;
+  delete h_mzzcostheta1;
+  delete h_mzzcostheta2;
+  delete h_mzzphi1;
+  delete h_mzzphi;
   
   if(normalized)
     return P_norm;
