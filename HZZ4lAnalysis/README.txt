@@ -1,6 +1,29 @@
-#############################################################
-####Instructions to install the package in CMSSW_4_2_8_patch7
-#############################################################
+############################################################################################
+####Instructions to install the package in CMSSW_4_4_4 / Colin, Bleeding Edge, 444 
+############################################################################################
+
+# First install the CMGTools package by doing (see also https://twiki.cern.ch/twiki/bin/viewauth/CMS/CMGToolsReleasesExperimental)
+wget -O installCMGTools.py "http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/UserCode/CMG/CMGTools/Common/bin/installCMGTools.py?view=co"
+python installCMGTools.py -r CMSSW_4_4_4 --recipe=exp_colin_BleedingEdge
+cd CMGTools/CMSSW_4_4_4/src
+cmsenv
+cvs up -r 1.47 PhysicsTools/PatAlgos/python/tools/tauTools.py
+chmod +x CMGTools/Production/scripts/*.py
+chmod +x CMGTools/Common/scripts/*.py
+scram b -j 4 
+
+# Then co from UserCode/scasasso
+cvs co -d HZZ4lAnalysis UserCode/scasasso/HZZ4lAnalysis
+scram b -j 4
+
+# Produce CMGTuple (by now from CMG trees of signal sample)
+cd HZZ4lAnalysis/HZZ4lCommon/prod
+cmsRun cmgTuple_cfg.py maxEvents=howmanyyouwant #where howmanyyouwant = 5000 should be fine for a simple test
+root -l HZZ4l_CMGTuple.root
+
+############################################################################################
+####Instructions to install the package in CMSSW_4_2_8_patch7 (obsolete, lost compatibility)
+############################################################################################
 
 # First install the CMGTools package by doing (see also https://twiki.cern.ch/twiki/bin/viewauth/CMS/CMGToolsReleasesExperimental#Colin_V2_5_0)
 wget -O installCMGTools.py "http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/UserCode/CMG/CMGTools/Common/bin/installCMGTools.py?view=co"
