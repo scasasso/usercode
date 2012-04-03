@@ -30,7 +30,7 @@ options.register('maxEvents',-1,VarParsing.VarParsing.multiplicity.singleton,Var
 options.parseArguments()
 
 
-Pick up the data files (ggHZZTo4l).
+#Pick up the data files (ggHZZTo4l).
 process.source = datasetToSource(
     "cmgtools",
     "/GluGluToHToZZTo4L_M-120_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM/V4/PAT_CMG_4_0_0",
