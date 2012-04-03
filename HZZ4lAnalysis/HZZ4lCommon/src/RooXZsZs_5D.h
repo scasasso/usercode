@@ -39,6 +39,8 @@ public:
     
     Int_t getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* rangeName=0) const ;
     Double_t analyticalIntegral(Int_t code, const char* rangeName=0) const ;
+
+  //ClassDef(RooXZsZs_5D,1) // Your description goes here...
     
 protected:
     
@@ -63,7 +65,6 @@ protected:
     
 private:
     
-    //ClassDef(RooXZsZs_5D,1) // Your description goes here...
 };
 
 #endif

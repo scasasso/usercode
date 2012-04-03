@@ -10,7 +10,6 @@
 #include "FWCore/Utilities/interface/InputTag.h"
 #include "DataFormats/Common/interface/ValueMap.h"
 #include "HZZ4lAnalysis/DataFormats/interface/HiggsCandidate.h"
-//#include "Alessio/RooFitUtil/src/HelicityLikelihoodDiscriminant.h"
 
 #include "RooDataSet.h"
 #include "RooRealVar.h"
@@ -35,7 +34,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "../src/AngularPdfFactory.cc"
+#include "HZZ4lAnalysis/HZZ4lCommon/src/AngularPdfFactory.cc"
+#include "HZZ4lAnalysis/HZZ4lCommon/src/RooqqZZ_JHU.cc"
 #include "TMVA/Tools.h"
 #include "TMVA/Reader.h"
 #include "TMVA/MethodCuts.h"
@@ -61,9 +61,9 @@ public:
   
 private:	
   edm::InputTag src_ ;
-  vector<double> my8DTemplate(bool normalized,double mZZ, double m1, double m2, double costhetastar, double costheta1, double costheta2, double phi, double phi1, TFile *f);
-  pair<double,double> likelihoodDiscriminant (double mZZ, double m1, double m2, double costhetastar, double costheta1, double costheta2, double phi, double phi1, TFile *f, double scaleFactor);
-
+  vector<double> my8DTemplate(bool normalized,double mZZ, double m1, double m2, double costhetastar, double costheta1, double costheta2, double phi, double phi1);
+  pair<double,double> likelihoodDiscriminant (double mZZ, double m1, double m2, double costhetastar, double costheta1, double costheta2, double phi, double phi1,  double scaleFactor);
+  void checkZorder(double& z1mass, double& z2mass, double& costhetastar, double& costheta1, double& costheta2, double& phi, double& phistar1);
   TFile *f;
 
   
@@ -85,24 +85,13 @@ void LDProducer<higgstype>::produce(edm::Event & iEvent, const edm::EventSetup &
     double mzz = ahiggs.mass();
     double m1 = ahiggs.leg1().mass();
     double m2 = ahiggs.leg2().mass();
-    //Must be in synch with definition in HiggsCandidateFactory.h and with the PDF definition
-    if(ahiggs.leg1().mass()>ahiggs.leg2().mass()){
-       m1 = ahiggs.leg1().mass();
-       m2 = ahiggs.leg2().mass(); 
-    }
-    else{
-       m1 = ahiggs.leg2().mass();
-       m2 = ahiggs.leg1().mass(); 
-    }
-      
     double costhetastar = ahiggs.costhetastar();
     double helcosthetaZl1 = ahiggs.helcosthetaZl1();
     double helcosthetaZl2 = ahiggs.helcosthetaZl2();
     double helphi = ahiggs.helphi();
     double helphiZl1 = ahiggs.phistarZl1();
 
-
-    pair<double,double> P = likelihoodDiscriminant(mzz, m1, m2, costhetastar, helcosthetaZl1, helcosthetaZl2, helphi, helphiZl1, f);
+    pair<double,double> P = likelihoodDiscriminant(mzz, m1, m2, costhetastar, helcosthetaZl1, helcosthetaZl2, helphi, helphiZl1);
     float psig = P.first;
     float pbkg = P.second;
     float ld = psig/(psig + pbkg);
@@ -126,7 +115,7 @@ void LDProducer<higgstype>::beginJob(){
 
 
 template <class higgstype>
-vector<double> LDProducer<higgstype>::my8DTemplate(bool normalized,double mZZ, double m1, double m2, double costhetastar, double costheta1, double costheta2, double phi, double phi1, TFile *f){
+vector<double> LDProducer<higgstype>::my8DTemplate(bool normalized,double mZZ, double m1, double m2, double costhetastar, double costheta1, double costheta2, double phi, double phi1){
   //read from a file the 3D and 2D template
   TH1F *h_mzz= (TH1F*)(f->Get("h_mzz"));
   TH3F *h_mzzm1m2= (TH3F*)(f->Get("h_mzzm1m2"));
@@ -202,31 +191,51 @@ vector<double> LDProducer<higgstype>::my8DTemplate(bool normalized,double mZZ, d
 }
 
 template <class higgstype>
-pair<double,double> LDProducer<higgstype>::likelihoodDiscriminant (double mZZ, double m1, double m2, double costhetastar, double costheta1, double costheta2, double phi, double phi1, TFile *f, double scaleFactor=5.0){
-
-  RooRealVar* z1mass_rrv = new RooRealVar("z1mass","m_{Z1}",0,180);
+pair<double,double> LDProducer<higgstype>::likelihoodDiscriminant (double mZZ, double m1, double m2, double costhetastar, double costheta1, double costheta2, double phi, double phi1, double scaleFactor=5.0){
+ RooRealVar* z1mass_rrv = new RooRealVar("z1mass","m_{Z1}",0,180);
   RooRealVar* z2mass_rrv = new RooRealVar("z2mass","m_{Z2}",0,120); 
+  RooRealVar* costhetastar_rrv = new RooRealVar("costhetastar","cos#theta^{*}",-1,1);  
   RooRealVar* costheta1_rrv = new RooRealVar("costheta1","cos#theta_{1}",-1,1);  
   RooRealVar* costheta2_rrv = new RooRealVar("costheta2","cos#theta_{2}",-1,1);
   RooRealVar* phi_rrv= new RooRealVar("phi","#Phi",-3.1415,3.1415);
-  RooRealVar* mzz_rrv= new RooRealVar("mzz","mZZ",100,180);
+  RooRealVar* phi1_rrv= new RooRealVar("phi1","#Phi^{*}_{1}",-3.1415,3.1415);
+  RooRealVar* mzz_rrv= new RooRealVar("mzz","mZZ",100,800);
   AngularPdfFactory *SMHiggs = new AngularPdfFactory(z1mass_rrv,z2mass_rrv,costheta1_rrv,costheta2_rrv,phi_rrv,mzz_rrv);
+  RooqqZZ_JHU* SMZZ = new RooqqZZ_JHU("SMZZ","SMZZ",*z1mass_rrv,*z2mass_rrv,*costheta1_rrv,*costheta2_rrv,*phi_rrv,*costhetastar_rrv,*phi1_rrv,*mzz_rrv);
   SMHiggs->makeSMHiggs();
   SMHiggs->makeParamsConst(true);
+
+  checkZorder(m1,m2,costhetastar,costheta1,costheta2,phi,phi1);
   
   z1mass_rrv->setVal(m1);  
   z2mass_rrv->setVal(m2);
+  costhetastar_rrv->setVal(costhetastar);
   costheta1_rrv->setVal(costheta1);
   costheta2_rrv->setVal(costheta2);
   phi_rrv->setVal(phi);
+  phi1_rrv->setVal(phi1);
   mzz_rrv->setVal(mZZ);
-  double Psig = SMHiggs->getVal(mZZ);
 
-  z1mass_rrv->setVal(m1);  
- 
-  vector <double> P=my8DTemplate(1, mZZ,  m1,  m2,  costhetastar,  costheta1,  costheta2,  phi,  phi1, f);
-
-  double Pbackg = P[0]*P[1]*P[2]*P[3]*P[4]*P[5]*scaleFactor; 
+  vector <double> P=my8DTemplate(1, mZZ,  m1,  m2,  costhetastar,  costheta1,  costheta2,  phi,  phi1);
+  
+  double Pbackg;
+  double Psig; 
+  if(mZZ>100 && mZZ<180){
+    Pbackg = P[0]*P[1]*P[2]*P[3]*P[4]*P[5]*scaleFactor;
+    Psig=SMHiggs->getVal(mZZ);
+  }
+  if(mZZ>180&&mZZ<=2*91.188){
+    z1mass_rrv->setVal(mZZ/2.);
+    z2mass_rrv->setVal(mZZ/2.);
+    Pbackg = SMZZ->getVal()/(SMZZ->createIntegral(RooArgSet(*costhetastar_rrv,*costheta1_rrv,*costheta2_rrv,*phi_rrv,*phi1_rrv))->getVal());
+    Psig = SMHiggs->PDF->getVal()/(SMHiggs->PDF->createIntegral(RooArgSet(*costheta1_rrv,*costheta2_rrv,*phi_rrv))->getVal());
+  }
+  if(mZZ>2*91.188){
+    z1mass_rrv->setVal(91.188);
+    z2mass_rrv->setVal(91.188);
+    Pbackg = SMZZ->getVal()/(SMZZ->createIntegral(RooArgSet(*costhetastar_rrv,*costheta1_rrv,*costheta2_rrv,*phi_rrv,*phi1_rrv))->getVal());
+    Psig = SMHiggs->PDF->getVal()/(SMHiggs->PDF->createIntegral(RooArgSet(*costheta1_rrv,*costheta2_rrv,*phi_rrv))->getVal());
+  }
 
   // - - - - - - - - - - - - - - - - - - - - - Whitbeck 
   // check whether P[i] is zero and print warning
@@ -239,18 +248,51 @@ pair<double,double> LDProducer<higgstype>::likelihoodDiscriminant (double mZZ, d
 	cout << " uh oh... Probability of " << varName[iVar] << " is zero." << endl;
   }
   // - - - - - - - - - - - - - - - - - - - - - 
- 
+
   delete z1mass_rrv; 
   delete z2mass_rrv; 
   delete costheta1_rrv;
   delete costheta2_rrv;
   delete phi_rrv;
   delete mzz_rrv; 
-
+  delete SMZZ;
   delete SMHiggs;
 
   return make_pair(Psig,Pbackg);
+
 }
 
+template <class higgstype>
+void LDProducer<higgstype>::checkZorder(double& z1mass, double& z2mass,
+		 double& costhetastar, double& costheta1,
+		 double& costheta2, double& phi, 
+		 double& phistar1){
+
+  double tempZ1mass=z1mass;
+  double tempZ2mass=z2mass;
+  double tempH1=costheta1;
+  double tempH2=costheta2;
+  double tempHs=costhetastar;
+  double tempPhi1=phistar1;
+  double tempPhi=phi;
+
+  if(z2mass>z1mass){
+    cout<<"inverted"<<endl;
+    z1mass=tempZ2mass;
+    z2mass=tempZ1mass;
+    costhetastar=-tempHs;
+    costheta1=tempH2;
+    costheta2=tempH1;
+    phi=tempPhi;
+    phistar1=-tempPhi1-tempPhi;
+    if(phistar1>3.1415)
+      phistar1=phistar1-2*3.1415;
+    if(phistar1<-3.1415)
+      phistar1=phistar1+2*3.1415;
+
+  }else
+    return;
+
+}
 
 #endif

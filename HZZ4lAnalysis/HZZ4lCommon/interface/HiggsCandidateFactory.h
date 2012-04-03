@@ -147,20 +147,24 @@ template<typename T, typename U> void cmg::HiggsCandidateFactory<T, U>::set(cons
   ///////////////////////////////////////////////	
   TLorentzVector p4H, p4Z1, p4M11, p4M12, p4Z2, p4M21, p4M22;
   p4H = thep4H;
-  if ((phi1 < 0)&&(phi1 >= -TMath::Pi())){
-    p4Z1 = thep4Z2; p4M11 = thep4M21; p4M12 = thep4M22;
-    p4Z2 = thep4Z1; p4M21 = thep4M11; p4M22 = thep4M12;		
-    costhetastar = theZ2X_p3.CosTheta();
-  }
-  else{
-    p4Z1 = thep4Z1; p4M11 = thep4M11; p4M12 = thep4M12;
-    p4Z2 = thep4Z2; p4M21 = thep4M21; p4M22 = thep4M22;
-    costhetastar = theZ1X_p3.CosTheta();
-  }
   
+  /* ORDER OF Z1 AND Z2 ALREADY CHOSEN IN MAIN FUNCTION!!!!!! - - - - - - 
+     if ((phi1 < 0)&&(phi1 >= -TMath::Pi())){   // old convention based on phi
+     p4Z1 = thep4Z2; p4M11 = thep4M21; p4M12 = thep4M22;
+     p4Z2 = thep4Z1; p4M21 = thep4M11; p4M22 = thep4M12;		
+     costhetastar = theZ2X_p3.CosTheta();
+     }
+     else{
+     p4Z1 = thep4Z1; p4M11 = thep4M11; p4M12 = thep4M12;
+     p4Z2 = thep4Z2; p4M21 = thep4M21; p4M22 = thep4M22;
+     costhetastar = theZ1X_p3.CosTheta();
+     }
+     - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - - - - - -*/
   
-  //std::cout << "phi1: " << phi1 << ", phi2: " << phi2 << std::endl;
-	
+  p4Z1 = thep4Z1; p4M11 = thep4M11; p4M12 = thep4M12;
+  p4Z2 = thep4Z2; p4M21 = thep4M21; p4M22 = thep4M22;
+  costhetastar = theZ1X_p3.CosTheta();
+  
   // now helicity angles................................
   // ...................................................
   TVector3 boostZ1 = -(p4Z1.BoostVector());
