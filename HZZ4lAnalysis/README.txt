@@ -12,9 +12,9 @@ chmod +x CMGTools/Production/scripts/*.py
 chmod +x CMGTools/Common/scripts/*.py
 scram b -j 4 
 
-# Then co from UserCode/scasasso
-cvs co -d HZZ4lAnalysis UserCode/scasasso/HZZ4lAnalysis
-scram b -j 4
+# Download and run the script installHZZ4lAnalysis.csh
+wget -O installHZZ4lAnalysis.csh "http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/UserCode/scasasso/HZZ4lAnalysis/installHZZ4lAnalysis.csh?view=co"
+source installHZZ4lAnalysis.csh
 
 # Produce CMGTuple (by now from CMG trees of signal sample)
 cd HZZ4lAnalysis/HZZ4lCommon/prod
