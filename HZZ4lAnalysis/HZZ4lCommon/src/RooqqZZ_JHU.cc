@@ -382,8 +382,8 @@ Double_t RooqqZZ_JHU::integratePartonicXS_Dh2DphDPh1_1(double m1_c, double m2_c,
     double M2 = m2_c;
     double hs = hs_c;
     double h1 = h1_c;
-    double h2 = h2_c;
-    double phi = phi_c;
+    //double h2 = h2_c;
+    //double phi = phi_c; NOT USED!!
     double Phi1 = Phi1_c;
     
     if (flipAxis){
@@ -395,11 +395,11 @@ Double_t RooqqZZ_JHU::integratePartonicXS_Dh2DphDPh1_1(double m1_c, double m2_c,
     // extra definitions needed
     double shs = Sqrt(1-hs*hs); // sin Theta
     double sh1 = Sqrt(1-h1*h1); // sin theta1
-    double sh2 = Sqrt(1-h2*h2); // sin theta2
-    double hsdb = 1 - 2*shs*shs; // cos 2*Theta
+    //double sh2 = Sqrt(1-h2*h2); // sin theta2
+    //double hsdb = 1 - 2*shs*shs; // cos 2*Theta  NOT USED!!
     double shsdb = 2*hs*shs; // sin 2*Theta
     double h1db = 1 - 2*sh1*sh1; // cos 2*theta1
-    double h2db = 1 - 2*sh2*sh2; // cos 2*theta2
+    //double h2db = 1 - 2*sh2*sh2; // cos 2*theta2 NOT USED!!
     
     double x = (M1*M1-M2*M2)/s;
     double beta1 = Sqrt(1. - (4.*M1*M1)/(s*(1+x)*(1+x))); 
@@ -547,9 +547,9 @@ Double_t RooqqZZ_JHU::integratePartonicXS_Dh1DphDPh1_2(double m1_c, double m2_c,
     double M1 = m1_c;
     double M2 = m2_c;
     double hs = hs_c;
-    double h1 = h1_c;
+    //double h1 = h1_c;
     double h2 = h2_c;
-    double phi = phi_c;
+    //double phi = phi_c; NOT USED !!
     double Phi1 = Phi1_c;
     
     if (flipAxis){
@@ -560,11 +560,11 @@ Double_t RooqqZZ_JHU::integratePartonicXS_Dh1DphDPh1_2(double m1_c, double m2_c,
     
     // extra definitions needed
     double shs = Sqrt(1-hs*hs); // sin Theta
-    double sh1 = Sqrt(1-h1*h1); // sin theta1
+    //double sh1 = Sqrt(1-h1*h1); // sin theta1
     double sh2 = Sqrt(1-h2*h2); // sin theta2
-    double hsdb = 1 - 2*shs*shs; // cos 2*Theta
+    //double hsdb = 1 - 2*shs*shs; // cos 2*Theta  NOT USED
     double shsdb = 2*hs*shs; // sin 2*Theta
-    double h1db = 1 - 2*sh1*sh1; // cos 2*theta1
+    //double h1db = 1 - 2*sh1*sh1; // cos 2*theta1 NOT USED
     double h2db = 1 - 2*sh2*sh2; // cos 2*theta2
     
     double x = (M1*M1-M2*M2)/s;
@@ -711,9 +711,9 @@ Double_t RooqqZZ_JHU::integratePartonicXS_Dh1Dh2Dph_3(double m1_c, double m2_c, 
     double M1 = m1_c;
     double M2 = m2_c;
     double hs = hs_c;
-    double h1 = h1_c;
-    double h2 = h2_c;
-    double phi = phi_c;
+    // double h1 = h1_c;
+    // double h2 = h2_c;
+    //double phi = phi_c; NOT USED !!
     double Phi1 = Phi1_c;
     
     if (flipAxis){
@@ -733,12 +733,12 @@ Double_t RooqqZZ_JHU::integratePartonicXS_Dh1Dh2Dph_3(double m1_c, double m2_c, 
     
     // extra definitions needed
     double shs = Sqrt(1-hs*hs); // sin Theta
-    double sh1 = Sqrt(1-h1*h1); // sin theta1
-    double sh2 = Sqrt(1-h2*h2); // sin theta2
+    //double sh1 = Sqrt(1-h1*h1); // sin theta1
+    //double sh2 = Sqrt(1-h2*h2); // sin theta2
     double hsdb = 1 - 2*shs*shs; // cos 2*Theta
     double shsdb = 2*hs*shs; // sin 2*Theta
-    double h1db = 1 - 2*sh1*sh1; // cos 2*theta1
-    double h2db = 1 - 2*sh2*sh2; // cos 2*theta2
+    //double h1db = 1 - 2*sh1*sh1; // cos 2*theta1  NOT USED
+    //double h2db = 1 - 2*sh2*sh2; // cos 2*theta2  NOT USED!!
     
     double x = (M1*M1-M2*M2)/s;
     double beta1 = Sqrt(1. - (4.*M1*M1)/(s*(1+x)*(1+x))); 
@@ -1002,8 +1002,8 @@ Double_t RooqqZZ_JHU::integratePartonicXS_Dh1Dh2DPh1_4(double m1_c, double m2_c,
     double M1 = m1_c;
     double M2 = m2_c;
     double hs = hs_c;
-    double h1 = h1_c;
-    double h2 = h2_c;
+    //double h1 = h1_c;
+    //double h2 = h2_c;
     double phi = phi_c;
     double Phi1 = Phi1_c;
     
@@ -1015,12 +1015,12 @@ Double_t RooqqZZ_JHU::integratePartonicXS_Dh1Dh2DPh1_4(double m1_c, double m2_c,
     
     // extra definitions needed
     double shs = Sqrt(1-hs*hs); // sin Theta
-    double sh1 = Sqrt(1-h1*h1); // sin theta1
-    double sh2 = Sqrt(1-h2*h2); // sin theta2
-    double hsdb = 1 - 2*shs*shs; // cos 2*Theta
+    //double sh1 = Sqrt(1-h1*h1); // sin theta1
+    //double sh2 = Sqrt(1-h2*h2); // sin theta2
+    double hsdb = 1 - 2*shs*shs; // cos 2*Theta 
     double shsdb = 2*hs*shs; // sin 2*Theta
-    double h1db = 1 - 2*sh1*sh1; // cos 2*theta1
-    double h2db = 1 - 2*sh2*sh2; // cos 2*theta2
+    //double h1db = 1 - 2*sh1*sh1; // cos 2*theta1 NOT USED
+    //double h2db = 1 - 2*sh2*sh2; // cos 2*theta2  NOT USED
     
     double x = (M1*M1-M2*M2)/s;
     double beta1 = Sqrt(1. - (4.*M1*M1)/(s*(1+x)*(1+x))); 
@@ -1227,9 +1227,9 @@ Double_t RooqqZZ_JHU::integratePartonicXS_Dh1Dh2DphDPh1_5(double m1_c, double m2
     double M1 = m1_c;
     double M2 = m2_c;
     double hs = hs_c;
-    double h1 = h1_c;
-    double h2 = h2_c;
-    double phi = phi_c;
+    //double h1 = h1_c;
+    //double h2 = h2_c;
+    //double phi = phi_c;  NOT USED
     double Phi1 = Phi1_c;
     
     if (flipAxis){
@@ -1240,12 +1240,12 @@ Double_t RooqqZZ_JHU::integratePartonicXS_Dh1Dh2DphDPh1_5(double m1_c, double m2
     
     // extra definitions needed
     double shs = Sqrt(1-hs*hs); // sin Theta
-    double sh1 = Sqrt(1-h1*h1); // sin theta1
-    double sh2 = Sqrt(1-h2*h2); // sin theta2
-    double hsdb = 1 - 2*shs*shs; // cos 2*Theta
+    //double sh1 = Sqrt(1-h1*h1); // sin theta1
+    //double sh2 = Sqrt(1-h2*h2); // sin theta2
+    //double hsdb = 1 - 2*shs*shs; // cos 2*Theta NOT USED!!
     double shsdb = 2*hs*shs; // sin 2*Theta
-    double h1db = 1 - 2*sh1*sh1; // cos 2*theta1
-    double h2db = 1 - 2*sh2*sh2; // cos 2*theta2
+    //double h1db = 1 - 2*sh1*sh1; // cos 2*theta1 NOT USED!!
+    //double h2db = 1 - 2*sh2*sh2; // cos 2*theta2  NOT USED!!
     
     double x = (M1*M1-M2*M2)/s;
     double beta1 = Sqrt(1. - (4.*M1*M1)/(s*(1+x)*(1+x))); 
