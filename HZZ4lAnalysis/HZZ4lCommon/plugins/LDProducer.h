@@ -65,8 +65,14 @@ private:
   pair<double,double> likelihoodDiscriminant (double mZZ, double m1, double m2, double costhetastar, double costheta1, double costheta2, double phi, double phi1,  double scaleFactor);
   void checkZorder(double& z1mass, double& z2mass, double& costhetastar, double& costheta1, double& costheta2, double& phi, double& phistar1);
   TFile *f;
-
-  
+  TH1F *h_mzz;
+  TH3F *h_mzzm1m2;
+  TH2F *h_mzzcosthetastar;
+  TH2F *h_mzzcostheta1;
+  TH2F *h_mzzcostheta2;
+  TH2F *h_mzzphi1;
+  TH2F *h_mzzphi;
+ 
 };
 
 template <class higgstype>
@@ -110,20 +116,27 @@ template<class higgstype>
 void LDProducer<higgstype>::beginJob(){
 
   f = new TFile("../src/datafiles/my8DTemplateNotNorm.root","READ");
-  
+  h_mzz= (TH1F*)(f->Get("h_mzz"));
+  h_mzzm1m2= (TH3F*)(f->Get("h_mzzm1m2"));
+  h_mzzcosthetastar= (TH2F*)(f->Get("h_mzzcosthetastar"));
+  h_mzzcostheta1= (TH2F*)(f->Get("h_mzzcostheta1"));
+  h_mzzcostheta2= (TH2F*)(f->Get("h_mzzcostheta2"));
+  h_mzzphi1= (TH2F*)(f->Get("h_mzzphi1"));
+  h_mzzphi= (TH2F*)(f->Get("h_mzzphi"));
+ 
 }
 
 
 template <class higgstype>
 vector<double> LDProducer<higgstype>::my8DTemplate(bool normalized,double mZZ, double m1, double m2, double costhetastar, double costheta1, double costheta2, double phi, double phi1){
   //read from a file the 3D and 2D template
-  TH1F *h_mzz= (TH1F*)(f->Get("h_mzz"));
+  /*TH1F *h_mzz= (TH1F*)(f->Get("h_mzz"));
   TH3F *h_mzzm1m2= (TH3F*)(f->Get("h_mzzm1m2"));
   TH2F *h_mzzcosthetastar= (TH2F*)(f->Get("h_mzzcosthetastar"));
   TH2F *h_mzzcostheta1= (TH2F*)(f->Get("h_mzzcostheta1"));
   TH2F *h_mzzcostheta2= (TH2F*)(f->Get("h_mzzcostheta2"));
   TH2F *h_mzzphi1= (TH2F*)(f->Get("h_mzzphi1"));
-  TH2F *h_mzzphi= (TH2F*)(f->Get("h_mzzphi"));
+  TH2F *h_mzzphi= (TH2F*)(f->Get("h_mzzphi"));*/
 
   //multiply the P values
   double n = h_mzz->GetBinContent(h_mzz->FindBin(mZZ));
@@ -176,13 +189,13 @@ vector<double> LDProducer<higgstype>::my8DTemplate(bool normalized,double mZZ, d
   P_norm.push_back(Pmzzphi_norm);
   P_norm.push_back(Pmzzphi1_norm);
 
-  delete h_mzz;
+  /*delete h_mzz;
   delete h_mzzm1m2;
   delete h_mzzcosthetastar;
   delete h_mzzcostheta1;
   delete h_mzzcostheta2;
   delete h_mzzphi1;
-  delete h_mzzphi;
+  delete h_mzzphi;*/
   
   if(normalized)
     return P_norm;
@@ -218,8 +231,8 @@ pair<double,double> LDProducer<higgstype>::likelihoodDiscriminant (double mZZ, d
 
   vector <double> P=my8DTemplate(1, mZZ,  m1,  m2,  costhetastar,  costheta1,  costheta2,  phi,  phi1);
   
-  double Pbackg;
-  double Psig; 
+  double Pbackg=-99;
+  double Psig=-99; 
   if(mZZ>100 && mZZ<180){
     Pbackg = P[0]*P[1]*P[2]*P[3]*P[4]*P[5]*scaleFactor;
     Psig=SMHiggs->getVal(mZZ);
@@ -258,6 +271,9 @@ pair<double,double> LDProducer<higgstype>::likelihoodDiscriminant (double mZZ, d
   delete SMZZ;
   delete SMHiggs;
 
+  if(Psig<0 || Pbackg<0)
+    cout<<"LDProducer.h Error: LD not defined for this mzz (maybe mZZ<100 ?)"<<endl;
+
   return make_pair(Psig,Pbackg);
 
 }
@@ -277,7 +293,7 @@ void LDProducer<higgstype>::checkZorder(double& z1mass, double& z2mass,
   double tempPhi=phi;
 
   if(z2mass>z1mass){
-    cout<<"inverted"<<endl;
+    //cout<<"inverted"<<endl;
     z1mass=tempZ2mass;
     z2mass=tempZ1mass;
     costhetastar=-tempHs;
