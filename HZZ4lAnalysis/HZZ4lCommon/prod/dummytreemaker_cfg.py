@@ -12,7 +12,7 @@ process.source = cms.Source("PoolSource",
                                                                )
                             )
 
-process.DummySelection = cms.EDAnalyzer('DummyTreeMaker'
+process.DummySelection = cms.EDAnalyzer('HZZ4lNtupleMaker'
                               )
 
 process.TFileService = cms.Service("TFileService",
