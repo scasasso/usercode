@@ -1,7 +1,6 @@
 #include "AnalysisDataFormats/CMGTools/interface/CompoundTypes.h"
 #include "HZZ4lAnalysis/DataFormats/interface/CompoundTypesHZZ4l.h"
 #include "HZZ4lAnalysis/HZZ4lCommon/plugins/LDProducer.h"
-#include "HZZ4lAnalysis/HZZ4lCommon/plugins/BestZ1Producer.h"
 
 #include "CommonTools/UtilAlgos/interface/ObjectSelector.h"
 #include "CMGTools/Common/interface/GenericPhysicsObjectSelectorDefinition.h"

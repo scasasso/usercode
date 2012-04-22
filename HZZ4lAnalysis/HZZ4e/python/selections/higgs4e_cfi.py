@@ -22,6 +22,5 @@ PRLHiggs4e = cms.PSet(
                           "("+mass1+" && "+mass2+" && "+mass4+")"   + " || " +
                           "("+mass1+" && "+mass3+" && "+mass4+")"   + " || " +
                           "("+mass2+" && "+mass3+" && "+mass4+")"
-                          ),
-    bestCand = cms.string('leg1.userFloat("bestZ1")==1 || leg2.userFloat("bestZ1")==1')
+                          )
     )
