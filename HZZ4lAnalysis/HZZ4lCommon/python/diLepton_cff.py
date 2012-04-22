@@ -14,9 +14,13 @@ cmgDiMuon = cms.EDFilter(
     cfg = dimuonFactory.clone(),
     cuts = cms.PSet(
     z1mumu = z1mumu.clone(),
-    zCand = zCand.clone(),
-    llCand = llCand.clone()
-      )
+    z2mumu = z2mumu.clone(),
+    zCandplusID = zCandplusID.clone(),
+    llCandplusID = llCandplusID.clone(),
+    llCandplusSIPOSSF = llCandplusSIPOSSF.clone(),
+    llCandplusSIPSSSF = llCandplusSIPSSSF.clone(),
+    llCandInvertedSIPplusID = llCandInvertedSIPplusID.clone()
+    )
     )
 
 # Build ee candidates (no charge requirements)
@@ -32,9 +36,13 @@ cmgDiElectron = cms.EDFilter(
     cfg = diElectronFactory.clone(),
     cuts = cms.PSet(
     z1ee = z1ee.clone(),
-    zCand = zCand.clone(),
-    llCand = llCand.clone()
-      ),
+    z2ee = z2ee.clone(),
+    zCandplusID = zCandplusID.clone(),
+    llCandplusID = llCandplusID.clone(),
+    llCandplusSIPOSSF = llCandplusSIPOSSF.clone(),
+    llCandplusSIPSSSF = llCandplusSIPSSSF.clone(),
+    llCandInvertedSIPplusID = llCandInvertedSIPplusID.clone()
+    )
     )
 
 # Build emu candidates (no charge requirements)
@@ -43,73 +51,90 @@ emuFactory = diObjectFactory.clone(
        leg2Collection = cms.InputTag("cmgMuon"),
 )
 
-cmgEMuCand = cms.EDFilter(
+cmgEMu = cms.EDFilter(
     "EMuPOProducer",
     cfg = emuFactory.clone(),
     cuts = cms.PSet(
-    llCand = llCand.clone()
-      ),
+    llCandplusID = llCandplusID.clone(),
+    llCandInvertedSIPplusID = llCandInvertedSIPplusID.clone()
+    )
     )
 
-#Skim the mumu collection
-MMCand = cms.EDFilter(
-    "CmgDiMuonSelector",
-    src = cms.InputTag( "cmgDiMuon" ),
-    cut = cms.string( "getSelection(\"cuts_llCand\")" )
-    )
 
-#Skim the ee collection
-EECand = cms.EDFilter(
-    "CmgDiElectronSelector",
-    src = cms.InputTag( "cmgDiElectron" ),
-    cut = cms.string( "getSelection(\"cuts_llCand\")" )
-    )
+# #Skim the mumu collection
+# MMCand = cms.EDFilter(
+#     "CmgDiMuonSelector",
+#     src = cms.InputTag( "cmgDiMuon" ),
+#     cut = cms.string( "getSelection(\"cuts_llCand\")" )
+#     )
 
-#Skim the emu collection
-EMCand = cms.EDFilter(
-    "CmgEMuSelector",
-    src = cms.InputTag( "cmgEMuCand" ),
-    cut = cms.string( "getSelection(\"cuts_llCand\")" )
-    )
+# #Skim the ee collection
+# EECand = cms.EDFilter(
+#     "CmgDiElectronSelector",
+#     src = cms.InputTag( "cmgDiElectron" ),
+#     cut = cms.string( "getSelection(\"cuts_llCand\")" )
+#     )
 
-#Skim the mumu collection
-zMMCand = cms.EDFilter(
-    "CmgDiMuonSelector",
-    src = cms.InputTag( "cmgDiMuon" ),
-    cut = cms.string( "getSelection(\"cuts_zCand\")" )
-    )
+# #Skim the emu collection
+# EMCand = cms.EDFilter(
+#     "CmgEMuSelector",
+#     src = cms.InputTag( "cmgEMuCand" ),
+#     cut = cms.string( "getSelection(\"cuts_llCand\")" )
+#     )
 
-#Skim the ee collection
-zEECand = cms.EDFilter(
-    "CmgDiElectronSelector",
-    src = cms.InputTag( "cmgDiElectron" ),
-    cut = cms.string( "getSelection(\"cuts_zCand\")" )
-    )
+# #Skim the mumu collection
+# zMMCand = cms.EDFilter(
+#     "CmgDiMuonSelector",
+#     src = cms.InputTag( "cmgDiMuon" ),
+#     cut = cms.string( "getSelection(\"cuts_zCand\")" )
+#     )
 
-# Skim the mumu collection to get the Z1 candidates
-Z1MMCand = cms.EDFilter(
-    "CmgDiMuonSelector",
-    src = cms.InputTag( "cmgDiMuon" ),
-    cut = cms.string( "getSelection(\"cuts_z1mumu\")" )
-    )
+# #Skim the ee collection
+# zEECand = cms.EDFilter(
+#     "CmgDiElectronSelector",
+#     src = cms.InputTag( "cmgDiElectron" ),
+#     cut = cms.string( "getSelection(\"cuts_zCand\")" )
+#     )
 
-# Skim the ee collection to get the Z1 candidates
-Z1EECand = cms.EDFilter(
-    "CmgDiElectronSelector",
-    src = cms.InputTag( "cmgDiElectron" ),
-    cut = cms.string( "getSelection(\"cuts_z1ee\")" )
-    )
+# # Skim the mumu collection to get the Z1 candidates
+# Z1MMCand = cms.EDFilter(
+#     "CmgDiMuonSelector",
+#     src = cms.InputTag( "cmgDiMuon" ),
+#     cut = cms.string( "getSelection(\"cuts_z1mumu\")" )
+#     )
+
+# # Skim the ee collection to get the Z1 candidates
+# Z1EECand = cms.EDFilter(
+#     "CmgDiElectronSelector",
+#     src = cms.InputTag( "cmgDiElectron" ),
+#     cut = cms.string( "getSelection(\"cuts_z1ee\")" )
+#     )
+
+# #Z+X control regions: SS-SF couples
+# SSSFEECand = cms.EDFilter(
+#     "CmgDiElectronSelector",
+#     src = cms.InputTag( "cmgDiElectron" ),
+#     cut = cms.string( "getSelection(\"cuts_SSSFCand\")" )
+#     )
+
+# SSSFMMCand = cms.EDFilter(
+#     "CmgDiMuonSelector",
+#     src = cms.InputTag( "cmgDiMuon" ),
+#     cut = cms.string( "getSelection(\"cuts_SSSFCand\")" )
+#     )
 
 
 diLeptonSequence = cms.Sequence(
     cmgDiMuon +
     cmgDiElectron +
-    cmgEMuCand +
-    MMCand +
-    EECand +
-    EMCand +
-    zMMCand +
-    zEECand +
-    Z1MMCand +
-    Z1EECand
-)
+    cmgEMu 
+    #     MMCand +
+    #     EECand +
+    #     EMCand +
+    #     zMMCand +
+    #     zEECand +
+    #     Z1MMCand +
+    #     Z1EECand +
+    #     SSSFMMCand +
+    #     SSSFEECand
+    )

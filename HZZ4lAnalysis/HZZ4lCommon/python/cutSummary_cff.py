@@ -10,21 +10,39 @@ cutSummaryElectron = cms.EDAnalyzer(
     inputCollection = cms.InputTag("cmgElectron")
 )
 
-cutSummaryZ1mumu = cms.EDAnalyzer(
+cutSummaryDiMuon = cms.EDAnalyzer(
     "CutSummaryAnalyzer",
     inputCollection = cms.InputTag("cmgDiMuon")
 )
 
-cutSummaryZ1ee = cms.EDAnalyzer(
+cutSummaryDiElectron = cms.EDAnalyzer(
     "CutSummaryAnalyzer",
     inputCollection = cms.InputTag("cmgDiElectron")
+)
+
+cutSummaryDiMuonDiMuonHiggs = cms.EDAnalyzer(
+    "CutSummaryAnalyzer",
+    inputCollection = cms.InputTag("cmgDiMuonDiMuonHiggs")
+)
+
+cutSummaryDiElectronDiMuonHiggs = cms.EDAnalyzer(
+    "CutSummaryAnalyzer",
+    inputCollection = cms.InputTag("cmgDiElectronDiMuonHiggs")
+)
+
+cutSummaryDiElectronDiElectronHiggs = cms.EDAnalyzer(
+    "CutSummaryAnalyzer",
+    inputCollection = cms.InputTag("cmgDiElectronDiElectronHiggs")
 )
 
 
 cutSummarySequence = cms.Sequence(
     cutSummaryMuon +
     cutSummaryElectron +
-    cutSummaryZ1mumu +
-    cutSummaryZ1ee
+    cutSummaryDiMuon +
+    cutSummaryDiElectron +
+    cutSummaryDiMuonDiMuonHiggs +
+    cutSummaryDiElectronDiMuonHiggs +
+    cutSummaryDiElectronDiElectronHiggs
     )
 

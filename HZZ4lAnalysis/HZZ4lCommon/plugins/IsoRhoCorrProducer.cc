@@ -12,7 +12,7 @@
 //
 // Original Author:  Stefano Casasso,,,
 //         Created:  Thu Mar 15 14:21:33 CET 2012
-// $Id$
+// $Id: IsoRhoCorrProducer.cc,v 1.2 2012/03/20 14:35:06 scasasso Exp $
 //
 //
 
@@ -85,11 +85,15 @@ void IsoRhoCorrProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
     pat::Muon & m = (*muonColl)[i];
 
     float RhoCorrIso = -1.; //the user float we want to add to pat::Muon
+    float SIP3D = -1.; //the user float we want to add to pat::Muon
+
     float ecalIso = m.ecalIso();
     float hcalIso = m.hcalIso();
     float trackIso = m.trackIso();
     float eta = m.eta();
-    //float rho = m.userFloat("rhoMu");
+    float IP = fabs(m.dB(pat::Muon::PV3D));
+    float IPError = m.edB(pat::Muon::PV3D);
+    SIP3D = IP/IPError;
 
     const float AreaEcal[2]    = {0.074, 0.045}; //   barrel/endcap
     const float AreaHcal[2]    = {0.022 , 0.030 }; //   barrel/endcap
@@ -102,6 +106,7 @@ void IsoRhoCorrProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
     RhoCorrIso = (ecalIso + hcalIso + trackIso)/m.pt();
 
     m.addUserFloat("RhoCorrIso",RhoCorrIso);
+    m.addUserFloat("SIP3D",SIP3D);
   }
 
   //Loop over electrons
@@ -109,10 +114,14 @@ void IsoRhoCorrProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
     pat::Electron & e = (*electronColl)[i];
 
     float RhoCorrIso = -1.; //the user float we want to add to pat::Electron
+    float SIP3D = -1.; //the user float we want to add to pat::Electron
+
     float ecalIso = e.ecalIso();
     float hcalIso = e.hcalIso();
     float trackIso = e.trackIso();
-    //float rho = e.userFloat("rhoMu");
+    float IP = fabs(e.dB(pat::Electron::PV3D));
+    float IPError = e.edB(pat::Electron::PV3D);
+    SIP3D = IP/IPError;
     
     const float AreaEcal[2]    = {0.101, 0.046}; //   barrel/endcap
     const float AreaHcal[2]    = {0.021 , 0.040 }; //   barrel/endcap
@@ -128,6 +137,7 @@ void IsoRhoCorrProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
     RhoCorrIso = (ecalIso + hcalIso + trackIso)/e.pt();
 
     e.addUserFloat("RhoCorrIso",RhoCorrIso);
+    e.addUserFloat("SIP3D",SIP3D);
   }
 
   

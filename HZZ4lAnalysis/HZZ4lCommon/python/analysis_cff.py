@@ -19,14 +19,14 @@ cmgObjectSequence = cms.Sequence(
     #jetSequence +
     #metSequence +
     muonSequence +
-    electronSequence +
-    leptonMergingSequence +
-    diLeptonSequence +
-    dileptonMergingSequence +
-    triLeptonSequence +
-    trileptonMergingSequence +
+    electronSequence + 
+#     leptonMergingSequence +
+    diLeptonSequence  +
+#     dileptonMergingSequence +
+#     triLeptonSequence +
+#     trileptonMergingSequence +
     quadriLeptonSequence +
-    quadrileptonMergingSequence +
+#     quadrileptonMergingSequence +
     #tauSequence +
     higgsSequence
     #triggerSequence
