@@ -1,6 +1,8 @@
 #include "AnalysisDataFormats/CMGTools/interface/CompoundTypes.h"
 #include "HZZ4lAnalysis/DataFormats/interface/CompoundTypesHZZ4l.h"
 #include "HZZ4lAnalysis/HZZ4lCommon/plugins/LDProducer.h"
+#include "HZZ4lAnalysis/HZZ4lCommon/plugins/BestCandProducer.h"
+#include "HZZ4lAnalysis/HZZ4lCommon/plugins/BestZProducer.h"
 
 #include "CommonTools/UtilAlgos/interface/ObjectSelector.h"
 #include "CMGTools/Common/interface/GenericPhysicsObjectSelectorDefinition.h"
@@ -36,3 +38,5 @@ typedef ObjectSelector<cmg::GenericPhysicsObjectSelectorDefinition<cmg::DiElectr
 DEFINE_FWK_MODULE(DiElectronDiElectronHiggsSelector);
 DEFINE_FWK_MODULE(DiMuonDiMuonHiggsSelector);
 DEFINE_FWK_MODULE(DiElectronDiMuonHiggsSelector);
+
+DEFINE_FWK_MODULE(BestZProducer);
