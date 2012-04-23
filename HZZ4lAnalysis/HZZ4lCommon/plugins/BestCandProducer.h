@@ -45,6 +45,7 @@ void BestCandProducer<higgstype>::produce(edm::Event & iEvent, const edm::EventS
   std::auto_ptr<std::vector<higgstype> > higgsColl( new std::vector<higgstype> (*higgscandidates) );
 
   unsigned int bestCand=999;
+  unsigned int bestCand2e2m=999;
   double ptMax = -999;
 
   for (unsigned int i=0 ; i<higgsColl->size() ; ++i ) {
@@ -71,6 +72,9 @@ void BestCandProducer<higgstype>::produce(edm::Event & iEvent, const edm::EventS
 	ptMax = pt1;
       }
     }
+    if((isBestZ1==2 && isBestZ2==1) || (isBestZ1==1 && isBestZ2==2)){
+      bestCand2e2m=i;
+    }
   }
   
     
@@ -78,9 +82,11 @@ void BestCandProducer<higgstype>::produce(edm::Event & iEvent, const edm::EventS
 
     higgstype & ahiggs = (*higgsColl)[i];
     if(i==bestCand)
-      ahiggs.addUserFloat("bestH",1);
+      ahiggs.addUserFloat("bestH_PRL",1);
     else
-      ahiggs.addUserFloat("bestH",0);
+      ahiggs.addUserFloat("bestH_PRL",0);
+    if(i==bestCand2e2m)
+      ahiggs.addUserFloat("bestH2e2m",1);
   }
     // and put it into the event
      iEvent.put(higgsColl);
