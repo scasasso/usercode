@@ -13,7 +13,7 @@
 //
 // Original Author:  Stefano Casasso,,,
 //         Created:  Tue Feb 28 14:33:03 CET 2012
-// $Id: HZZ4lNtupleMaker.cc,v 1.2 2012/03/01 12:56:37 scasasso Exp $
+// $Id: HZZ4lNtupleMaker.cc,v 1.1 2012/04/20 12:44:02 pellicci Exp $
 //
 //
 
@@ -94,15 +94,15 @@ void HZZ4lNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& 
 
   //4Mu
   edm::Handle<std::vector<cmg::DiMuonDiMuonHiggs> > higgsMuMuHandle;
-  iEvent.getByLabel(std::string("cmgDiMuonDiMuonHiggsLD"), higgsMuMuHandle);
+  iEvent.getByLabel(std::string("cmgDiMuonDiMuonHiggs"), higgsMuMuHandle);
 
   //4E
   edm::Handle<std::vector<cmg::DiElectronDiElectronHiggs> > higgsEEHandle;
-  iEvent.getByLabel(std::string("cmgDiElectronDiElectronHiggsLD"), higgsEEHandle);
+  iEvent.getByLabel(std::string("cmgDiElectronDiElectronHiggs"), higgsEEHandle);
 
   //2Mu2E
   edm::Handle<std::vector<cmg::DiElectronDiMuonHiggs> > higgsEMuHandle;
-  iEvent.getByLabel(std::string("cmgDiElectronDiMuonHiggsLD"), higgsEMuHandle);
+  iEvent.getByLabel(std::string("cmgDiElectronDiMuonHiggs"), higgsEMuHandle);
 
 
   if (higgsMuMuHandle->size() == 0 && higgsEEHandle->size() == 0 && higgsEMuHandle->size() == 0) return;
@@ -111,11 +111,13 @@ void HZZ4lNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& 
   myTree->FillEventInfo(iEvent.id().run(), iEvent.id().event(), iEvent.luminosityBlock());
 
   for(std::vector<cmg::DiMuonDiMuonHiggs >::const_iterator higgs=higgsMuMuHandle->begin(); higgs!=higgsMuMuHandle->end(); ++higgs){
-    FillCandidate(higgs, 0);
+    if(higgs->getSelection("cuts_overlap"))
+      FillCandidate(higgs, 0);
   }
 
   for(std::vector<cmg::DiElectronDiElectronHiggs >::const_iterator higgs=higgsEEHandle->begin(); higgs!=higgsEEHandle->end(); ++higgs){
-    FillCandidate(higgs, 1);
+    if(higgs->getSelection("cuts_overlap"))
+        FillCandidate(higgs, 1);
   }
 
   for(std::vector<cmg::DiElectronDiMuonHiggs >::const_iterator higgs=higgsEMuHandle->begin(); higgs!=higgsEMuHandle->end(); ++higgs){
@@ -143,7 +145,7 @@ void HZZ4lNtupleMaker::FillCandidate(higgstype higgs, const Int_t Htype)
   const Double_t ZZPt = higgs->pt();
   const Double_t ZZEta = higgs->eta();
   const Double_t ZZPhi = higgs->phi();
-  const Double_t ZZLD = higgs->userFloat("LD");
+  const Double_t ZZLD = 1;//higgs->userFloat("LD"); waiting for final implementation of the Higgs candidates
 
   //convention: 0 -> 4mu   1 -> 4e   2 -> 2mu2e
   const Int_t HiggsType = Htype;
