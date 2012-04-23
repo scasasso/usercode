@@ -55,8 +55,8 @@ void BestCandProducer<higgstype>::produce(edm::Event & iEvent, const edm::EventS
     double mH = ahiggs.mass();
     double m1 = ahiggs.leg1().mass();
     double m2 = ahiggs.leg2().mass();
-    double pt1 = ahiggs.leg1().pt();
-    double pt2 = ahiggs.leg2().pt();
+    double pt1 = ahiggs.leg1().leg1().pt() + ahiggs.leg1().leg2().pt();
+    double pt2 = ahiggs.leg2().leg1().pt() + ahiggs.leg2().leg2().pt();
     float isBestZ1 = ahiggs.leg1().userFloat("bestZ");
     float isBestZ2 = ahiggs.leg2().userFloat("bestZ");
     
