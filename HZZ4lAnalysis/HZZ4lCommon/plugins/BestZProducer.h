@@ -89,11 +89,11 @@ void BestZProducer::produce(edm::Event & iEvent, const edm::EventSetup & iSetup)
   for(unsigned int i=0 ; i<zmumuColl->size() ; ++i ){
     cmg::DiObject<cmg::Muon, cmg::Muon>  & zmumu = (*zmumuColl)[i];
    if(i==bestZmumu && bestZFlavor==0)
-      zmumu.addUserFloat("best",2);
+      zmumu.addUserFloat("bestZ",2);
     else if(i==bestZmumu && bestZFlavor!=0)
-      zmumu.addUserFloat("best",1);
+      zmumu.addUserFloat("bestZ",1);
     else
-      zmumu.addUserFloat("best",0);
+      zmumu.addUserFloat("bestZ",0);
   }
  
   //store the info of the best Z into eleele collection
