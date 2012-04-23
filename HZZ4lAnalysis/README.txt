@@ -12,6 +12,8 @@ chmod +x CMGTools/Production/scripts/*.py
 chmod +x CMGTools/Common/scripts/*.py
 scram b -j 4 
 
+#Modify the DiObject.h class
+cp /afs/cern.ch/user/s/sbologne/DiObject.h AnalysisDataFormats/CMGTools/interface
 # Download and run the script installHZZ4lAnalysis.csh
 wget -O installHZZ4lAnalysis.csh "http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/UserCode/scasasso/HZZ4lAnalysis/installHZZ4lAnalysis.csh?view=co"
 source installHZZ4lAnalysis.csh
