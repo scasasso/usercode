@@ -59,23 +59,20 @@ void BestCandProducer<higgstype>::produce(edm::Event & iEvent, const edm::EventS
     float isBestZ1 = ahiggs.leg1().userFloat("bestZ");
     float isBestZ2 = ahiggs.leg2().userFloat("bestZ");
     
-    if(isBestZ1 > isBestZ2){
+    if(isBestZ1 == 2){
       if(m2>12 && mH>100 && pt2>ptMax){
 	bestCand=i;
 	ptMax = pt2;
       }
     }
-    else if(isBestZ2 > isBestZ1){
+    else if(isBestZ2 == 2){
       if(m1>12 && mH>100 && pt1>ptMax){
 	bestCand=i;
 	ptMax = pt1;
       }
     }
-    else {
-      std::cout<<"ERROR BestCandProducer.h: no best Z chosen: bestZ1=bestZ2<<endl";
-      abort();
-    }
   }
+  
     
   for (unsigned int i=0 ; i<higgsColl->size() ; ++i ) {
 
