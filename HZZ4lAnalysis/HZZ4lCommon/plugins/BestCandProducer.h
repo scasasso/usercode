@@ -45,23 +45,35 @@ void BestCandProducer<higgstype>::produce(edm::Event & iEvent, const edm::EventS
   std::auto_ptr<std::vector<higgstype> > higgsColl( new std::vector<higgstype> (*higgscandidates) );
 
   unsigned int bestCand=999;
-  double mZ = 91.2;
-  double deltamZ = 1000000;
+  double ptMax = -999;
 
   for (unsigned int i=0 ; i<higgsColl->size() ; ++i ) {
-
-    higgstype & ahiggs = (*higgsColl)[i];
     
+    higgstype & ahiggs = (*higgsColl)[i];
+ 
+    double mH = ahiggs.mass();
     double m1 = ahiggs.leg1().mass();
     double m2 = ahiggs.leg2().mass();
+    double pt1 = ahiggs.leg1().pt();
+    double pt2 = ahiggs.leg2().pt();
+    float isBestZ1 = ahiggs.leg1().userFloat("bestZ");
+    float isBestZ2 = ahiggs.leg2().userFloat("bestZ");
     
-    if(fabs(m1 - mZ)<deltamZ){
-      deltamZ = fabs(m1 - mZ);
-      bestCand = i;
+    if(isBestZ1 > isBestZ2){
+      if(m2>12 && mH>100 && pt2>ptMax){
+	bestCand=i;
+	ptMax = pt2;
+      }
     }
-    if(fabs(m2 - mZ)<deltamZ){
-      deltamZ = fabs(m2 - mZ);
-      bestCand = i;
+    else if(isBestZ2 > isBestZ1){
+      if(m1>12 && mH>100 && pt1>ptMax){
+	bestCand=i;
+	ptMax = pt1;
+      }
+    }
+    else {
+      std::cout<<"ERROR BestCandProducer.h: no best Z chosen: bestZ1=bestZ2<<endl";
+      abort();
     }
   }
     
@@ -69,9 +81,9 @@ void BestCandProducer<higgstype>::produce(edm::Event & iEvent, const edm::EventS
 
     higgstype & ahiggs = (*higgsColl)[i];
     if(i==bestCand)
-      ahiggs.addUserFloat("best",1);
+      ahiggs.addUserFloat("bestH",1);
     else
-      ahiggs.addUserFloat("best",0);
+      ahiggs.addUserFloat("bestH",0);
   }
     // and put it into the event
      iEvent.put(higgsColl);
