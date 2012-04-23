@@ -24,6 +24,12 @@ cd HZZ4lAnalysis/HZZ4lCommon/prod
 cmsRun cmgTuple_cfg.py maxEvents=howmanyyouwant #where howmanyyouwant = 5000 should be fine for a simple test
 root -l HZZ4l_CMGTuple.root
 
+# Produce flat tree from the cmgTuple
+cd HZZ4lAnalysis/HZZ4lCommon/prod
+cmsRun dummytreemaker_cfg.py
+root -l HZZ4l_DummyTree.root
+#you can also use HZZ4lBaseClass.C to run on the tree and make histograms
+
 ############################################################################################
 ####Instructions to install the package in CMSSW_4_2_8_patch7 (obsolete, lost compatibility)
 ############################################################################################
