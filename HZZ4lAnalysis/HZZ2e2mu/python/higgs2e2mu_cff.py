@@ -12,16 +12,14 @@ cmgDiElectronDiMuonHiggs = cms.EDFilter(
     cuts = cms.PSet(  # inherited from source collection
     overlap = overlap.clone(),
     mass = mass.clone(),
+    isoOfllCouples = isoOfllCouples.clone(),
+    SIP4Leptons = SIP4Leptons.clone()
     )
     )
 
 cmgDiElectronDiMuonHiggsFlag = cms.EDProducer(
     "DiElectronDiMuonHiggsBestCandProducer",
     src = cms.InputTag("cmgDiElectronDiMuonHiggs"),
-    cuts = cms.PSet(
-    isoOfllCouples = isoOfllCouples.clone(),
-    SIP4Leptons = SIP4Leptons.clone()
-    )
     )
 
 cmgDiElectronDiMuonHiggsFlagLD = cms.EDProducer(
