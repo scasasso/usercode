@@ -47,9 +47,9 @@ isoOfllCouples = cms.PSet(
     )
 
 SIP4Leptons = cms.PSet(
-    SIP4Leptonscut = cms.string('leg1.leg1.userFloat("SIP3D") < 4. && '+
-                                'leg1.leg2.userFloat("SIP3D") < 4. && '+
-                                'leg2.leg1.userFloat("SIP3D") < 4. && '+
-                                'leg2.leg2.userFloat("SIP3D") < 4.'
+    SIP4Leptonscut = cms.string('leg1.leg1.sourcePtr().userFloat("SIP3D") < 4. && '+
+                                'leg1.leg2.sourcePtr().userFloat("SIP3D") < 4. && '+
+                                'leg2.leg1.sourcePtr().userFloat("SIP3D") < 4. && '+
+                                'leg2.leg2.sourcePtr().userFloat("SIP3D") < 4.'
                                 )
     )
