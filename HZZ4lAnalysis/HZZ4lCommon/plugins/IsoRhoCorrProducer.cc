@@ -89,7 +89,7 @@ void IsoRhoCorrProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
 
     float ecalIso = m.ecalIso();
     float hcalIso = m.hcalIso();
-    float trackIso = m.trackIso();
+    float trackIso = m.userIsolation(pat::User1Iso);
     float eta = m.eta();
     float IP = fabs(m.dB(pat::Muon::PV3D));
     float IPError = m.edB(pat::Muon::PV3D);
@@ -107,6 +107,7 @@ void IsoRhoCorrProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
 
     m.addUserFloat("RhoCorrIso",RhoCorrIso);
     m.addUserFloat("SIP3D",SIP3D);
+    m.addUserFloat("User1TkIso",trackIso);
   }
 
   //Loop over electrons
@@ -116,9 +117,9 @@ void IsoRhoCorrProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
     float RhoCorrIso = -1.; //the user float we want to add to pat::Electron
     float SIP3D = -1.; //the user float we want to add to pat::Electron
 
-    float ecalIso = e.ecalIso();
-    float hcalIso = e.hcalIso();
-    float trackIso = e.trackIso();
+    float ecalIso = e.dr03EcalRecHitSumEt();
+    float hcalIso = e.dr03HcalTowerSumEt();
+    float trackIso = e.userIsolation(pat::User1Iso);
     float IP = fabs(e.dB(pat::Electron::PV3D));
     float IPError = e.edB(pat::Electron::PV3D);
     SIP3D = IP/IPError;
@@ -138,6 +139,7 @@ void IsoRhoCorrProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
 
     e.addUserFloat("RhoCorrIso",RhoCorrIso);
     e.addUserFloat("SIP3D",SIP3D);
+    e.addUserFloat("User1TkIso",trackIso);
   }
 
   
