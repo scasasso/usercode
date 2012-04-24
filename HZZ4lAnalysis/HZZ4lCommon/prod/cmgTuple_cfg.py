@@ -30,16 +30,10 @@ options.register('maxEvents',-1,VarParsing.VarParsing.multiplicity.singleton,Var
 options.parseArguments()
 
 
-#Pick up the data files (ggHZZTo4l).
-#process.source = datasetToSource(
-#    "cmgtools",
-#    "/GluGluToHToZZTo4L_M-120_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM/V4/PAT_CMG_4_0_0",
-#    "tree_CMG_.*root"
-#   )
 
 process.source = cms.Source("PoolSource",
                             fileNames = cms.untracked.vstring(
-    '/store/cmst3/user/cmgtools/CMG/GluGluToHToZZTo4L_M-120_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM/V4/PAT_CMG_4_0_0/patTuple_PF2PAT_0.root'
+    '/store/cmst3/user/cmgtools/CMG/GluGluToHToZZTo4L_M-120_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM/V4/PAT_CMG_4_0_0/patTuple_PF2PAT_2.root'
     ))
 
 # One can limit the number of files to avoid some of the CASTOR
@@ -80,10 +74,33 @@ process.out.dropMetaData = cms.untracked.string("PRIOR")
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string("histograms_HZZ4l.root"))
 
+######Code for cleaning
+process.cleanPatElectrons = cms.EDProducer("PATElectronCleaner",
+    ## pat electron input source
+    src = cms.InputTag("selectedPatElectrons"), 
+    # preselection (any string-based cut for pat::Electron)
+    preselection = cms.string(''),
+    # overlap checking configurables
+    checkOverlaps = cms.PSet(
+        muons = cms.PSet(
+           src       = cms.InputTag("selectedPatMuons"),
+           algorithm = cms.string("byDeltaR"),
+           preselection        = cms.string("isGlobalMuon"),  # don't preselect the muons
+           deltaR              = cms.double(0.01),  
+           checkRecoComponents = cms.bool(False), # don't check if they share some AOD object ref
+           pairCut             = cms.string(""),
+           requireNoOverlaps   = cms.bool(True), # overlaps don't cause the electron to be discared
+        )
+    ),
+    # finalCut (any string-based cut for pat::Electron)
+    finalCut = cms.string(''),
+)
+
+
 # Add RhoCorrIso to pat::Muon and pat::Electron
 process.RhoCorrIsoSequence = cms.EDProducer("IsoRhoCorrProducer",
                                             muonSrc = cms.untracked.InputTag("selectedPatMuons"),
-                                            electronSrc = cms.untracked.InputTag("selectedPatElectrons"),
+                                            electronSrc = cms.untracked.InputTag("cleanPatElectrons"),
                                             rhoSrc = cms.untracked.InputTag("kt6PFJetsAK5","rho","PAT")
                                             )
 
@@ -107,6 +124,7 @@ if runOnMC:
     process.outpath += process.runInfoAccounting
 
 process.p = cms.Path(
+    process.cleanPatElectrons +
     process.RhoCorrIsoSequence +
     process.analysisSequence
     )
