@@ -12,7 +12,7 @@
 //
 // Original Author:  Stefano Casasso,,,
 //         Created:  Thu Mar 15 14:21:33 CET 2012
-// $Id: IsoRhoCorrProducer.cc,v 1.3 2012/04/22 20:52:59 scasasso Exp $
+// $Id: IsoRhoCorrProducer.cc,v 1.5 2012/04/24 15:16:05 scasasso Exp $
 //
 //
 
@@ -98,7 +98,7 @@ void IsoRhoCorrProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
     const float AreaEcal[2]    = {0.074, 0.045}; //   barrel/endcap
     const float AreaHcal[2]    = {0.022 , 0.030 }; //   barrel/endcap
     
-    Int_t ifid = (eta < 1.479) ? 0 : 1;
+    Int_t ifid = (fabs(eta) < 1.479) ? 0 : 1;
     
     ecalIso = ecalIso - AreaEcal[ifid]*rho;
     hcalIso = hcalIso - AreaHcal[ifid]*rho;
