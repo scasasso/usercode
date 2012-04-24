@@ -2,41 +2,45 @@ import FWCore.ParameterSet.Config as cms
 from selections.higgs4e_cfi import *
 from HZZ4lAnalysis.HZZ4lCommon.selections.quadriLepton_cfi import *
 
+
+cmgDiElectronDiElectronSel = cms.EDFilter(
+    "DiElectronDiElectronSelector",
+    src = cms.InputTag('cmgDiElectronDiElectron'),
+    cut = cms.string('getSelection(\"cuts_overlap\")')
+    )
+
 # Build cmg::DiElectronDiElectronHiggs candidates
 diElectronDiElectronHiggsFactory = cms.PSet(
-       inputs = cms.InputTag("cmgDiElectronDiElectron")
+       inputs = cms.InputTag("cmgDiElectronDiElectronSel")
 )
 
 cmgDiElectronDiElectronHiggs = cms.EDFilter(
     "DiElectronDiElectronHiggsPOProducer",
     cfg = diElectronDiElectronHiggsFactory.clone(),
-    cuts = cms.PSet(
+    cuts = cms.PSet(  # inherited from source collection
     overlap = overlap.clone(),
     mass = mass.clone(),
     massOfllCouples = massOfllCouples.clone()
     )
     )
 
-cmgDiElectronDiElectronHiggsSel = cms.EDFilter(
-    "DiElectronDiElectronHiggsSelector",
-    src = cms.InputTag('cmgDiElectronDiElectronHiggs'),
-    cut = cms.string('getSelection(\"cuts_overlap\")')
-    )
-
 cmgDiElectronDiElectronHiggsSelFlag = cms.EDProducer(
     "DiElectronDiElectronHiggsBestCandProducer",
-    src = cms.InputTag("cmgDiElectronDiElectronHiggsSel")
+    src = cms.InputTag("cmgDiElectronDiElectronHiggs"),
+    cuts = cms.PSet(
+    isoOfllCouples = isoOfllCouples.clone(),
+    SIP4Leptons = SIP4Leptons.clone()
+    )
     )
 
-
-# cmgDiElectronDiElectronHiggsLD = cms.EDProducer(
-#     "DiElectronDiElectronHiggsLDProducer",
-#     src = cms.InputTag("cmgDiElectronDiElectronHiggs")
-#     )
+cmgDiElectronDiElectronHiggsSelFlagLD = cms.EDProducer(
+     "DiElectronDiElectronHiggsLDProducer",
+     src = cms.InputTag("cmgDiElectronDiElectronHiggsSelFlag")
+     )
 
 PRLHiggs4e = cms.EDFilter(
     "DiElectronDiElectronHiggsSelector",
-    src = cms.InputTag('cmgDiElectronDiElectronHiggsSelFlag'),
+    src = cms.InputTag('cmgDiElectronDiElectronHiggsSelFlagLD'),
     cut = cms.string('userFloat("bestH_PRL")==1 && '+
                      'leg1.leg1.sourcePtr().userFloat("RhoCorrIso") + leg1.leg2.sourcePtr().userFloat("RhoCorrIso") < 0.35 && '+
                      'leg1.leg1.sourcePtr().userFloat("RhoCorrIso") + leg2.leg1.sourcePtr().userFloat("RhoCorrIso") < 0.35 && '+
@@ -56,9 +60,9 @@ PRLHiggs4e = cms.EDFilter(
 
 
 higgs4eSequence = (
+    cmgDiElectronDiElectronSel +
     cmgDiElectronDiElectronHiggs +
-    cmgDiElectronDiElectronHiggsSel +
     cmgDiElectronDiElectronHiggsSelFlag +
-#    cmgDiElectronDiElectronHiggsLD
+    cmgDiElectronDiElectronHiggsSelFlagLD +
     PRLHiggs4e
     )
