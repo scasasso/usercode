@@ -13,7 +13,7 @@
 //
 // Original Author:  Stefano Casasso,,,
 //         Created:  Tue Feb 28 14:33:03 CET 2012
-// $Id: HZZ4lNtupleMaker.cc,v 1.1 2012/04/20 12:44:02 pellicci Exp $
+// $Id: HZZ4lNtupleMaker.cc,v 1.2 2012/04/23 14:58:00 sbologne Exp $
 //
 //
 
@@ -41,6 +41,8 @@
 #include "HZZ4lAnalysis/DataFormats/interface/HiggsCandidate.h"
 
 #include "HZZ4lAnalysis/HZZ4lCommon/interface/HZZ4lNtupleFactory.h"
+
+using namespace std;
 //
 // class declaration
 //
@@ -90,19 +92,21 @@ HZZ4lNtupleMaker::~HZZ4lNtupleMaker()
 // ------------ method called for each event  ------------
 void HZZ4lNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
+  cout<<"New event"<<endl;
+  
   //Get Higgs Collections
 
   //4Mu
   edm::Handle<std::vector<cmg::DiMuonDiMuonHiggs> > higgsMuMuHandle;
-  iEvent.getByLabel(std::string("cmgDiMuonDiMuonHiggs"), higgsMuMuHandle);
+  iEvent.getByLabel(std::string("cmgDiMuonDiMuonHiggsSelFlag"), higgsMuMuHandle);
 
   //4E
   edm::Handle<std::vector<cmg::DiElectronDiElectronHiggs> > higgsEEHandle;
-  iEvent.getByLabel(std::string("cmgDiElectronDiElectronHiggs"), higgsEEHandle);
+  iEvent.getByLabel(std::string("cmgDiElectronDiElectronHiggsSelFlag"), higgsEEHandle);
 
   //2Mu2E
   edm::Handle<std::vector<cmg::DiElectronDiMuonHiggs> > higgsEMuHandle;
-  iEvent.getByLabel(std::string("cmgDiElectronDiMuonHiggs"), higgsEMuHandle);
+  iEvent.getByLabel(std::string("cmgDiElectronDiMuonHiggsFlag"), higgsEMuHandle);
 
 
   if (higgsMuMuHandle->size() == 0 && higgsEEHandle->size() == 0 && higgsEMuHandle->size() == 0) return;
@@ -111,17 +115,39 @@ void HZZ4lNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& 
   myTree->FillEventInfo(iEvent.id().run(), iEvent.id().event(), iEvent.luminosityBlock());
 
   for(std::vector<cmg::DiMuonDiMuonHiggs >::const_iterator higgs=higgsMuMuHandle->begin(); higgs!=higgsMuMuHandle->end(); ++higgs){
-    if(higgs->getSelection("cuts_overlap"))
-      FillCandidate(higgs, 0);
+    cout<<"4mu event"<<endl;
+    if(higgs->userFloat("bestH_PRL")==1 && 
+       ((higgs->leg1().getSelection("cuts_z1mumu") &&  higgs->leg1().userFloat("bestZ")>0 && higgs->leg2().getSelection("cuts_z2mumu")) ||
+	(higgs->leg2().getSelection("cuts_z1mumu") &&  higgs->leg2().userFloat("bestZ")>0 && higgs->leg1().getSelection("cuts_z2mumu")) )  &&
+       higgs->getSelection("cuts_massOfllCouples") && higgs->getSelection("cuts_mass") &&
+       higgs->getSelection("cuts_isoOfllCouples") && higgs->getSelection("cuts_SIP4Leptons") ){
+      cout<<"best PRL found"<<endl;
+     FillCandidate(higgs, 0);
+    }
   }
 
   for(std::vector<cmg::DiElectronDiElectronHiggs >::const_iterator higgs=higgsEEHandle->begin(); higgs!=higgsEEHandle->end(); ++higgs){
-    if(higgs->getSelection("cuts_overlap"))
-        FillCandidate(higgs, 1);
+   cout<<"4e event"<<endl;
+     if(higgs->userFloat("bestH_PRL")==1 && 
+       ((higgs->leg1().getSelection("cuts_z1ee") &&  higgs->leg1().userFloat("bestZ")>0 && higgs->leg2().getSelection("cuts_z2ee")) ||
+	(higgs->leg2().getSelection("cuts_z1ee") &&  higgs->leg2().userFloat("bestZ")>0 && higgs->leg1().getSelection("cuts_z2ee")) )  &&
+       higgs->getSelection("cuts_massOfllCouples") && higgs->getSelection("cuts_mass") &&
+       higgs->getSelection("cuts_isoOfllCouples") && higgs->getSelection("cuts_SIP4Leptons") ){
+       cout<<"best PRL found"<<endl;
+          FillCandidate(higgs, 1);
+    }
   }
 
   for(std::vector<cmg::DiElectronDiMuonHiggs >::const_iterator higgs=higgsEMuHandle->begin(); higgs!=higgsEMuHandle->end(); ++higgs){
-    FillCandidate(higgs, 2);
+     cout<<"2mu2e event"<<endl;
+    if(higgs->userFloat("bestH_PRL")==1 && 
+       ((higgs->leg1().getSelection("cuts_z1ee") &&  higgs->leg1().userFloat("bestZ")>0 && higgs->leg2().getSelection("cuts_z2mumu")) ||
+	(higgs->leg2().getSelection("cuts_z1mumu") &&  higgs->leg2().userFloat("bestZ")>0 && higgs->leg1().getSelection("cuts_z2ee")) )  &&
+        higgs->getSelection("cuts_mass") &&
+       higgs->getSelection("cuts_isoOfllCouples") && higgs->getSelection("cuts_SIP4Leptons") ){
+      cout<<"best PRL found"<<endl;
+      FillCandidate(higgs, 2);
+     }
   }
 
   myTree->FillEvent();
