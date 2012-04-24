@@ -22,8 +22,8 @@ public:
     srcMuMu_(iConfig.getParameter<edm::InputTag>("srcMuMu")),
     srcEleEle_(iConfig.getParameter<edm::InputTag>("srcEleEle"))
   {
-    produces<std::vector<cmg::DiObject<cmg::Muon, cmg::Muon> > >();
-    produces<std::vector<cmg::DiObject<cmg::Electron, cmg::Electron> > >();
+    produces<std::vector<cmg::DiObject<cmg::Muon, cmg::Muon> > >("cmgDiMuon");
+    produces<std::vector<cmg::DiObject<cmg::Electron, cmg::Electron> > >("cmgDiElectron");
  }
   
   virtual ~BestZProducer() {}
@@ -52,6 +52,8 @@ void BestZProducer::produce(edm::Event & iEvent, const edm::EventSetup & iSetup)
   for(unsigned int i=0 ; i<zmumuColl->size() ; ++i ){
     cmg::DiObject<cmg::Muon, cmg::Muon>  & zmumu = (*zmumuColl)[i];
 
+    if (! zmumu.getSelection("cuts_zCandplusID") ) continue;
+
     if(fabs(mZ - zmumu.mass())<deltamZmumu){
       deltamZmumu = fabs(mZ - zmumu.mass());
       bestZmumu=i;
@@ -69,6 +71,8 @@ void BestZProducer::produce(edm::Event & iEvent, const edm::EventSetup & iSetup)
  
   for(unsigned int i=0 ; i<zeleeleColl->size() ; ++i ){
     cmg::DiObject<cmg::Electron, cmg::Electron>  & zeleele = (*zeleeleColl)[i];
+
+    if (! zeleele.getSelection("cuts_zCandplusID") ) continue;
 
     if(fabs(mZ - zeleele.mass())<deltamZeleele){
       deltamZeleele = fabs(mZ - zeleele.mass());
@@ -111,8 +115,8 @@ void BestZProducer::produce(edm::Event & iEvent, const edm::EventSetup & iSetup)
  
  
     // and put it into the event
-     iEvent.put(zmumuColl);
-     iEvent.put(zeleeleColl);
+  iEvent.put(zmumuColl,"cmgDiMuon");
+  iEvent.put(zeleeleColl, "cmgDiElectron");
 }
 
 

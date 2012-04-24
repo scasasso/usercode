@@ -61,19 +61,28 @@ cmgEMu = cms.EDFilter(
     )
 
 
-# #Skim the mumu collection
-# MMCand = cms.EDFilter(
+# #Skim the mumu collection before bestZProducer
+# ZmmCand = cms.EDFilter(
 #     "CmgDiMuonSelector",
 #     src = cms.InputTag( "cmgDiMuon" ),
-#     cut = cms.string( "getSelection(\"cuts_llCand\")" )
+#     cut = cms.string( "getSelection(\"cuts_zCandplusID\")" )
 #     )
 
-# #Skim the ee collection
-# EECand = cms.EDFilter(
+# #Skim the ee collection before bestZProducer
+# ZeeCand = cms.EDFilter(
 #     "CmgDiElectronSelector",
 #     src = cms.InputTag( "cmgDiElectron" ),
-#     cut = cms.string( "getSelection(\"cuts_llCand\")" )
+#     cut = cms.string( "getSelection(\"cuts_zCandplusID\")" )
 #     )
+
+#Run BestZProducer
+ZCandFlag = cms.EDProducer(
+    "BestZProducer",
+    srcMuMu = cms.InputTag("cmgDiMuon"),
+    srcEleEle = cms.InputTag("cmgDiElectron"),
+    )
+
+
 
 # #Skim the emu collection
 # EMCand = cms.EDFilter(
@@ -127,7 +136,10 @@ cmgEMu = cms.EDFilter(
 diLeptonSequence = cms.Sequence(
     cmgDiMuon +
     cmgDiElectron +
-    cmgEMu 
+    cmgEMu +
+#     ZmmCand +
+#     ZeeCand +
+    ZCandFlag
     #     MMCand +
     #     EECand +
     #     EMCand +

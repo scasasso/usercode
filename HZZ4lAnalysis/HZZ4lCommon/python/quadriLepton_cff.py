@@ -12,7 +12,7 @@ from HZZ4lAnalysis.HZZ4lCommon.selections.quadriLepton_cfi import *
 
 # MMEM
 mmemFactory = diObjectFactory.clone(
-       leg1Collection = cms.InputTag("cmgDiMuon"),
+       leg1Collection = cms.InputTag("ZCandFlag","cmgDiMuon"),
        leg2Collection = cms.InputTag("cmgEMu"),
        metCollection = cms.InputTag("")
        )
@@ -29,7 +29,7 @@ cmgDiMuonEMu = cms.EDFilter(
 
 # EEEM
 eeemFactory = diObjectFactory.clone(
-       leg1Collection = cms.InputTag("cmgDiElectron"),
+       leg1Collection = cms.InputTag("ZCandFlag","cmgDiElectron"),
        leg2Collection = cms.InputTag("cmgEMu"),
        metCollection = cms.InputTag("")
        )
@@ -46,8 +46,8 @@ cmgDiElectronEMu = cms.EDFilter(
 
 # MMMM
 mmmmFactory = diObjectFactory.clone(
-       leg1Collection = cms.InputTag("cmgDiMuon"),
-       leg2Collection = cms.InputTag("cmgDiMuon"),
+       leg1Collection = cms.InputTag("ZCandFlag","cmgDiMuon"),
+       leg2Collection = cms.InputTag("ZCandFlag","cmgDiMuon"),
        metCollection = cms.InputTag("")
        )
 
@@ -63,8 +63,8 @@ cmgDiMuonDiMuon = cms.EDFilter(
 
 # EEEE
 eeeeFactory = diObjectFactory.clone(
-       leg1Collection = cms.InputTag("cmgDiElectron"),
-       leg2Collection = cms.InputTag("cmgDiElectron"),
+       leg1Collection = cms.InputTag("ZCandFlag","cmgDiElectron"),
+       leg2Collection = cms.InputTag("ZCandFlag","cmgDiElectron"),
        metCollection = cms.InputTag("")
        )
 
@@ -80,8 +80,8 @@ cmgDiElectronDiElectron = cms.EDFilter(
 
 # EEMM
 eemmFactory = diObjectFactory.clone(
-       leg1Collection = cms.InputTag("cmgDiElectron"),
-       leg2Collection = cms.InputTag("cmgDiMuon"),
+       leg1Collection = cms.InputTag("ZCandFlag","cmgDiElectron"),
+       leg2Collection = cms.InputTag("ZCandFlag","cmgDiMuon"),
        metCollection = cms.InputTag("")
        )
 

@@ -6,7 +6,7 @@ basePath = os.environ['CMSSW_BASE'] + '/src/CMGTools/Common/data/'
 
 from CMGTools.Common.factories.cmgLepton_cfi import leptonFactory
 electronFactory = cms.PSet(
-       inputCollection = cms.InputTag("RhoCorrIsoSequence"),
+       inputCollection = cms.InputTag("RhoCorrIsoSequence","patElectrons"),
        primaryVertexCollection = cms.InputTag("offlinePrimaryVerticesWithBS"),
        leptonFactory = leptonFactory.clone(),
        electronMVAFile = cms.string(basePath + "TMVA_BDTSimpleCat.weights.xml")

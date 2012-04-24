@@ -36,3 +36,20 @@ massOfllCouples = cms.PSet(
                           )
     )
 
+isoOfllCouples = cms.PSet(
+    isoOfllCouplescut = cms.string('leg1.leg1.sourcePtr().userFloat("RhoCorrIso") + leg1.leg2.sourcePtr().userFloat("RhoCorrIso") < 0.35 && '+
+                                   'leg1.leg1.sourcePtr().userFloat("RhoCorrIso") + leg2.leg1.sourcePtr().userFloat("RhoCorrIso") < 0.35 && '+
+                                   'leg1.leg1.sourcePtr().userFloat("RhoCorrIso") + leg2.leg2.sourcePtr().userFloat("RhoCorrIso") < 0.35 && '+
+                                   'leg1.leg2.sourcePtr().userFloat("RhoCorrIso") + leg2.leg1.sourcePtr().userFloat("RhoCorrIso") < 0.35 && '+
+                                   'leg1.leg2.sourcePtr().userFloat("RhoCorrIso") + leg2.leg2.sourcePtr().userFloat("RhoCorrIso") < 0.35 && '+
+                                   'leg2.leg1.sourcePtr().userFloat("RhoCorrIso") + leg2.leg2.sourcePtr().userFloat("RhoCorrIso") < 0.35'
+                                   )
+    )
+
+SIP4Leptons = cms.PSet(
+    SIP4Leptonscut = cms.string('leg1.leg1.userFloat("SIP3D") < 4. && '+
+                                'leg1.leg2.userFloat("SIP3D") < 4. && '+
+                                'leg2.leg1.userFloat("SIP3D") < 4. && '+
+                                'leg2.leg2.userFloat("SIP3D") < 4.'
+                                )
+    )

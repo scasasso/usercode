@@ -26,7 +26,7 @@ muonCandLoose = cms.PSet(
 
 #Loose electron candidates (soft electrons)
 electronCandLoose = cms.PSet(
-    pt = cms.string('pt() > 5')
+    pt = cms.string('pt() > 7')
     )
 
 
@@ -39,13 +39,17 @@ muonCandplusID = cms.PSet(
     isGlobalOrTracker = cms.string('isGlobal() || isTracker()'),
     pt = cms.string('pt() > 5'),
     isGlobal = cms.string('isGlobal()'),
-    numberOfValidHits = cms.string('isGlobal() && sourcePtr().numberOfValidHits() > 10') #need to get rid of the complaint of undefined ref to reco::Track. It's really the most safe choice to ask the muon to be Global?
+    numberOfValidHits = cms.string('isGlobal() && sourcePtr().numberOfValidHits() > 10'), #need to get rid of the complaint of undefined ref to reco::Track. It's really the most safe choice to ask the muon to be Global?
+    looseiso = cms.string('sourcePtr().trackIso()/pt() < 0.7'), #Remember to switch to UserIso ASAP
+    sipsanity = cms.string('sourcePtr().userFloat("SIP3D") < 100.')
     )
 
 electronCandplusID = cms.PSet(
-    pt = cms.string('pt() > 5'),
+    pt = cms.string('pt() > 7'),
     cicTight = cicTightID.clone(), #waiting to pass to MVA
-    numberOfHits = cms.string('sourcePtr().gsfTrack().trackerExpectedHitsInner().numberOfHits()<=1')
+    numberOfHits = cms.string('sourcePtr().gsfTrack().trackerExpectedHitsInner().numberOfHits()<=1'),
+    looseiso = cms.string('sourcePtr().trackIso()/pt() < 0.7'), #Remember to switch to UserIso ASAP
+    sipsanity = cms.string('sourcePtr().userFloat("SIP3D") < 100.')
     )
 
 
@@ -64,7 +68,7 @@ muonCandInvertedSIPplusID = cms.PSet(
     )
 
 electronCandInvertedSIPplusID = cms.PSet(
-    pt = cms.string('pt() > 5'),
+    pt = cms.string('pt() > 7'),
     cicTight = cicTightID.clone(), #waiting to pass to MVA
     numberOfHits = cms.string('sourcePtr().gsfTrack().trackerExpectedHitsInner().numberOfHits()<=1'),
     sip = cms.string('sourcePtr().userFloat("SIP3D") > 5.')
@@ -81,7 +85,7 @@ muonCandplusSIP = cms.PSet(
     )
 
 electronCandplusSIP = cms.PSet(
-    pt = cms.string('pt() > 5'),
+    pt = cms.string('pt() > 7'),
     sip = cms.string('sourcePtr().userFloat("SIP3D") < 4.')
     )
 

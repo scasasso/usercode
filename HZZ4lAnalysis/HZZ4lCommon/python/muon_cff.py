@@ -4,7 +4,7 @@ import FWCore.ParameterSet.Config as cms
 # Build cmg::Muon object
 from CMGTools.Common.factories.cmgLepton_cfi import leptonFactory
 muonFactory = cms.PSet(
-       inputCollection = cms.InputTag("RhoCorrIsoSequence"),
+       inputCollection = cms.InputTag("RhoCorrIsoSequence","patMuons"),
        trackType = cms.int32(0),#use the global track,
        muonIDType = cms.string("All"),#the flag for muonID
        leptonFactory = leptonFactory.clone()

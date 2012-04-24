@@ -12,7 +12,7 @@
 //
 // Original Author:  Stefano Casasso,,,
 //         Created:  Thu Mar 15 14:21:33 CET 2012
-// $Id: IsoRhoCorrProducer.cc,v 1.2 2012/03/20 14:35:06 scasasso Exp $
+// $Id: IsoRhoCorrProducer.cc,v 1.3 2012/04/22 20:52:59 scasasso Exp $
 //
 //
 
@@ -61,8 +61,8 @@ IsoRhoCorrProducer::IsoRhoCorrProducer(const edm::ParameterSet& iConfig):
   electronSrc_(iConfig.getUntrackedParameter<edm::InputTag>("electronSrc")),
   rhoSrc_(iConfig.getUntrackedParameter<edm::InputTag>("rhoSrc"))
 {
-  produces<std::vector<pat::Muon> >();
-  produces<std::vector<pat::Electron> >();
+  produces<std::vector<pat::Muon> >("patMuons");
+  produces<std::vector<pat::Electron> >("patElectrons");
 }
 
 void IsoRhoCorrProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
@@ -141,12 +141,14 @@ void IsoRhoCorrProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
   }
 
   
-  iEvent.put( muonColl);
-  iEvent.put( electronColl);
+  iEvent.put( muonColl, "patMuons");
+  iEvent.put( electronColl, "patElectrons");
   
 }
 
 IsoRhoCorrProducer::~IsoRhoCorrProducer() { }
+
+
 void IsoRhoCorrProducer::beginJob() { }
 void IsoRhoCorrProducer::endJob() { } 
 DEFINE_FWK_MODULE(IsoRhoCorrProducer);

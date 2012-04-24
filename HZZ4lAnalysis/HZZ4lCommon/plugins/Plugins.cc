@@ -21,6 +21,14 @@ DEFINE_FWK_MODULE(DiElectronDiElectronHiggsLDProducer);
 DEFINE_FWK_MODULE(DiElectronDiMuonHiggsLDProducer);
 DEFINE_FWK_MODULE(DiMuonDiMuonHiggsLDProducer);
 
+typedef BestCandProducer<cmg::DiElectronDiElectronHiggs> DiElectronDiElectronHiggsBestCandProducer;
+typedef BestCandProducer<cmg::DiElectronDiMuonHiggs> DiElectronDiMuonHiggsBestCandProducer;
+typedef BestCandProducer<cmg::DiMuonDiMuonHiggs> DiMuonDiMuonHiggsBestCandProducer;
+DEFINE_FWK_MODULE(DiElectronDiElectronHiggsBestCandProducer);
+DEFINE_FWK_MODULE(DiElectronDiMuonHiggsBestCandProducer);
+DEFINE_FWK_MODULE(DiMuonDiMuonHiggsBestCandProducer);
+
+
 typedef ObjectSelector<cmg::GenericPhysicsObjectSelectorDefinition<cmg::DiElectronDiElectron> > DiElectronDiElectronSelector;
 typedef ObjectSelector<cmg::GenericPhysicsObjectSelectorDefinition<cmg::DiMuonDiMuon> > DiMuonDiMuonSelector;
 typedef ObjectSelector<cmg::GenericPhysicsObjectSelectorDefinition<cmg::DiElectronDiMuon> > DiElectronDiMuonSelector;
@@ -38,5 +46,7 @@ typedef ObjectSelector<cmg::GenericPhysicsObjectSelectorDefinition<cmg::DiElectr
 DEFINE_FWK_MODULE(DiElectronDiElectronHiggsSelector);
 DEFINE_FWK_MODULE(DiMuonDiMuonHiggsSelector);
 DEFINE_FWK_MODULE(DiElectronDiMuonHiggsSelector);
+
+
 
 DEFINE_FWK_MODULE(BestZProducer);
