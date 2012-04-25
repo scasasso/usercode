@@ -36,12 +36,13 @@ electronCandLoose = cms.PSet(
 
 #Adding ID
 muonCandplusID = cms.PSet(
-    isGlobalOrTracker = cms.string('isGlobal() || isTracker()'),
+    #isGlobalOrTracker = cms.string('isGlobal() || isTracker()'),
     pt = cms.string('pt() > 5'),
     isGlobal = cms.string('isGlobal()'),
     numberOfValidHits = cms.string('isGlobal() && sourcePtr().numberOfValidHits() > 10'), #need to get rid of the complaint of undefined ref to reco::Track. It's really the most safe choice to ask the muon to be Global?
     looseiso = cms.string('sourcePtr().userFloat("User1TkIso")/pt() < 0.7'), #Remember to switch to UserIso ASAP
-    sipsanity = cms.string('sourcePtr().userFloat("SIP3D") < 100.')
+    sipsanity = cms.string('sourcePtr().userFloat("SIP3D") < 100.'),
+    eta = cms.string('abs(eta()) < 2.4')
     )
 
 electronCandplusID = cms.PSet(
@@ -49,7 +50,8 @@ electronCandplusID = cms.PSet(
     cicTight = cicTightID.clone(), #waiting to pass to MVA
     numberOfHits = cms.string('sourcePtr().gsfTrack().trackerExpectedHitsInner().numberOfHits()<=1'),
     looseiso = cms.string('sourcePtr().userFloat("User1TkIso")/pt() < 0.7'), #Remember to switch to UserIso ASAP
-    sipsanity = cms.string('sourcePtr().userFloat("SIP3D") < 100.')
+    sipsanity = cms.string('sourcePtr().userFloat("SIP3D") < 100.'),
+    eta = cms.string('abs(eta()) < 2.5')
     )
 
 
