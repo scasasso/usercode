@@ -52,7 +52,7 @@ void BestCandProducer<higgstype>::produce(edm::Event & iEvent, const edm::EventS
     
     higgstype & ahiggs = (*higgsColl)[i];
 
-    if ( !( ahiggs.getSelection("cuts_massOfllCouples") && ahiggs.getSelection("cuts_mass") && ahiggs.leg1().getSelection("cuts_zCandplusID") && ahiggs.leg2().getSelection("cuts_zCandplusID") ) ) continue;
+    if ( !( ahiggs.getSelection("cuts_mass") && ahiggs.leg1().getSelection("cuts_zCandplusID") && ahiggs.leg2().getSelection("cuts_zCandplusID") ) ) continue;
  
     double mH = ahiggs.mass();
     double m1 = ahiggs.leg1().mass();
