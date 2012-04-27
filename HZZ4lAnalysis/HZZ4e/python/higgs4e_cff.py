@@ -39,7 +39,7 @@ cmgDiElectronDiElectronHiggsSelFlagLD = cms.EDProducer(
 PRLHiggs4e = cms.EDFilter(
     "DiElectronDiElectronHiggsSelector",
     src = cms.InputTag('cmgDiElectronDiElectronHiggsSelFlagLD'),
-    cut = cms.string('userFloat("bestH_PRL")==1 && '+
+    cut = cms.string('getSelection(\"cuts_massOfllCouples\") && userFloat("bestH_PRL")==1 && '+
                      'leg1.leg1.sourcePtr().userFloat("RhoCorrIso") + leg1.leg2.sourcePtr().userFloat("RhoCorrIso") < 0.35 && '+
                      'leg1.leg1.sourcePtr().userFloat("RhoCorrIso") + leg2.leg1.sourcePtr().userFloat("RhoCorrIso") < 0.35 && '+
                      'leg1.leg1.sourcePtr().userFloat("RhoCorrIso") + leg2.leg2.sourcePtr().userFloat("RhoCorrIso") < 0.35 && '+
