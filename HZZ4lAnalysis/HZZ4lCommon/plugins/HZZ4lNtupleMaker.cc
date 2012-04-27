@@ -13,7 +13,7 @@
 //
 // Original Author:  Stefano Casasso,,,
 //         Created:  Tue Feb 28 14:33:03 CET 2012
-// $Id: HZZ4lNtupleMaker.cc,v 1.2 2012/04/23 14:58:00 sbologne Exp $
+// $Id: HZZ4lNtupleMaker.cc,v 1.3 2012/04/24 16:16:36 sbologne Exp $
 //
 //
 
@@ -148,6 +148,13 @@ void HZZ4lNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& 
       cout<<"best PRL found"<<endl;
       FillCandidate(higgs, 2);
      }
+  }
+
+  edm::Handle<std::vector<reco::PFCandidate> > pfCandidates;
+  iEvent.getByLabel(std::string("particleFlow"), pfCandidates);
+  for(std::vector<reco::PFCandidate >::const_iterator pfCand=pfCandidates->begin(); pfCand!=pfCandidates->end(); ++pfCand){
+    if(pfCand->particleId() == 4)
+      cout<<"pfPhoton"<<endl;
   }
 
   myTree->FillEvent();
