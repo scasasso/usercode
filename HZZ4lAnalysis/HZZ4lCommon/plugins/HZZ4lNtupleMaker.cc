@@ -13,7 +13,7 @@
 //
 // Original Author:  Stefano Casasso,,,
 //         Created:  Tue Feb 28 14:33:03 CET 2012
-// $Id: HZZ4lNtupleMaker.cc,v 1.3 2012/04/24 16:16:36 sbologne Exp $
+// $Id: HZZ4lNtupleMaker.cc,v 1.4 2012/04/27 08:53:32 scasasso Exp $
 //
 //
 
@@ -58,6 +58,7 @@ private:
   virtual void beginJob() ;
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
   template <class higgstype> void FillCandidate(higgstype higgs, const Int_t Htype);
+  template <class higgstype> Int_t SelectBestCand(higgstype higgs, const Int_t Htype);
   virtual void endJob() ;
   
   virtual void beginRun(edm::Run const&, edm::EventSetup const&);
@@ -116,46 +117,27 @@ void HZZ4lNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& 
 
   for(std::vector<cmg::DiMuonDiMuonHiggs >::const_iterator higgs=higgsMuMuHandle->begin(); higgs!=higgsMuMuHandle->end(); ++higgs){
     cout<<"4mu event"<<endl;
-    if(higgs->userFloat("bestH_PRL")==1 && 
-       ((higgs->leg1().getSelection("cuts_z1mumu") &&  higgs->leg1().userFloat("bestZ")>0 && higgs->leg2().getSelection("cuts_z2mumu")) ||
-	(higgs->leg2().getSelection("cuts_z1mumu") &&  higgs->leg2().userFloat("bestZ")>0 && higgs->leg1().getSelection("cuts_z2mumu")) )  &&
-       higgs->getSelection("cuts_massOfllCouples") && higgs->getSelection("cuts_mass") &&
-       higgs->getSelection("cuts_isoOfllCouples") && higgs->getSelection("cuts_SIP4Leptons") ){
-      cout<<"best PRL found"<<endl;
-     FillCandidate(higgs, 0);
-    }
+    FillCandidate(higgs, 0);
   }
 
   for(std::vector<cmg::DiElectronDiElectronHiggs >::const_iterator higgs=higgsEEHandle->begin(); higgs!=higgsEEHandle->end(); ++higgs){
-   cout<<"4e event"<<endl;
-     if(higgs->userFloat("bestH_PRL")==1 && 
-       ((higgs->leg1().getSelection("cuts_z1ee") &&  higgs->leg1().userFloat("bestZ")>0 && higgs->leg2().getSelection("cuts_z2ee")) ||
-	(higgs->leg2().getSelection("cuts_z1ee") &&  higgs->leg2().userFloat("bestZ")>0 && higgs->leg1().getSelection("cuts_z2ee")) )  &&
-       higgs->getSelection("cuts_massOfllCouples") && higgs->getSelection("cuts_mass") &&
-       higgs->getSelection("cuts_isoOfllCouples") && higgs->getSelection("cuts_SIP4Leptons") ){
-       cout<<"best PRL found"<<endl;
-          FillCandidate(higgs, 1);
-    }
+    cout<<"4e event"<<endl;
+    FillCandidate(higgs, 1);
   }
 
   for(std::vector<cmg::DiElectronDiMuonHiggs >::const_iterator higgs=higgsEMuHandle->begin(); higgs!=higgsEMuHandle->end(); ++higgs){
-     cout<<"2mu2e event"<<endl;
-    if(higgs->userFloat("bestH_PRL")==1 && 
-       ((higgs->leg1().getSelection("cuts_z1ee") &&  higgs->leg1().userFloat("bestZ")>0 && higgs->leg2().getSelection("cuts_z2mumu")) ||
-	(higgs->leg2().getSelection("cuts_z1mumu") &&  higgs->leg2().userFloat("bestZ")>0 && higgs->leg1().getSelection("cuts_z2ee")) )  &&
-        higgs->getSelection("cuts_mass") &&
-       higgs->getSelection("cuts_isoOfllCouples") && higgs->getSelection("cuts_SIP4Leptons") ){
-      cout<<"best PRL found"<<endl;
-      FillCandidate(higgs, 2);
-     }
+    cout<<"2mu2e event"<<endl;
+    FillCandidate(higgs, 2);
   }
 
+  /*
   edm::Handle<std::vector<reco::PFCandidate> > pfCandidates;
   iEvent.getByLabel(std::string("particleFlow"), pfCandidates);
   for(std::vector<reco::PFCandidate >::const_iterator pfCand=pfCandidates->begin(); pfCand!=pfCandidates->end(); ++pfCand){
     if(pfCand->particleId() == 4)
       cout<<"pfPhoton"<<endl;
   }
+  */
 
   myTree->FillEvent();
 
@@ -174,11 +156,11 @@ void HZZ4lNtupleMaker::FillCandidate(higgstype higgs, const Int_t Htype)
   //Fill the info on the Higgs candidate
   const Double_t ZZMass = higgs->mass();
   const Double_t ZZMassErr = 0.;   //FIXME higgs->massErr();
-  const Double_t ZZisBestCand = false; //FIXME
+  const Int_t    ZZisBestCand = SelectBestCand(higgs, Htype); //FIXME
   const Double_t ZZPt = higgs->pt();
   const Double_t ZZEta = higgs->eta();
   const Double_t ZZPhi = higgs->phi();
-  const Double_t ZZLD = 1;//higgs->userFloat("LD"); waiting for final implementation of the Higgs candidates
+  const Double_t ZZLD = higgs->userFloat("LD");
 
   //convention: 0 -> 4mu   1 -> 4e   2 -> 2mu2e
   const Int_t HiggsType = Htype;
@@ -273,7 +255,37 @@ void HZZ4lNtupleMaker::FillCandidate(higgstype higgs, const Int_t Htype)
   return;
 }
 
+template <class higgstype>
+Int_t HZZ4lNtupleMaker::SelectBestCand(higgstype higgs, const Int_t Htype)
+{
+  Int_t isBestCommon = 0;
+  Int_t isBestChannel = 0;
 
+  if(higgs->userFloat("bestH_PRL") == 1 && higgs->getSelection("cuts_mass") && higgs->getSelection("cuts_isoOfllCouples")
+     && higgs->getSelection("cuts_SIP4Leptons")) isBestCommon = 1;
+
+  if( (Htype == 0 || Htype == 1) && !(higgs->getSelection("cuts_massOfllCouples")) ) isBestCommon = 0;
+
+  switch(Htype){
+
+  case 0:
+    if( (higgs->leg1().getSelection("cuts_z1mumu") &&  higgs->leg1().userFloat("bestZ")>0 && higgs->leg2().getSelection("cuts_z2mumu")) ||
+	(higgs->leg2().getSelection("cuts_z1mumu") &&  higgs->leg2().userFloat("bestZ")>0 && higgs->leg1().getSelection("cuts_z2mumu")) ) isBestChannel = 1;
+    break;
+
+  case 1:
+    if( (higgs->leg1().getSelection("cuts_z1ee") &&  higgs->leg1().userFloat("bestZ")>0 && higgs->leg2().getSelection("cuts_z2ee")) ||
+	(higgs->leg2().getSelection("cuts_z1ee") &&  higgs->leg2().userFloat("bestZ")>0 && higgs->leg1().getSelection("cuts_z2ee")) ) isBestChannel = 1;
+    break;
+
+  case 2:
+    if( ((higgs->leg1().getSelection("cuts_z1ee") &&  higgs->leg1().userFloat("bestZ")>0 && higgs->leg2().getSelection("cuts_z2mumu")) ||
+	 (higgs->leg2().getSelection("cuts_z1mumu") &&  higgs->leg2().userFloat("bestZ")>0 && higgs->leg1().getSelection("cuts_z2ee")) ) ) isBestChannel = 1;
+    break;
+  }
+
+  return (isBestCommon * isBestChannel);
+}
 
 // ------------ method called once each job just before starting event loop  ------------
 void HZZ4lNtupleMaker::beginJob()
