@@ -1,13 +1,13 @@
 
 //
-// $Id: MuScleFitMuonCorrector.cc,v 1.6 2013/01/31 11:08:08 namapane Exp $
+// $Id: MuScleFitMuonCorrector.cc,v 1.1 2013/04/05 14:18:33 scasasso Exp $
 //
 
 /**
   \class    modules::MuScleFitMuonCorrectorT MuScleFitMuonCorrectorT.h 
   \brief    Applies MuScleFit corrections to muons            
   \author   Giovanni Petrucciani (modified by Stefano Casasso)
-  \version  $Id: MuScleFitMuonCorrector.cc,v 1.6 2013/01/31 11:08:08 namapane Exp $
+  \version  $Id: MuScleFitMuonCorrector.cc,v 1.1 2013/04/05 14:18:33 scasasso Exp $
 */
 
 
@@ -19,7 +19,7 @@
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
 
-#include "ZZAnalysis/AnalysisStep/interface/MuScleFitCorrector.h"
+#include "MuScleFit/Calibration/interface/MuScleFitCorrector.h"
 
 namespace modules {
 
