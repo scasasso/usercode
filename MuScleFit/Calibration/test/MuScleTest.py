@@ -15,9 +15,8 @@ process.source = cms.Source("PoolSource",
 
 process.MuScleFit = cms.EDProducer("MuScleFitPATMuonCorrector",
                                    src = cms.InputTag("patMuonsWithTrigger"),
-                                   is2012 = cms.bool(True),
-                                   isMC = cms.bool(IsMC),
                                    debug = cms.bool(True),
+                                   identifier = cms.string("Summer12_DR53X"),
                                    applySmearing = cms.bool(True),
                                    fakeSmearing = cms.bool(False),
     )
