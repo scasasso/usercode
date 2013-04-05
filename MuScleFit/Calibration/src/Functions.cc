@@ -1,4 +1,4 @@
-#include <ZZAnalysis/AnalysisStep/interface/Functions.h>
+#include <MuScleFit/Calibration/interface/Functions.h>
 
 // Service to build the scale functor corresponding to the passed identifier                                                                               
 scaleFunctionBase<double * > * scaleFunctionService( const int identifier ){
