@@ -1,13 +1,13 @@
 
 //
-// $Id: MuScleFitMuonCorrector.cc,v 1.2 2013/04/05 14:45:09 scasasso Exp $
+// $Id: MuScleFitMuonCorrector.cc,v 1.3 2013/04/05 16:07:50 scasasso Exp $
 //
 
 /**
   \class    modules::MuScleFitMuonCorrectorT MuScleFitMuonCorrectorT.h 
   \brief    Applies MuScleFit corrections to muons            
   \author   Giovanni Petrucciani (modified by Stefano Casasso)
-  \version  $Id: MuScleFitMuonCorrector.cc,v 1.2 2013/04/05 14:45:09 scasasso Exp $
+  \version  $Id: MuScleFitMuonCorrector.cc,v 1.3 2013/04/05 16:07:50 scasasso Exp $
 */
 
 
@@ -55,8 +55,6 @@ modules::MuScleFitMuonCorrectorT<T>::MuScleFitMuonCorrectorT(const edm::Paramete
   applySmearing_(iConfig.getParameter<bool>("applySmearing")),
   fakeSmearing_(iConfig.getParameter<bool>("fakeSmearing"))
 {
-
-
 
   TString fileName = "";
   if (identifier_=="Summer12_DR53X"){ // MC 2012
