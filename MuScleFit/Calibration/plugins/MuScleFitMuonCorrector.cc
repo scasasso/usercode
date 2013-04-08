@@ -1,13 +1,13 @@
 
 //
-// $Id: MuScleFitMuonCorrector.cc,v 1.3 2013/04/05 16:07:50 scasasso Exp $
+// $Id: MuScleFitMuonCorrector.cc,v 1.4 2013/04/05 16:11:35 scasasso Exp $
 //
 
 /**
   \class    modules::MuScleFitMuonCorrectorT MuScleFitMuonCorrectorT.h 
   \brief    Applies MuScleFit corrections to muons            
   \author   Giovanni Petrucciani (modified by Stefano Casasso)
-  \version  $Id: MuScleFitMuonCorrector.cc,v 1.3 2013/04/05 16:07:50 scasasso Exp $
+  \version  $Id: MuScleFitMuonCorrector.cc,v 1.4 2013/04/05 16:11:35 scasasso Exp $
 */
 
 
@@ -74,6 +74,12 @@ modules::MuScleFitMuonCorrectorT<T>::MuScleFitMuonCorrectorT(const edm::Paramete
   }
   else if (identifier_=="Data2011_44X"){ // DATA 2011 (44X)
     fileName.Append("MuScleFit/Calibration/data/MuScleFit_2011_DATA_42X.txt");
+  }
+  else {
+    std::cout<<"%MuScleFitCorrector% wrong identifier, choose among:"<<std::endl;
+    std::cout<<"  data: 'Data2012_53X', 'Data2011_42X', 'Data2011_44X'"<<std::endl;
+    std::cout<<"   MC : 'Summer12_DR53X', 'Fall11_START44', 'Fall11_START42'"<<std::endl;
+    exit(0);
   }
 
   edm::FileInPath fileWithFullPath(fileName.Data());
