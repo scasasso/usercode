@@ -1,13 +1,13 @@
 
 //
-// $Id: MuScleFitMuonCorrector.cc,v 1.5 2013/04/08 17:08:11 scasasso Exp $
+// $Id: MuScleFitMuonCorrector.cc,v 1.6 2013/04/10 08:10:02 scasasso Exp $
 //
 
 /**
   \class    modules::MuScleFitMuonCorrectorT MuScleFitMuonCorrectorT.h 
   \brief    Applies MuScleFit corrections to muons            
   \author   Giovanni Petrucciani (modified by Stefano Casasso)
-  \version  $Id: MuScleFitMuonCorrector.cc,v 1.5 2013/04/08 17:08:11 scasasso Exp $
+  \version  $Id: MuScleFitMuonCorrector.cc,v 1.6 2013/04/10 08:10:02 scasasso Exp $
 */
 
 
@@ -134,7 +134,7 @@ modules::MuScleFitMuonCorrectorT<T>::produce(edm::Event & iEvent, const edm::Eve
        }
      }
 
-     if (debug_) cout<<endl<<endl;
+     if (debug_ && event%100==0) cout<<endl;
      
      
      math::XYZTLorentzVector newP4(p4->Px(),p4->Py(),p4->Pz(),p4->Energy());
