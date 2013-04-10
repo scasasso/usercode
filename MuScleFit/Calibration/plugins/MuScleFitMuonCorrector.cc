@@ -1,13 +1,13 @@
 
 //
-// $Id: MuScleFitMuonCorrector.cc,v 1.4 2013/04/05 16:11:35 scasasso Exp $
+// $Id: MuScleFitMuonCorrector.cc,v 1.5 2013/04/08 17:08:11 scasasso Exp $
 //
 
 /**
   \class    modules::MuScleFitMuonCorrectorT MuScleFitMuonCorrectorT.h 
   \brief    Applies MuScleFit corrections to muons            
   \author   Giovanni Petrucciani (modified by Stefano Casasso)
-  \version  $Id: MuScleFitMuonCorrector.cc,v 1.4 2013/04/05 16:11:35 scasasso Exp $
+  \version  $Id: MuScleFitMuonCorrector.cc,v 1.5 2013/04/08 17:08:11 scasasso Exp $
 */
 
 
@@ -79,7 +79,7 @@ modules::MuScleFitMuonCorrectorT<T>::MuScleFitMuonCorrectorT(const edm::Paramete
     std::cout<<"%MuScleFitCorrector% wrong identifier, choose among:"<<std::endl;
     std::cout<<"  data: 'Data2012_53X', 'Data2011_42X', 'Data2011_44X'"<<std::endl;
     std::cout<<"   MC : 'Summer12_DR53X', 'Fall11_START44', 'Fall11_START42'"<<std::endl;
-    exit(0);
+    exit(1);
   }
 
   edm::FileInPath fileWithFullPath(fileName.Data());
@@ -112,8 +112,8 @@ modules::MuScleFitMuonCorrectorT<T>::produce(edm::Event & iEvent, const edm::Eve
     
     
     if(debug_ && event%100==0) {
-      cout<<"### RAW MOMENTA ###"<<endl;
-      cout<<"   Muon: "<<"px = "<<p4->Px()<<", py = "<<p4->Py()<<", pz = "<<p4->Pz()<<", pT = "<<p4->Pt()<<endl;
+      cout<<"-- MuScleFitCorrector, debug mode --"<<endl;
+      cout<<"   Muon pT (RAW) =        "<<p4->Pt()<<endl;
     }
     
     corrector_->applyPtCorrection(*p4,chg);
@@ -121,8 +121,7 @@ modules::MuScleFitMuonCorrectorT<T>::produce(edm::Event & iEvent, const edm::Eve
     
     
     if(debug_ && event%100==0) {
-      cout<<"### CORRECTED MOMENTA ###"<<endl;
-      cout<<"   Muon: "<<"px = "<<p4->Px()<<", py = "<<p4->Py()<<", pz = "<<p4->Pz()<<", pT = "<<p4->Pt()<<endl;
+      cout<<"   Muon pT (CORR) =       "<<p4->Pt()<<endl;
     }
     
     
@@ -131,10 +130,11 @@ modules::MuScleFitMuonCorrectorT<T>::produce(edm::Event & iEvent, const edm::Eve
        corrector_->applyPtSmearing(*p4,chg,fakeSmearing_);
        
        if(debug_ && event%100==0) {
-	 cout<<"### SMEARED MOMENTA ###"<<endl;
-	 cout<<"   Muon: "<<"px = "<<p4->Px()<<", py = "<<p4->Py()<<", pz = "<<p4->Pz()<<", pT = "<<p4->Pt()<<endl;
+	 cout<<"   Muon pT (CORR+SMEAR) = "<<p4->Pt()<<endl;
        }
      }
+
+     if (debug_) cout<<endl<<endl;
      
      
      math::XYZTLorentzVector newP4(p4->Px(),p4->Py(),p4->Pz(),p4->Energy());

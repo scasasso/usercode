@@ -194,9 +194,9 @@ void readParameters(const TString& fileName){
       resolutionFunctionId_ = resolutionFunctionNum;
       resolutionFunction_ = resolutionFunctionService(resolutionFunctionNum);
 
-      std::cout<<"Function IDs: "<<std::endl;
-      std::cout<<"     scale function number "<<scaleFunctionId_<<std::endl;
-      std::cout<<"     resolution function number "<<resolutionFunctionId_<<std::endl;
+/*       std::cout<<"Function IDs: "<<std::endl; */
+/*       std::cout<<"     scale function number "<<scaleFunctionId_<<std::endl; */
+/*       std::cout<<"     resolution function number "<<resolutionFunctionId_<<std::endl; */
 
   }
         
