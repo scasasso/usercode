@@ -1,13 +1,13 @@
 
 //
-// $Id: MuScleFitMuonCorrector.cc,v 1.6 2013/04/10 08:10:02 scasasso Exp $
+// $Id: MuScleFitMuonCorrector.cc,v 1.7 2013/04/10 08:24:09 scasasso Exp $
 //
 
 /**
   \class    modules::MuScleFitMuonCorrectorT MuScleFitMuonCorrectorT.h 
   \brief    Applies MuScleFit corrections to muons            
   \author   Giovanni Petrucciani (modified by Stefano Casasso)
-  \version  $Id: MuScleFitMuonCorrector.cc,v 1.6 2013/04/10 08:10:02 scasasso Exp $
+  \version  $Id: MuScleFitMuonCorrector.cc,v 1.7 2013/04/10 08:24:09 scasasso Exp $
 */
 
 
@@ -42,6 +42,7 @@ namespace modules {
 
       // MuScleFit corrector
       MuScleFitCorrector* corrector_;
+      MuScleFitCorrector* corrector2012D_;
   };
 
 } // namespace
@@ -57,11 +58,13 @@ modules::MuScleFitMuonCorrectorT<T>::MuScleFitMuonCorrectorT(const edm::Paramete
 {
 
   TString fileName = "";
+  TString fileName2012D = "MuScleFit/Calibration/data/MuScleFit_2012D_DATA_53X.txt";
+
   if (identifier_=="Summer12_DR53X"){ // MC 2012
     fileName.Append("MuScleFit/Calibration/data/MuScleFit_2012_MC_53X.txt");
   }
   else if (identifier_=="Data2012_53X"){ // DATA 2012
-    fileName.Append("MuScleFit/Calibration/data/MuScleFit_2012_DATA_53X.txt");
+    fileName.Append("MuScleFit/Calibration/data/MuScleFit_2012ABC_DATA_53X.txt");
   }
   else if (identifier_=="Fall11_START42"){ // MC 2011 (42X)
     fileName.Append("MuScleFit/Calibration/data/MuScleFit_2011_MC_42X.txt");
@@ -84,6 +87,11 @@ modules::MuScleFitMuonCorrectorT<T>::MuScleFitMuonCorrectorT(const edm::Paramete
 
   edm::FileInPath fileWithFullPath(fileName.Data());
   corrector_ = new MuScleFitCorrector(fileWithFullPath.fullPath());
+
+  if (identifier_=="Data2012_53X"){
+    edm::FileInPath file2012DWithFullPath(fileName2012D.Data());
+    corrector2012D_ = new MuScleFitCorrector(file2012DWithFullPath.fullPath());
+  }
   
   produces<std::vector<T> >(); 
 }
@@ -104,6 +112,7 @@ modules::MuScleFitMuonCorrectorT<T>::produce(edm::Event & iEvent, const edm::Eve
   out->reserve(nsrc);
   
   unsigned int event = (unsigned int)iEvent.id().event(); 
+  unsigned int run = (unsigned int)iEvent.id().run(); 
   
   for (unsigned int i = 0; i < nsrc; ++i) {
     T mu = (*src)[i];
@@ -115,9 +124,14 @@ modules::MuScleFitMuonCorrectorT<T>::produce(edm::Event & iEvent, const edm::Eve
       cout<<"-- MuScleFitCorrector, debug mode --"<<endl;
       cout<<"   Muon pT (RAW) =        "<<p4->Pt()<<endl;
     }
-    
-    corrector_->applyPtCorrection(*p4,chg);
-    corrector_->applyPtCorrection(*p4,chg);	 
+
+    if (run < 203773){
+      corrector_->applyPtCorrection(*p4,chg);
+      corrector_->applyPtCorrection(*p4,chg);	 
+    } else {
+      corrector2012D_->applyPtCorrection(*p4,chg);
+      corrector2012D_->applyPtCorrection(*p4,chg);	 
+    }
     
     
     if(debug_ && event%100==0) {
