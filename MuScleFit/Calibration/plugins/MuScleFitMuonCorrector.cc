@@ -1,13 +1,13 @@
 
 //
-// $Id: MuScleFitMuonCorrector.cc,v 1.7 2013/04/10 08:24:09 scasasso Exp $
+// $Id: MuScleFitMuonCorrector.cc,v 1.8 2013/04/12 10:40:38 scasasso Exp $
 //
 
 /**
   \class    modules::MuScleFitMuonCorrectorT MuScleFitMuonCorrectorT.h 
   \brief    Applies MuScleFit corrections to muons            
   \author   Giovanni Petrucciani (modified by Stefano Casasso)
-  \version  $Id: MuScleFitMuonCorrector.cc,v 1.7 2013/04/10 08:24:09 scasasso Exp $
+  \version  $Id: MuScleFitMuonCorrector.cc,v 1.8 2013/04/12 10:40:38 scasasso Exp $
 */
 
 
@@ -58,13 +58,18 @@ modules::MuScleFitMuonCorrectorT<T>::MuScleFitMuonCorrectorT(const edm::Paramete
 {
 
   TString fileName = "";
-  TString fileName2012D = "MuScleFit/Calibration/data/MuScleFit_2012D_DATA_53X.txt";
+  TString fileName2012D = "";
 
   if (identifier_=="Summer12_DR53X"){ // MC 2012
     fileName.Append("MuScleFit/Calibration/data/MuScleFit_2012_MC_53X.txt");
   }
-  else if (identifier_=="Data2012_53X"){ // DATA 2012
+  else if (identifier_=="Data2012_53X"){ // DATA 2012 (Prompt)
     fileName.Append("MuScleFit/Calibration/data/MuScleFit_2012ABC_DATA_53X.txt");
+    fileName2012D = "MuScleFit/Calibration/data/MuScleFit_2012D_DATA_53X.txt";
+  }
+  else if (identifier_=="Data2012_53X_ReReco"){ // DATA 2012 (ReReco)
+    fileName.Append("MuScleFit/Calibration/data/MuScleFit_2012ABC_DATA_ReReco_53X.txt");
+    fileName2012D = "MuScleFit/Calibration/data/MuScleFit_2012D_DATA_ReReco_53X.txt";
   }
   else if (identifier_=="Fall11_START42"){ // MC 2011 (42X)
     fileName.Append("MuScleFit/Calibration/data/MuScleFit_2011_MC_42X.txt");
@@ -80,7 +85,7 @@ modules::MuScleFitMuonCorrectorT<T>::MuScleFitMuonCorrectorT(const edm::Paramete
   }
   else {
     std::cout<<"%MuScleFitCorrector% wrong identifier, choose among:"<<std::endl;
-    std::cout<<"  data: 'Data2012_53X', 'Data2011_42X', 'Data2011_44X'"<<std::endl;
+    std::cout<<"  data: 'Data2012_53X', 'Data2012_53X_ReReco', 'Data2011_42X', 'Data2011_44X'"<<std::endl;
     std::cout<<"   MC : 'Summer12_DR53X', 'Fall11_START44', 'Fall11_START42'"<<std::endl;
     exit(1);
   }
@@ -88,7 +93,7 @@ modules::MuScleFitMuonCorrectorT<T>::MuScleFitMuonCorrectorT(const edm::Paramete
   edm::FileInPath fileWithFullPath(fileName.Data());
   corrector_ = new MuScleFitCorrector(fileWithFullPath.fullPath());
 
-  if (identifier_=="Data2012_53X"){
+  if (identifier_.find("Data2012")!=std::string::npos){
     edm::FileInPath file2012DWithFullPath(fileName2012D.Data());
     corrector2012D_ = new MuScleFitCorrector(file2012DWithFullPath.fullPath());
   }

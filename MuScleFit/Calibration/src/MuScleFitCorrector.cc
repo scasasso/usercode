@@ -30,7 +30,7 @@ double MuScleFitCorrector::getSmearedPt( const TLorentzVector & lorentzVector , 
   double eta = lorentzVector.Eta();
   double squaredDiff = getSigmaPtDiffSquared(pt,eta);
   if (squaredDiff < 0) return pt;
-  double Cfact = 0.9;
+  double Cfact = 0.8;
   double sPar = Cfact*sqrt(squaredDiff);
   double curv = ((double)chg/pt);
   double normSmearFact = gRandom_->Gaus(0,sPar);
