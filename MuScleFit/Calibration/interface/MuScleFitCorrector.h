@@ -37,6 +37,7 @@ class MuScleFitCorrector
    */
   MuScleFitCorrector(const TString& identifier)
   {
+    fileName_ = identifier;
     readParameters( identifier ); 
     gRandom_ = new TRandom3();
   }
@@ -66,9 +67,10 @@ class MuScleFitCorrector
   
 
  protected:
-/*   // Convert vectors to arrays for faster random access. The first pointer is replaced, thus it is taken by reference. */
-/*   void convertToArrays(); */
-
+  
+  // File name
+  TString fileName_;
+  
   // Identification numbers
   int scaleFunctionId_;
   int resolutionFunctionId_;

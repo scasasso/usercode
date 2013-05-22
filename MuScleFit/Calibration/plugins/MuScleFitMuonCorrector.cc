@@ -1,13 +1,13 @@
 
 //
-// $Id: MuScleFitMuonCorrector.cc,v 1.8 2013/04/12 10:40:38 scasasso Exp $
+// $Id: MuScleFitMuonCorrector.cc,v 1.9.2.2 2013/05/22 12:13:45 scasasso Exp $
 //
 
 /**
   \class    modules::MuScleFitMuonCorrectorT MuScleFitMuonCorrectorT.h 
   \brief    Applies MuScleFit corrections to muons            
   \author   Giovanni Petrucciani (modified by Stefano Casasso)
-  \version  $Id: MuScleFitMuonCorrector.cc,v 1.8 2013/04/12 10:40:38 scasasso Exp $
+  \version  $Id: MuScleFitMuonCorrector.cc,v 1.9.2.2 2013/05/22 12:13:45 scasasso Exp $
 */
 
 
@@ -60,8 +60,11 @@ modules::MuScleFitMuonCorrectorT<T>::MuScleFitMuonCorrectorT(const edm::Paramete
   TString fileName = "";
   TString fileName2012D = "";
 
-  if (identifier_=="Summer12_DR53X"){ // MC 2012
-    fileName.Append("MuScleFit/Calibration/data/MuScleFit_2012_MC_53X.txt");
+  if (identifier_=="Summer12_DR53X_smearPrompt"){ // MC 2012 smeared against Prompt data
+    fileName.Append("MuScleFit/Calibration/data/MuScleFit_2012_MC_53X_smearPrompt.txt");
+  }
+  if (identifier_=="Summer12_DR53X_smearReReco"){ // MC 2012 smeared against ReReco data
+    fileName.Append("MuScleFit/Calibration/data/MuScleFit_2012_MC_53X_smearReReco.txt");
   }
   else if (identifier_=="Data2012_53X"){ // DATA 2012 (Prompt)
     fileName.Append("MuScleFit/Calibration/data/MuScleFit_2012ABC_DATA_53X.txt");
@@ -81,7 +84,7 @@ modules::MuScleFitMuonCorrectorT<T>::MuScleFitMuonCorrectorT(const edm::Paramete
     fileName.Append("MuScleFit/Calibration/data/MuScleFit_2011_DATA_42X.txt");
   }
   else if (identifier_=="Data2011_44X"){ // DATA 2011 (44X)
-    fileName.Append("MuScleFit/Calibration/data/MuScleFit_2011_DATA_42X.txt");
+    fileName.Append("MuScleFit/Calibration/data/MuScleFit_2011_DATA_44X.txt");
   }
   else {
     std::cout<<"%MuScleFitCorrector% wrong identifier, choose among:"<<std::endl;
@@ -132,10 +135,8 @@ modules::MuScleFitMuonCorrectorT<T>::produce(edm::Event & iEvent, const edm::Eve
 
     if (run < 203773){
       corrector_->applyPtCorrection(*p4,chg);
-      corrector_->applyPtCorrection(*p4,chg);	 
     } else {
       corrector2012D_->applyPtCorrection(*p4,chg);
-      corrector2012D_->applyPtCorrection(*p4,chg);	 
     }
     
     
@@ -145,7 +146,6 @@ modules::MuScleFitMuonCorrectorT<T>::produce(edm::Event & iEvent, const edm::Eve
     
     
      if (applySmearing_){
-       corrector_->applyPtSmearing(*p4,chg,fakeSmearing_);
        corrector_->applyPtSmearing(*p4,chg,fakeSmearing_);
        
        if(debug_ && event%100==0) {

@@ -30,7 +30,14 @@ double MuScleFitCorrector::getSmearedPt( const TLorentzVector & lorentzVector , 
   double eta = lorentzVector.Eta();
   double squaredDiff = getSigmaPtDiffSquared(pt,eta);
   if (squaredDiff < 0) return pt;
-  double Cfact = 0.8;
+  double Cfact = 0.;
+  if (fileName_.Contains("smearPrompt")) Cfact = 0.85; // smear Summer12 against 2012 Prompt data
+  else if (fileName_.Contains("smearReReco")) Cfact = 0.75; // smear Summer12 against 2012 ReReco data
+  else if (fileName_.Contains("2011_MC")) Cfact = 0.8; // smear Fall11 against 2011 ReReco data
+  else {
+    std::cout<<"Are you sure you want to smear data??"<<std::endl;
+    exit(1);
+  }
   double sPar = Cfact*sqrt(squaredDiff);
   double curv = ((double)chg/pt);
   double normSmearFact = gRandom_->Gaus(0,sPar);
