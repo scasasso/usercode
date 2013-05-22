@@ -1,13 +1,13 @@
 
 //
-// $Id: MuScleFitMuonCorrector.cc,v 1.9 2013/05/17 10:02:46 scasasso Exp $
+// $Id: MuScleFitMuonCorrector.cc,v 1.9.2.1 2013/05/21 10:00:21 scasasso Exp $
 //
 
 /**
   \class    modules::MuScleFitMuonCorrectorT MuScleFitMuonCorrectorT.h 
   \brief    Applies MuScleFit corrections to muons            
   \author   Giovanni Petrucciani (modified by Stefano Casasso)
-  \version  $Id: MuScleFitMuonCorrector.cc,v 1.9 2013/05/17 10:02:46 scasasso Exp $
+  \version  $Id: MuScleFitMuonCorrector.cc,v 1.9.2.1 2013/05/21 10:00:21 scasasso Exp $
 */
 
 
@@ -135,10 +135,8 @@ modules::MuScleFitMuonCorrectorT<T>::produce(edm::Event & iEvent, const edm::Eve
 
     if (run < 203773){
       corrector_->applyPtCorrection(*p4,chg);
-      corrector_->applyPtCorrection(*p4,chg);	 
     } else {
       corrector2012D_->applyPtCorrection(*p4,chg);
-      corrector2012D_->applyPtCorrection(*p4,chg);	 
     }
     
     
@@ -148,7 +146,6 @@ modules::MuScleFitMuonCorrectorT<T>::produce(edm::Event & iEvent, const edm::Eve
     
     
      if (applySmearing_){
-       corrector_->applyPtSmearing(*p4,chg,fakeSmearing_);
        corrector_->applyPtSmearing(*p4,chg,fakeSmearing_);
        
        if(debug_ && event%100==0) {
