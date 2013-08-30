@@ -1,0 +1,26 @@
+##################################
+INSTRUCTIONS TO RUN THE VALIDATION
+##################################
+
+In order to run the validation you can use the script:
+./runDiMuonValidation.py -h (to see the options)
+
+Before launching the script you have to set up the path to the trees and the text files
+with the correction parameters in TreePath.py (default is provided for 2012 ReReco validation).
+
+The output will be stored in the directory specified with the "-d" option.
+
+The validation can be also run step-by-step, following the instructions below:
+
+1. prepare the .cfg file with path to tree and text files (see examples provided)
+2. gmake clean; gmake all
+3. ./validate <my-cfg>.cfg
+4. histograms files are stored in $TMPDIR directory: 
+   hadd h3_afterCorrection.root `ls $TMPDIR/h3_*afterCorrection.root` 
+   (eventually: hadd h3_beforeCorrection.root `ls $TMPDIR/h3_*beforeCorrection.root` )
+5. set up RooFit on lxplus (eventually changing ROOT and gcc version editing the script):
+   ./RootSetup.sh	
+6. root -b -q -l "Fitter.C+(\"h3_afterCorrection.root\",\"TGEs_afterCorrection.root\",\"_afterCorrection\")"
+7. root -b -q -l "Plotter.C+(\"TGEs_afterCorrection.root\",\"_afterCorrection\")"
+
+Enjoy!
