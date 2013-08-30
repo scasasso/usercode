@@ -5,7 +5,7 @@
 // hadd h3_beforeCorrection.root `ls h3_*beforeCorrection.root`
 // hadd h3_afterCorrection.root `ls h3_*afterCorrection.root` 
 
-#include "MuScleFitCorrector.h"
+#include "../MuScleFitCorrector_v4_2/MuScleFitCorrector.h"
 #include "MuonPair.h"
 #include "LinkDef.h"
 
@@ -61,7 +61,7 @@ DiMuonValidator::DiMuonValidator(string line){
   _corrector = new MuScleFitCorrector(fileNameCorrectionIn.c_str());
 
   // root file with the pre-correction input Tree
-  string fileNameTreeCutIn = string("/tmp/emiglior/")+_resonanceId+string("_")+_evtType+string(".root");
+  string fileNameTreeCutIn = string("/tmp/$USER/")+_resonanceId+string("_")+_evtType+string(".root");
 
   if ( fileMode == "RECREATE" ) {
 
@@ -104,7 +104,7 @@ DiMuonValidator::DiMuonValidator(string line){
   string h1title, h3title;
 
   // before corrections
-  fileNameTHOut = string("/tmp/emiglior/")+string("h3_")+_resonanceId+string("_")+_evtType+string("_beforeCorrection.root");
+  fileNameTHOut = string("/tmp/$USER/")+string("h3_")+_resonanceId+string("_")+_evtType+string("_beforeCorrection.root");
   _fileTHOut[0] = new TFile(fileNameTHOut.c_str(),"RECREATE");
 
   h1title = string("h1_")+_resonanceId+string("_")+_evtType;
@@ -120,7 +120,7 @@ DiMuonValidator::DiMuonValidator(string line){
   _h1_Mass_beforeCorrection = new TH1F( h1title.c_str(), "resonance mass", nMassBin, atof(minMass.c_str()), atof(maxMass.c_str()) );//atof convert string to double  
 
   // after corrections
-  fileNameTHOut = string("/tmp/emiglior/")+string("h3_")+_resonanceId+string("_")+_evtType+string("_afterCorrection.root");
+  fileNameTHOut = string("/tmp/$USER/")+string("h3_")+_resonanceId+string("_")+_evtType+string("_afterCorrection.root");
   _fileTHOut[1] = new TFile(fileNameTHOut.c_str(),"RECREATE");
   if(_resonanceId == "Z"){
     _h3_MassVsEtaPt_afterCorrection = new TH3F( h3title.c_str(), "resonance mass",nEtaBin, 0., 2.4, nPtBin, 0., 100., nMassBin, atof(minMass.c_str()), atof(maxMass.c_str()) );//atof convert string to double  
