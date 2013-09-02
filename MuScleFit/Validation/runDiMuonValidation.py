@@ -16,6 +16,8 @@ def main():
                       help="If fired the script will process the Y resonance")
     parser.add_option("-j", "--processJPsi", action="store_true", dest="processJPsi", default=False,
                       help="If fired the script will process the JPsi resonance")
+    parser.add_option("-r", "--recreateTrees", action="store_true", dest="recreateTrees", default=False,
+                      help="If fired the script will recreate the input trees (it may take several minutes)")
     parser.add_option("-a", "--appendToCfg", type="string", dest="appendToCfg", metavar="<my string>", default="",
                       help="Specify a string to the cfg name (to avoid overwriting it in the future)")
 
@@ -24,15 +26,20 @@ def main():
     outCfgName = 'dimuon_validation'+opt.appendToCfg+'.cfg'
     outCfg = open(outCfgName,'w')
 
+    if opt.recreateTrees==True:
+      recreate = "RECREATE"
+    else:    
+       recreate = "READ"
+
     if opt.processZ==True:
-        outCfg.write("Z data "+subprocess.check_output(['cmsPfn',ZdataTree]).rstrip()+" "+ZdataTxt+" 70 110 RECREATE\n")
-        outCfg.write("Z mc "+subprocess.check_output(['cmsPfn',ZmcTree]).rstrip()+" "+ZmcTxt+" 70 110 RECREATE\n")
+        outCfg.write("Z data "+subprocess.check_output(['cmsPfn',ZdataTree]).rstrip()+" "+ZdataTxt+" 70 110 "+recreate+" \n")
+        outCfg.write("Z mc "+subprocess.check_output(['cmsPfn',ZmcTree]).rstrip()+" "+ZmcTxt+" 70 110 "+recreate+" \n")
     if opt.processY==True:
-        outCfg.write("Y data "+subprocess.check_output(['cmsPfn',YdataTree]).rstrip()+" "+YdataTxt+" 8.6 11.3 RECREATE\n")
-        outCfg.write("Y mc "+subprocess.check_output(['cmsPfn',YmcTree]).rstrip()+" "+YmcTxt+" 8.6 11.3 RECREATE\n")
+        outCfg.write("Y data "+subprocess.check_output(['cmsPfn',YdataTree]).rstrip()+" "+YdataTxt+" 8.6 11.3 "+recreate+" \n")
+        outCfg.write("Y mc "+subprocess.check_output(['cmsPfn',YmcTree]).rstrip()+" "+YmcTxt+" 8.6 11.3 "+recreate+" \n")
     if opt.processJPsi==True:
-        outCfg.write("JPsi data "+subprocess.check_output(['cmsPfn',JPsidataTree]).rstrip()+" "+JPsidataTxt+" 2.8 3.4 RECREATE\n")
-        outCfg.write("JPsi mc "+subprocess.check_output(['cmsPfn',JPsimcTree]).rstrip()+" "+JPsimcTxt+" 2.8 3.4 RECREATE\n")
+        outCfg.write("JPsi data "+subprocess.check_output(['cmsPfn',JPsidataTree]).rstrip()+" "+JPsidataTxt+" 2.8 3.4 "+recreate+" \n")
+        outCfg.write("JPsi mc "+subprocess.check_output(['cmsPfn',JPsimcTree]).rstrip()+" "+JPsimcTxt+" 2.8 3.4 "+recreate+" \n")
 
     outCfg.write("# stupid std::ifstream: this file should not end with an empty line!")
 
@@ -42,7 +49,7 @@ def main():
     Create the output root files with TH3s'''
     validateString = "./validate "+outCfgName
     if opt.quiet == True:
-        validateString += +" >& /dev/null"
+        validateString += " >& /dev/null"
     os.system(validateString)
 
 
