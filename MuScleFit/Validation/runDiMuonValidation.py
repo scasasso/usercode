@@ -23,6 +23,8 @@ def main():
 
     (opt, args) = parser.parse_args()
 
+    os.system('gmake clean; gmake all')
+
     outCfgName = 'dimuon_validation'+opt.appendToCfg+'.cfg'
     outCfg = open(outCfgName,'w')
 
