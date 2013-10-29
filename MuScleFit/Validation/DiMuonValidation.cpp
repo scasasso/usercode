@@ -76,7 +76,7 @@ DiMuonValidator::DiMuonValidator(string line){
     cout << "+++++ No. of entries in the input tree: " << nentries << endl;
 
     // string for the cut on the selected invariant mass windowm    
-    string mass_cut=minMass+string("*")+minMass+string("<2*(event.mu1.fCoordinates.fT*event.mu2.fCoordinates.fT-event.mu1.fCoordinates.fX*event.mu2.fCoordinates.fX-event.mu1.fCoordinates.fY*event.mu2.fCoordinates.fY-event.mu1.fCoordinates.fZ*event.mu2.fCoordinates.fZ) && 2*(event.mu1.fCoordinates.fT*event.mu2.fCoordinates.fT-event.mu1.fCoordinates.fX*event.mu2.fCoordinates.fX-event.mu1.fCoordinates.fY*event.mu2.fCoordinates.fY-event.mu1.fCoordinates.fZ*event.mu2.fCoordinates.fZ)<")+maxMass+string("*")+maxMass;
+    string mass_cut=minMass+string("*")+minMass+string("<2*(event.mu1.fP4.fCoordinates.fT*event.mu2.fP4.fCoordinates.fT-event.mu1.fP4.fCoordinates.fX*event.mu2.fP4.fCoordinates.fX-event.mu1.fP4.fCoordinates.fY*event.mu2.fP4.fCoordinates.fY-event.mu1.fP4.fCoordinates.fZ*event.mu2.fP4.fCoordinates.fZ) && 2*(event.mu1.fP4.fCoordinates.fT*event.mu2.fP4.fCoordinates.fT-event.mu1.fP4.fCoordinates.fX*event.mu2.fP4.fCoordinates.fX-event.mu1.fP4.fCoordinates.fY*event.mu2.fP4.fCoordinates.fY-event.mu1.fP4.fCoordinates.fZ*event.mu2.fP4.fCoordinates.fZ)<")+maxMass+string("*")+maxMass;
     // cout << mass_cut << endl; // DEBUG
     string run_cut("&& event.run<203746");  
     string all_cut=mass_cut+run_cut;
@@ -165,8 +165,8 @@ void DiMuonValidator::Fill(){
       if (entry%100000==0)cout<<"Reading muon pair n. "<<entry<<endl;
 
 	// fetch muons before correction from the input tree
-	muNeg_BC = new TLorentzVector(mupairIN_->mu1.Px(), mupairIN_->mu1.Py(), mupairIN_->mu1.Pz(), mupairIN_->mu1.E());
-	muPos_BC = new TLorentzVector(mupairIN_->mu2.Px(), mupairIN_->mu2.Py(), mupairIN_->mu2.Pz(), mupairIN_->mu2.E());
+        muNeg_BC = new TLorentzVector(mupairIN_->mu1.fP4.Px(), mupairIN_->mu1.fP4.Py(), mupairIN_->mu1.fP4.Pz(), mupairIN_->mu1.fP4.E());
+	muPos_BC = new TLorentzVector(mupairIN_->mu2.fP4.Px(), mupairIN_->mu2.fP4.Py(), mupairIN_->mu2.fP4.Pz(), mupairIN_->mu2.fP4.E());
 	MuMu_BC = new TLorentzVector((*muNeg_BC)+(*muPos_BC));
 
 	// make muons after correction       

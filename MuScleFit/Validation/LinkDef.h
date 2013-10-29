@@ -4,6 +4,7 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
+#pragma link C++ class MuScleFitMuon+;
 #pragma link C++ class MuonPair+;
 
 //based on http://root.cern.ch/root/html/tutorials/math/mathcoreVectorFloatIO.C.html

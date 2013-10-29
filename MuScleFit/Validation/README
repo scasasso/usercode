@@ -2,7 +2,7 @@
 INSTRUCTIONS TO RUN THE VALIDATION
 ##################################
 
-!!!! IMPORTNANT: set up Roofit by issuing:
+!!!! IMPORTANT: set up Roofit by issuing:
 	source RootSetup.sh  !!!!
 
 In order to run the validation you can use the script:
