@@ -29,14 +29,14 @@ def main():
 ### m(mumu) vs. Eta
 
     # dictionary for Z
-    #dict_Eta = {'ScalePdg_mc_Eta_afterCorrection_V0':ROOT.kBlack,\
+    dict_Eta = {'ScalePdg_mc_Eta_afterCorrection_V0':ROOT.kBlack,\
     #            'ScalePdg_mc_Eta_afterCorrection_V1':ROOT.kBlue, \
     #            'ScalePdg_mc_Eta_Z_afterCorrection_V2':ROOT.kGreen,\
-    #            'ScalePdg_mc_Eta_Z_afterCorrection_V3':ROOT.kRed}
+                'ScalePdg_mc_Eta_Z_afterCorrection_V3':ROOT.kRed}
     
     # dictionary for Y
-    dict_Eta = {'ScalePdg_mc_Eta_Y_afterCorrection_V0':ROOT.kBlack,\
-                'ScalePdg_mc_Eta_Y_afterCorrection_V3':ROOT.kRed}
+    #dict_Eta = {'ScalePdg_mc_Eta_Y_afterCorrection_V0':ROOT.kBlack,\
+    #            'ScalePdg_mc_Eta_Y_afterCorrection_V3':ROOT.kRed}
 
     legLabels_Z_eta = ['p_{T} 20-45 GeV', 'p_{T} 45-90 GeV']
     legLabels_Y_eta = ['p_{T} 10-20 GeV']
@@ -60,17 +60,17 @@ def main():
 # extraLabel should be set to describe the input dataset
         extraLabel = ' ' 
         if mg_eta.GetListOfGraphs().At(igraph).GetLineColor() == ROOT.kBlack:
-            #        extraLabel += 'MadGraph AODSIM'         
-            extraLabel += 'AODSIM'         
+            extraLabel += 'MadGraph AODSIM'         
+            #extraLabel += 'AODSIM'         
         elif mg_eta.GetListOfGraphs().At(igraph).GetLineColor() == ROOT.kBlue:
             extraLabel += 'POWHEG AODSIM'         
         elif mg_eta.GetListOfGraphs().At(igraph).GetLineColor() == ROOT.kGreen:
             extraLabel += 'POWHEG rereco START53'         
         elif mg_eta.GetListOfGraphs().At(igraph).GetLineColor() == ROOT.kRed:
-            #        extraLabel += 'POWHEG rereco MC_53'            
-            extraLabel += 'rereco MC_53'            
-            #    legScaleEta.AddEntry(mg_eta.GetListOfGraphs().At(igraph),legLabels_Z_eta[igraph%2]+extraLabel,'P')
-        legScaleEta.AddEntry(mg_eta.GetListOfGraphs().At(igraph),legLabels_Y_eta[0]+extraLabel,'P')
+                    extraLabel += 'POWHEG rereco MC_53'            
+            #extraLabel += 'rereco MC_53'            
+        legScaleEta.AddEntry(mg_eta.GetListOfGraphs().At(igraph),legLabels_Z_eta[igraph%2]+extraLabel,'P')
+        #legScaleEta.AddEntry(mg_eta.GetListOfGraphs().At(igraph),legLabels_Y_eta[0]+extraLabel,'P')
 
 
     cScalePdg_mc_Eta = ROOT.TCanvas('cScalePdg_mc_Eta_Y','cScalePdg_mc_Eta_Y',1200,700)
@@ -84,19 +84,20 @@ def main():
     mg_eta.GetYaxis().SetRangeUser(-0.005,0.005)
     mg_eta.GetXaxis().SetRangeUser(0.,2.5)
     legScaleEta.Draw('same');
-    cScalePdg_mc_Eta.SaveAs('ScalePdg_mc_Eta_Y.png')
+    #cScalePdg_mc_Eta.SaveAs('ScalePdg_mc_Eta_Y.png')
+    cScalePdg_mc_Eta.SaveAs('ScalePdg_mc_Eta_Z.png')
 
 ### m(mumu) vs. pT
 
     # dictionary for Z
-    #dict_Pt = {'ScalePdg_mc_Pt_afterCorrection_V0':ROOT.kBlack,\
+    dict_Pt = {'ScalePdg_mc_Pt_afterCorrection_V0':ROOT.kBlack,\
     #           'ScalePdg_mc_Pt_afterCorrection_V1':ROOT.kBlue, \
     #           'ScalePdg_mc_Pt_Z_afterCorrection_V2':ROOT.kGreen,\
-    #           'ScalePdg_mc_Pt_Z_afterCorrection_V3':ROOT.kRed}
+               'ScalePdg_mc_Pt_Z_afterCorrection_V3':ROOT.kRed}
 
     # dictionary for Y
-    dict_Pt = {'ScalePdg_mc_Pt_Y_afterCorrection_V0':ROOT.kBlack,\
-               'ScalePdg_mc_Pt_Y_afterCorrection_V3':ROOT.kRed}
+    #dict_Pt = {'ScalePdg_mc_Pt_Y_afterCorrection_V0':ROOT.kBlack,\
+    #           'ScalePdg_mc_Pt_Y_afterCorrection_V3':ROOT.kRed}
 
     legLabels_Z_pt = ['|#eta| 0.0-2.4']
     legLabels_Y_pt = ['|#eta| 0.0-0.7', '|#eta| 0.7-2.4']
@@ -127,8 +128,8 @@ def main():
         elif mg_pt.GetListOfGraphs().At(igraph).GetLineColor() == ROOT.kRed:
             #        extraLabel += 'POWHEG rereco MC_53'            
             extraLabel += 'rereco MC_53'            
-            #    legScalePt.AddEntry(mg_pt.GetListOfGraphs().At(igraph),legLabels_Z_pt[0]+extraLabel,'P')
-            legScalePt.AddEntry(mg_pt.GetListOfGraphs().At(igraph),legLabels_Y_pt[igraph%2]+extraLabel,'P')
+        legScalePt.AddEntry(mg_pt.GetListOfGraphs().At(igraph),legLabels_Z_pt[0]+extraLabel,'P')
+        #legScalePt.AddEntry(mg_pt.GetListOfGraphs().At(igraph),legLabels_Y_pt[igraph%2]+extraLabel,'P')
    
     cScalePdg_mc_Pt = ROOT.TCanvas('cScalePdg_mc_Pt_Y','cScalePdg_mc_Pt_Y',1200,700)
     cScalePdg_mc_Pt.SetGridy()
@@ -141,7 +142,8 @@ def main():
     mg_pt.GetYaxis().SetRangeUser(-0.005,0.005)
     mg_pt.GetXaxis().SetRangeUser(0.,70.)
     legScalePt.Draw('same')
-    cScalePdg_mc_Pt.SaveAs('ScalePdg_mc_Pt_Y.png')
+    #cScalePdg_mc_Pt.SaveAs('ScalePdg_mc_Pt_Y.png')
+    cScalePdg_mc_Pt.SaveAs('ScalePdg_mc_Pt_Z.png')
 
 
 ##################################
