@@ -319,7 +319,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t dMassPdg_data_Err = computeErrorPdg(e1_mass, mass_Z);
 	dMassPdg_data_Z_pt[i][j] = dMassPdg_data; dMassPdg_data_Z_pt_Err[i][j] = dMassPdg_data_Err;
 	Double_t dMassPdg_mc = (mass_Z_pt_mc[i][j] - mass_Z)/mass_Z;
-	Double_t dMassPdg_mc_Err = computeErrorPdg(e1_mass,mass_Z);
+	Double_t dMassPdg_mc_Err = computeErrorPdg(e2_mass,mass_Z);
 	dMassPdg_mc_Z_pt[i][j] = dMassPdg_mc; dMassPdg_mc_Z_pt_Err[i][j] = dMassPdg_mc_Err;
       }
     }
@@ -346,7 +346,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t dMassPdg_data_Err = computeErrorPdg(e1_mass,mass_Z);
 	dMassPdg_data_Z_eta[i][j] = dMassPdg_data; dMassPdg_data_Z_eta_Err[i][j] = dMassPdg_data_Err;
 	Double_t dMassPdg_mc = (mass_Z_eta_mc[i][j] - mass_Z)/mass_Z;
-	Double_t dMassPdg_mc_Err = computeErrorPdg(e1_mass,mass_Z);
+	Double_t dMassPdg_mc_Err = computeErrorPdg(e2_mass,mass_Z);
 	dMassPdg_mc_Z_eta[i][j] = dMassPdg_mc; dMassPdg_mc_Z_eta_Err[i][j] = dMassPdg_mc_Err;
       }
     }
@@ -376,7 +376,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t dMassPdg_data_Err = computeErrorPdg(e1_mass,mass_Y);
 	dMassPdg_data_Y_pt[i][j] = dMassPdg_data; dMassPdg_data_Y_pt_Err[i][j] = dMassPdg_data_Err;
 	Double_t dMassPdg_mc = (mass_Y_pt_mc[i][j] - mass_Y)/mass_Y;
-	Double_t dMassPdg_mc_Err = computeErrorPdg(e1_mass,mass_Y);
+	Double_t dMassPdg_mc_Err = computeErrorPdg(e2_mass,mass_Y);
 	dMassPdg_mc_Y_pt[i][j] = dMassPdg_mc; dMassPdg_mc_Y_pt_Err[i][j] = dMassPdg_mc_Err;
       }
     }
@@ -403,7 +403,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t dMassPdg_data_Err = computeErrorPdg(e1_mass,mass_Y);
 	dMassPdg_data_Y_eta[i][j] = dMassPdg_data; dMassPdg_data_Y_eta_Err[i][j] = dMassPdg_data_Err;
 	Double_t dMassPdg_mc = (mass_Y_eta_mc[i][j] - mass_Y)/mass_Y;
-	Double_t dMassPdg_mc_Err = computeErrorPdg(e1_mass,mass_Y);
+	Double_t dMassPdg_mc_Err = computeErrorPdg(e2_mass,mass_Y);
 	dMassPdg_mc_Y_eta[i][j] = dMassPdg_mc; dMassPdg_mc_Y_eta_Err[i][j] = dMassPdg_mc_Err;
       }
     }
@@ -433,7 +433,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t dMassPdg_data_Err = computeErrorPdg(e1_mass,mass_JPsi);
 	dMassPdg_data_JPsi_pt[i][j] = dMassPdg_data; dMassPdg_data_JPsi_pt_Err[i][j] = dMassPdg_data_Err;
 	Double_t dMassPdg_mc = (mass_JPsi_pt_mc[i][j] - mass_JPsi)/mass_JPsi;
-	Double_t dMassPdg_mc_Err = computeErrorPdg(e1_mass,mass_JPsi);
+	Double_t dMassPdg_mc_Err = computeErrorPdg(e2_mass,mass_JPsi);
 	dMassPdg_mc_JPsi_pt[i][j] = dMassPdg_mc; dMassPdg_mc_JPsi_pt_Err[i][j] = dMassPdg_mc_Err;
       }
     }
@@ -460,7 +460,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t dMassPdg_data_Err = computeErrorPdg(e1_mass,mass_JPsi);
 	dMassPdg_data_JPsi_eta[i][j] = dMassPdg_data; dMassPdg_data_JPsi_eta_Err[i][j] = dMassPdg_data_Err;
 	Double_t dMassPdg_mc = (mass_JPsi_eta_mc[i][j] - mass_JPsi)/mass_JPsi;
-	Double_t dMassPdg_mc_Err = computeErrorPdg(e1_mass,mass_JPsi);
+	Double_t dMassPdg_mc_Err = computeErrorPdg(e2_mass,mass_JPsi);
 	dMassPdg_mc_JPsi_eta[i][j] = dMassPdg_mc; dMassPdg_mc_JPsi_eta_Err[i][j] = dMassPdg_mc_Err;
       }
     }
@@ -779,6 +779,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   cScalePt->cd();
   mg_dMass_pt->Draw("AP");
   cScalePt->SaveAs("ScalePt"+append+".png");
+  cScalePt->SaveAs("ScalePt"+append+".root"); 
   mg_dMass_pt->GetYaxis()->SetTitle("#DeltaM/M (data-MC)");
   //mg_dMass_pt->GetYaxis()->SetTitleOffset(1.4);
   mg_dMass_pt->GetXaxis()->SetTitle("p_{T} (GeV)");
@@ -787,7 +788,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   mg_dMass_pt->GetXaxis()->SetRangeUser(0.,70.);
   legScalePt->Draw("same");
   cScalePt->SaveAs("ScalePt"+append+".png");
-
+  cScalePt->SaveAs("ScalePt"+append+".root");
 
 
   TCanvas* cScaleEta = new TCanvas("cScaleEta","cScaleEta");
@@ -802,7 +803,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   mg_dMass_eta->GetXaxis()->SetRangeUser(0.,2.5);
   legScaleEta->Draw("same");
   cScaleEta->SaveAs("ScaleEta"+append+".png");
-
+  cScaleEta->SaveAs("ScaleEta"+append+".root");
 
   TCanvas* cResolPt = new TCanvas("cResolPt","cResolPt");
   cResolPt->SetGridy();
@@ -816,7 +817,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   mg_dSigma_pt->GetXaxis()->SetRangeUser(0.,70.);
   legResolPt->Draw("same");
   cResolPt->SaveAs("ResolPt"+append+".png");
-
+  cResolPt->SaveAs("ResolPt"+append+".root");
 
   TCanvas* cResolEta = new TCanvas("cResolEta","cResolEta");
   cResolEta->SetGridy();
@@ -830,7 +831,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   mg_dSigma_eta->GetXaxis()->SetRangeUser(0.,2.5);
   legResolEta->Draw("same");
   cResolEta->SaveAs("ResolEta"+append+".png");
-
+  cResolEta->SaveAs("ResolEta"+append+".root");
 
   TCanvas* cScalePdg_data_Pt = new TCanvas("cScalePdg_data_Pt","cScalePdg_data_Pt");
   cScalePdg_data_Pt->SetGridy();
@@ -840,10 +841,11 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   //mg_dMassPdg_data_pt->GetYaxis()->SetTitleOffset(1.4);
   mg_dMassPdg_data_pt->GetXaxis()->SetTitle("p_{T} (GeV)");
   //mg_dMassPdg_data_pt->GetXaxis()->SetTitleOffset(1.2);
-  mg_dMassPdg_data_pt->GetYaxis()->SetRangeUser(-0.015,0.015);
+  mg_dMassPdg_data_pt->GetYaxis()->SetRangeUser(-0.005,0.005);
   mg_dMassPdg_data_pt->GetXaxis()->SetRangeUser(0.,70.);
   legScalePt->Draw("same");
   cScalePdg_data_Pt->SaveAs("ScalePdg_data_Pt"+append+".png");
+  cScalePdg_data_Pt->SaveAs("ScalePdg_data_Pt"+append+".root");
 
   TCanvas* cScalePdg_data_Eta = new TCanvas("cScalePdg_data_Eta","cScalePdg_data_Eta");
   cScalePdg_data_Eta->SetGridy();
@@ -853,10 +855,11 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   //mg_dMassPdg_data_eta->GetYaxis()->SetTitleOffset(1.4);
   mg_dMassPdg_data_eta->GetXaxis()->SetTitle("#eta");
   //mg_dMassPdg_data_eta->GetXaxis()->SetTitleOffset(1.2);
-  mg_dMassPdg_data_eta->GetYaxis()->SetRangeUser(-0.015,0.015);
+  mg_dMassPdg_data_eta->GetYaxis()->SetRangeUser(-0.005,0.005);
   mg_dMassPdg_data_eta->GetXaxis()->SetRangeUser(0.,2.5);
   legScaleEta->Draw("same");
   cScalePdg_data_Eta->SaveAs("ScalePdg_data_Eta"+append+".png");
+  cScalePdg_data_Eta->SaveAs("ScalePdg_data_Eta"+append+".root"); 
 
   TCanvas* cScalePdg_mc_Pt = new TCanvas("cScalePdg_mc_Pt","cScalePdg_mc_Pt");
   cScalePdg_mc_Pt->SetGridy();
@@ -866,10 +869,11 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   //mg_dMassPdg_mc_pt->GetYaxis()->SetTitleOffset(1.4);
   mg_dMassPdg_mc_pt->GetXaxis()->SetTitle("p_{T} (GeV)");
   //mg_dMassPdg_mc_pt->GetXaxis()->SetTitleOffset(1.2);
-  mg_dMassPdg_mc_pt->GetYaxis()->SetRangeUser(-0.015,0.015);
+  mg_dMassPdg_mc_pt->GetYaxis()->SetRangeUser(-0.005,0.005);
   mg_dMassPdg_mc_pt->GetXaxis()->SetRangeUser(0.,70.);
   legScalePt->Draw("same");
   cScalePdg_mc_Pt->SaveAs("ScalePdg_mc_Pt"+append+".png");
+  cScalePdg_mc_Pt->SaveAs("ScalePdg_mc_Pt"+append+".root");
 
   TCanvas* cScalePdg_mc_Eta = new TCanvas("cScalePdg_mc_Eta","cScalePdg_mc_Eta");
   cScalePdg_mc_Eta->SetGridy();
@@ -879,11 +883,12 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   //mg_dMassPdg_mc_eta->GetYaxis()->SetTitleOffset(1.4);
   mg_dMassPdg_mc_eta->GetXaxis()->SetTitle("#eta");
   //mg_dMassPdg_mc_eta->GetXaxis()->SetTitleOffset(1.2);
-  mg_dMassPdg_mc_eta->GetYaxis()->SetRangeUser(-0.015,0.015);
+  mg_dMassPdg_mc_eta->GetYaxis()->SetRangeUser(-0.005,0.005);
   mg_dMassPdg_mc_eta->GetXaxis()->SetRangeUser(0.,2.5);
   legScaleEta->Draw("same");
   cScalePdg_mc_Eta->SaveAs("ScalePdg_mc_Eta"+append+".png");
-  
+  cScalePdg_mc_Eta->SaveAs("ScalePdg_mc_Eta"+append+".root"); 
+ 
 
 
 } // end main
