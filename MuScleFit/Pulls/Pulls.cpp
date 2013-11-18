@@ -1,6 +1,6 @@
 // usage: 
 // make
-// ./pull /tmp/ymumuTree_Upsilon1SToMuMu.root
+// ./pull /tmp/ymumuTree_Upsilon1SToMuMu.root 
 //
 #include "../Validation/MuonPair.h"
 #include "GenMuonPair.h"
@@ -279,7 +279,7 @@ HistosManager::HistosManager(const char* xName, const char* xLabel, int nX, doub
 void HistosManager::monitor(double x1_raw, double x2_raw, double mass){
 
 
-  // monitor input eta distribution
+  // monitor input distribution
   h1_X_all->Fill(x1_raw);
   h1_X_all->Fill(x2_raw);
   if ( fabs(mass-10.)<2 ) {
@@ -486,7 +486,7 @@ void HistosManager::draw(const char* xName){
     h_Chi2NDFvsX_neg_2s->GetYaxis()->SetLabelSize(font_size_dw);
     h_Chi2NDFvsX_neg_2s->GetYaxis()->SetTitleSize(font_size_dw);
     h_Chi2NDFvsX_neg_2s->GetYaxis()->SetTitleOffset(0.4);
-    h_Chi2NDFvsX_neg_2s->GetXaxis()->SetTitleOffset(0.1);
+    h_Chi2NDFvsX_neg_2s->GetXaxis()->SetTitleOffset(0.5);
     h_Chi2NDFvsX_neg_2s->Draw("p"); 
 
     // set pad size
@@ -514,7 +514,7 @@ void HistosManager::draw(const char* xName){
     h_Chi2NDFvsX_pos_2s->GetYaxis()->SetLabelSize(font_size_dw);
     h_Chi2NDFvsX_pos_2s->GetYaxis()->SetTitleSize(font_size_dw);
     h_Chi2NDFvsX_pos_2s->GetYaxis()->SetTitleOffset(0.4);
-    h_Chi2NDFvsX_pos_2s->GetXaxis()->SetTitleOffset(0.1);
+    h_Chi2NDFvsX_pos_2s->GetXaxis()->SetTitleOffset(0.5);
     h_Chi2NDFvsX_pos_2s->Draw("p"); 
 
     sprintf (buffer,"MeanDeltaKvs%sTProfile.pdf",xName);
@@ -577,7 +577,7 @@ void HistosManager::draw(const char* xName){
     h_Chi2NDFvsX_neg_3s->GetYaxis()->SetLabelSize(font_size_dw);
     h_Chi2NDFvsX_neg_3s->GetYaxis()->SetTitleSize(font_size_dw);
     h_Chi2NDFvsX_neg_3s->GetYaxis()->SetTitleOffset(0.4);
-    h_Chi2NDFvsX_neg_3s->GetXaxis()->SetTitleOffset(0.1);
+    h_Chi2NDFvsX_neg_3s->GetXaxis()->SetTitleOffset(0.5);
     h_Chi2NDFvsX_neg_3s->Draw("p"); 
     h_Chi2NDFvsX_neg_2s->Draw("pSAME"); 
 
@@ -616,7 +616,7 @@ void HistosManager::draw(const char* xName){
     h_Chi2NDFvsX_pos_3s->GetYaxis()->SetLabelSize(font_size_dw);
     h_Chi2NDFvsX_pos_3s->GetYaxis()->SetTitleSize(font_size_dw);
     h_Chi2NDFvsX_pos_3s->GetYaxis()->SetTitleOffset(0.4);
-    h_Chi2NDFvsX_pos_3s->GetXaxis()->SetTitleOffset(0.1);
+    h_Chi2NDFvsX_pos_3s->GetXaxis()->SetTitleOffset(0.5);
     h_Chi2NDFvsX_pos_3s->Draw("p"); 
     h_Chi2NDFvsX_pos_2s->Draw("pSAME"); 
 
@@ -671,7 +671,7 @@ void HistosManager::draw(const char* xName){
     h_RatiovsX_neg_2s->GetYaxis()->SetLabelSize(font_size_dw);
     h_RatiovsX_neg_2s->GetYaxis()->SetTitleSize(font_size_dw);
     h_RatiovsX_neg_2s->GetYaxis()->SetTitleOffset(0.4);
-    h_RatiovsX_neg_2s->GetXaxis()->SetTitleOffset(0.1);
+    h_RatiovsX_neg_2s->GetXaxis()->SetTitleOffset(0.5);
     h_RatiovsX_neg_2s->GetYaxis()->SetRangeUser(0.80,1.20);
     h_RatiovsX_neg_2s->Draw("p"); 
 
@@ -710,7 +710,7 @@ void HistosManager::draw(const char* xName){
     h_RatiovsX_pos_2s->GetYaxis()->SetLabelSize(font_size_dw);
     h_RatiovsX_pos_2s->GetYaxis()->SetTitleSize(font_size_dw);
     h_RatiovsX_pos_2s->GetYaxis()->SetTitleOffset(0.4);
-    h_RatiovsX_pos_2s->GetXaxis()->SetTitleOffset(0.1);
+    h_RatiovsX_pos_2s->GetXaxis()->SetTitleOffset(0.5);
     h_RatiovsX_pos_2s->GetYaxis()->SetRangeUser(0.80,1.20);
     h_RatiovsX_pos_2s->Draw("p"); 
 
@@ -807,8 +807,10 @@ int main(int argc, char *argv[]){
       // Get pts and etas
       double pt1_reco = muNeg->Pt(); double eta1_reco = muNeg->Eta(); double phi1_reco = muNeg->Phi();
       double pt2_reco = muPos->Pt(); double eta2_reco = muPos->Eta(); double phi2_reco = muPos->Phi();
-      double pt1_gen = mupairGenIN_->mu1.fP4.Pt(); double eta1_gen = mupairGenIN_->mu1.fP4.Eta();
-      double pt2_gen = mupairGenIN_->mu2.fP4.Pt(); double eta2_gen = mupairGenIN_->mu2.fP4.Eta();
+      double pt1_gen = mupairGenIN_->mu1.fP4.Pt(); double eta1_gen = mupairGenIN_->mu1.fP4.Eta(); double phi1_gen = mupairGenIN_->mu1.fP4.Phi();
+      double pt2_gen = mupairGenIN_->mu2.fP4.Pt(); double eta2_gen = mupairGenIN_->mu2.fP4.Eta(); double phi2_gen = mupairGenIN_->mu2.fP4.Phi();
+
+      //      double mass_reco = mumu->M();
       
       if ( muNeg != 0  ) delete muNeg; 
       if ( muPos != 0  ) delete muPos; 
@@ -851,10 +853,12 @@ int main(int argc, char *argv[]){
 
       }
       
-      hmEta.analyze(eta1_reco, k1_reco, k1_gen, eta2_reco,  k2_reco, k2_gen, sigmaRelPt1, sigmaRelPt2);
-      hmPt.analyze(pt1_reco, k1_reco, k1_gen, pt2_reco, k2_reco, k2_gen, sigmaRelPt1, sigmaRelPt2);
-      hmPhi.analyze(phi1_reco, k1_reco, k1_gen, phi2_reco, k2_reco, k2_gen, sigmaRelPt1, sigmaRelPt2);
-      	
+      //      if ( mass_reco>=80 && mass_reco<=100 ) {
+      hmEta.analyze(eta1_gen, k1_reco, k1_gen, eta2_gen,  k2_reco, k2_gen, sigmaRelPt1, sigmaRelPt2);
+      hmPt.analyze(pt1_gen, k1_reco, k1_gen, pt2_gen, k2_reco, k2_gen, sigmaRelPt1, sigmaRelPt2);
+      hmPhi.analyze(phi1_gen, k1_reco, k1_gen, phi2_gen, k2_reco, k2_gen, sigmaRelPt1, sigmaRelPt2);
+	//      }
+
     }//loop over tree entries
 
     hmEta.draw("Eta");
