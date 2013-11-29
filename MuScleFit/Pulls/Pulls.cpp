@@ -8,6 +8,7 @@
 #include "LinkDef.h"
 #include "TFile.h"
 #include "TROOT.h"
+#include "TStyle.h"
 #include "TTree.h"
 #include "TLegend.h"
 #include "TPaveText.h"
@@ -225,16 +226,14 @@ HistosManager::HistosManager(const char* xName, const char* xLabel, int nX, doub
   h_MeanDeltaKvsX_anychg_2s->SetMarkerColor(kRed); 
   h_MeanDeltaKvsX_anychg_2s->SetLineColor(kRed); 
  
-  // Summary hitsos of the measured resolution from MC truth
-  sprintf(h_name ,"h_sigmaKvs%s_neg_2s", xName);
-  sprintf(h_label,";%s (#mu^{-}); #Delta(#kappa)/#kappa",xLabel);
-  h_SigmaKvsX_neg_2s = new TH1D(h_name,h_label,nBin,xBin);
-  sprintf(h_name ,"h_sigmaKvs%s_pos_2s", xName);
-  sprintf(h_label,";%s (#mu^{+}); #Delta(#kappa)/#kappa",xLabel);
-  h_SigmaKvsX_pos_2s = new TH1D(h_name,h_label,nBin,xBin);
-  sprintf(h_name ,"h_sigmaKvs%s_anychg_2s", xName);
-  sprintf(h_label,";%s (#mu); #Delta(#kappa)/#kappa",xLabel);
-  h_SigmaKvsX_anychg_2s = new TH1D(h_name,h_label,nBin,xBin);
+  sprintf (h_name, "h_sigmaKvs%s_neg_2s", xName);
+  h_SigmaKvsX_neg_2s = new TH1D(h_name,";#eta (#mu^{-}); #sigma(#kappa)/#kappa",nBin,xBin);
+
+  sprintf (h_name, "h_sigmaKvs%s_pos_2s", xName);
+  h_SigmaKvsX_pos_2s = new TH1D(h_name,";#eta (#mu^{+}); #sigma(#kappa)/#kappa",nBin,xBin);
+
+  sprintf (h_name, "h_sigmaKvs%s_anychg_2s", xName);
+  h_SigmaKvsX_anychg_2s = new TH1D(h_name,";#eta (#mu); #sigma(#kappa)/#kappa",nBin,xBin);
 
   h_SigmaKvsX_neg_2s->SetMarkerStyle(kFullCircle); 
   h_SigmaKvsX_neg_2s->SetMarkerSize(0.5); 
@@ -909,6 +908,207 @@ void HistosManager::draw(const char* xName){
 
 }
 
+/*--------------------------------------------------*/
+
+class HistosManager2D {
+public:
+  HistosManager2D(const char*, const char*, int, double, double, const char*, const char*, int, double, double, int);
+  void analyze(double x1_reco, double y1_reco, double k1_reco, double k1_gen, 
+	       double x2_reco, double y2_reco, double k2_reco, double k2_gen, 	       
+	       double sigmaRelPt1[], double sigmaRelPt2[]);
+  void draw(const char*, const char*);
+
+private:
+  const int nBinX, nBinY;
+  double *xBin, *yBin; 
+  
+  // array of h1 for residuals 
+  TH1D*** h_DeltaKvsXY_neg;  
+  TH1D*** h_DeltaKvsXY_pos;  
+  TH1D*** h_DeltaKvsXY_anychg;  
+
+  // Summary hitsos of the residual offset from MC truth
+  TH2D* h2_MeanDeltaKvsXY_neg;
+  TH2D* h2_MeanDeltaKvsXY_pos;
+  TH2D* h2_MeanDeltaKvsXY_anychg;
+
+  // Summary hitsos of the measured resolution from MC truth
+  TH2D* h2_SigmaKvsXY_neg;
+  TH2D* h2_SigmaKvsXY_pos;
+  TH2D* h2_SigmaKvsXY_anychg;
+
+  int nCor;
+};
+
+
+HistosManager2D::HistosManager2D(const char* xName, const char* xLabel, int nX, double x0, double dx, 
+				 const char* yName, const char* yLabel, int nY, double y0, double dy, 
+				 int nC) : nBinX(nX), nBinY(nY), nCor(nC) {
+  char h_name[50];
+  char h_label[50];
+
+  xBin = new double[nBinX+1];
+  xBin[0]=x0;
+  for ( int iBin=0; iBin<nBinX; iBin++ )  
+    xBin[iBin+1]=xBin[iBin]+dx;
+
+  yBin = new double[nBinY+1];
+  yBin[0]=y0;
+  for ( int iBin=0; iBin<nBinY; iBin++ )  
+    yBin[iBin+1]=yBin[iBin]+dy;
+
+  // array of h1 for residuals 
+  h_DeltaKvsXY_neg = new TH1D** [nBinX];
+  h_DeltaKvsXY_pos = new TH1D** [nBinX];
+  h_DeltaKvsXY_anychg = new TH1D** [nBinX];
+  
+  for ( int iBin=0; iBin<nBinX; iBin++ ) {    
+    h_DeltaKvsXY_neg[iBin] = new TH1D* [nBinY];
+    h_DeltaKvsXY_pos[iBin] = new TH1D* [nBinY];
+    h_DeltaKvsXY_anychg[iBin] = new TH1D* [nBinY];
+    for ( int jBin=0; jBin<nBinY; jBin++ ) {          
+      sprintf(h_name ,"h_DeltaKvs%s%s_neg_bin%d_%d", xName, yName, iBin, jBin);
+      sprintf(h_label,"(k_{reco}-k_{gen})/k_{gen} (%s^{-} vs. %s^{-})",yLabel,xLabel);
+      h_DeltaKvsXY_neg[iBin][jBin] = new TH1D(h_name,h_label,50,-0.1,0.1);
+      sprintf(h_name ,"h_DeltaKvs%s%s_pos_bin%d_%d", xName, yName, iBin, jBin);
+      sprintf(h_label,"(k_{reco}-k_{gen})/k_{gen} (%s^{+} vs %s^{+})",yLabel,xLabel);
+      h_DeltaKvsXY_pos[iBin][jBin] = new TH1D(h_name,h_label,50,-0.1,0.1);
+      sprintf(h_name ,"h_DeltaKvs%s%s_anychg_bin%d_%d", xName, yName, iBin, jBin);
+      sprintf(h_label,"(k_{reco}-k_{gen})/k_{gen} (%s^{any} vs %s^{any})",yLabel,xLabel);
+      h_DeltaKvsXY_anychg[iBin][jBin] = new TH1D(h_name,h_label,50,-0.1,0.1);
+    }
+  }
+
+
+  // Summary hitsos of the residual offset from MC truth
+  sprintf(h_name ,"h2_meandeltaKvs%svs%s_neg", xName, yName);
+  sprintf(h_label,";%s (#mu^{-}); %s (#mu^{-}); #Delta(#kappa)/#kappa", xLabel, yLabel);
+  h2_MeanDeltaKvsXY_neg = new TH2D(h_name, h_label, nBinX, xBin, nBinY, yBin);
+  h2_MeanDeltaKvsXY_neg->SetStats(0);
+
+  sprintf(h_name ,"h2_meandeltaKvs%svs%s_pos", xName, yName);
+  sprintf(h_label,";%s (#mu^{+}); %s (#mu^{+}); #Delta(#kappa)/#kappa", xLabel, yLabel);
+  h2_MeanDeltaKvsXY_pos = new TH2D(h_name, h_label, nBinX, xBin, nBinY, yBin);
+  h2_MeanDeltaKvsXY_pos->SetStats(0);
+
+  sprintf(h_name ,"h2_meandeltaKvs%svs%s_anychg", xName, yName);
+  sprintf(h_label,";%s (#mu); %s (#mu); #Delta(#kappa)/#kappa",xLabel, yLabel);
+  h2_MeanDeltaKvsXY_anychg = new TH2D(h_name, h_label, nBinX, xBin, nBinY, yBin);
+  h2_MeanDeltaKvsXY_anychg->SetStats(0);
+
+  sprintf(h_name, "h2_sigmaKvs%svs%s_neg", xName, yName);
+  sprintf(h_label,";%s (#mu^{-}); %s (#mu^{-}); #Delta(#kappa)/#kappa", xLabel, yLabel);
+  h2_SigmaKvsXY_neg = new TH2D(h_name, h_label,nBinX, xBin, nBinY, yBin);
+  h2_SigmaKvsXY_neg->SetStats(0);
+
+  sprintf(h_name, "h2_sigmaKvs%s%s_pos", xName, yName);
+  sprintf(h_label,";%s (#mu^{-}); %s (#mu^{-}); #Delta(#kappa)/#kappa", xLabel, yLabel);
+  h2_SigmaKvsXY_pos = new TH2D(h_name, h_label,nBinX, xBin, nBinY, yBin);
+  h2_SigmaKvsXY_pos->SetStats(0);
+
+  sprintf(h_name, "h2_sigmaKvs%s%s_anychg", xName, yName);
+  sprintf(h_label,";%s (#mu); %s (#mu); #Delta(#kappa)/#kappa", xLabel, yLabel);
+  h2_SigmaKvsXY_anychg = new TH2D(h_name, h_label, nBinX, xBin, nBinY, yBin);
+  h2_SigmaKvsXY_anychg->SetStats(0);
+}
+
+void HistosManager2D::analyze(double x1_reco, double y1_reco, double k1_reco, double k1_gen, 
+	                      double x2_reco, double y2_reco, double k2_reco, double k2_gen, 	       
+	     double sigmaRelPt1[], double sigmaRelPt2[]) {
+
+
+      //---------------- fill TH1 for resolution vs eta, pT
+
+  int iXBin  = h2_SigmaKvsXY_neg->GetXaxis()->FindBin(x1_reco)-1;
+  int iYBin  = h2_SigmaKvsXY_neg->GetYaxis()->FindBin(y1_reco)-1;
+  if ( iXBin > -1 && iXBin < nBinX  && iYBin > -1 && iYBin < nBinY ) { 
+    h_DeltaKvsXY_neg[iXBin][iYBin]->Fill(k1_reco/k1_gen-1.);
+    h_DeltaKvsXY_anychg[iXBin][iYBin]->Fill(k1_reco/k1_gen-1.);
+  }
+  
+  iXBin  = h2_SigmaKvsXY_neg->GetXaxis()->FindBin(x2_reco)-1;
+  iYBin  = h2_SigmaKvsXY_neg->GetXaxis()->FindBin(y2_reco)-1;
+  if ( iXBin > -1 && iXBin < nBinX  && iYBin > -1 && iYBin < nBinY ) { 
+    h_DeltaKvsXY_pos[iXBin][iYBin]->Fill(k2_reco/k2_gen-1.);
+    h_DeltaKvsXY_anychg[iXBin][iYBin]->Fill(k2_reco/k2_gen-1.);
+  }
+
+  return;
+}
+
+
+void HistosManager2D::draw(const char * xName, const char * yName){
+
+    char buffer[50];
+    double nRMS(2);
+
+    double mean, sigma;
+    double mean_err, sigma_err;
+    int w, h;
+
+    // canvas with table of 1D fit
+    TCanvas* c1XY_all = new TCanvas("c1XY_all","c1XY_all",900,900);
+    c1XY_all->SetFillColor(kWhite);  
+
+    w = ceil(sqrt(nBinX*nBinY));
+    h = round(sqrt(nBinX*nBinY));   
+    c1XY_all->Divide(w,h);
+
+
+    int iBin=0;
+
+    // array of helper function for gaussian fit of the h1 residuals
+    //    TF1** gaus_DeltaKvsXY_neg = new TF1* [nBinX];
+    //    TF1** gaus_DeltaKvsXY_pos = new TF1* [nBinX];  
+    TF1*** gaus_DeltaKvsXY_anychg = new TF1** [nBinX];  
+
+    for ( int iBinX=0; iBinX<nBinX; iBinX++ ) {    
+      //      gaus_DeltaKvsXY_neg[iBinX] = new TF1* [nBinY];
+      //      gaus_DeltaKvsXY_pos[iBinX] = new TF1* [nBinY];
+      gaus_DeltaKvsXY_anychg[iBinX] = new TF1* [nBinY];
+
+      for ( int iBinY=0; iBinY<nBinY; iBinY++ ) {    
+      
+	c1XY_all->cd(++iBin);
+	gaus_DeltaKvsXY_anychg[iBinX][iBinY] = drawGFit(h_DeltaKvsXY_anychg[iBinX][iBinY], nRMS  ,nRMS  ,-0.1,0.1, (TPad*)c1XY_all->GetPad(iBin));
+	
+	mean = gaus_DeltaKvsXY_anychg[iBinX][iBinY]->GetParameter("Mean");    
+	mean_err = gaus_DeltaKvsXY_anychg[iBinX][iBinY]->GetParError(1);
+	h2_MeanDeltaKvsXY_anychg->SetBinContent(iBinX+1,iBinY+1,mean);
+	h2_MeanDeltaKvsXY_anychg->SetBinError(iBinX+1,iBinY+1,mean_err);
+	
+	sigma = gaus_DeltaKvsXY_anychg[iBinX][iBinY]->GetParameter("Sigma");    
+	sigma_err = gaus_DeltaKvsXY_anychg[iBinX][iBinY]->GetParError(2);
+	h2_SigmaKvsXY_anychg->SetBinContent(iBinX+1,iBinY+1,sigma);
+	h2_SigmaKvsXY_anychg->SetBinError(iBinX+1,iBinY+1,sigma_err);
+	h_DeltaKvsXY_anychg[iBinX][iBinY]->Draw();     
+      }
+    }
+    sprintf (buffer,"DeltaKvs%s%s_all.pdf", xName, yName);
+    c1XY_all->SaveAs(buffer);
+
+    // canvas 
+    gStyle->SetPalette(1);
+    TCanvas* c2XY_all = new TCanvas("c2XY_all","c2XY_all",900,900);
+    c2XY_all->SetFillColor(kWhite);  
+    c2XY_all->Divide(1,2);
+
+    c2XY_all->cd(1);
+    h2_MeanDeltaKvsXY_anychg->Draw("colz");
+    h2_MeanDeltaKvsXY_anychg->SetMinimum(-0.02);
+    h2_MeanDeltaKvsXY_anychg->SetMaximum(+0.02);
+    c2XY_all->cd(2);
+    h2_SigmaKvsXY_anychg->Draw("colz");
+    h2_SigmaKvsXY_anychg->SetMinimum(0.);
+    h2_SigmaKvsXY_anychg->SetMaximum(0.02);
+
+    sprintf (buffer,"MeanKvs%s%s_all.pdf", xName, yName);
+    c2XY_all->SaveAs(buffer);
+
+    return;
+}
+
+/*--------------------------------------------------*/
 
 int main(int argc, char *argv[]){
 
@@ -926,8 +1126,6 @@ int main(int argc, char *argv[]){
 
   const int nCor(1);
 
-  TFile *fout = TFile::Open("TH2.root","RECREATE");
-
   //---------------- STUDY OF RESOLUTION VS eta
   HistosManager hmEta("Eta","#eta",48,-2.4,0.1,nCor);
 
@@ -936,6 +1134,9 @@ int main(int argc, char *argv[]){
 
   //---------------- STUDY OF RESOLUTION VS phi
   HistosManager hmPhi("phi","#phi",42,-3.15,0.15,nCor);
+
+  //---------------- STUDY OF RESOLUTION VS eta
+  HistosManager2D hm2dEtaPt("Eta","#eta",12,-2.4,0.4,"pT","pT",8,10.0,20.0,nCor);
 
 
  //-------------------
@@ -991,8 +1192,8 @@ int main(int argc, char *argv[]){
       hmPhi.monitor(muNeg->Phi(),muPos->Phi(),mumu->M());
 
       // comment next two lines in case muons have been alread corrected
-//       corrector_[0]->applyPtCorrection(*muNeg,-1); 
-//       corrector_[0]->applyPtCorrection(*muPos,+1);
+//      corrector_[0]->applyPtCorrection(*muNeg,-1); 
+//      corrector_[0]->applyPtCorrection(*muPos,+1);
 
       // Get pts and etas
       double pt1_reco = muNeg->Pt(); double eta1_reco = muNeg->Eta(); double phi1_reco = muNeg->Phi();
@@ -1044,9 +1245,15 @@ int main(int argc, char *argv[]){
       }
       
       //      if ( mass_reco>=80 && mass_reco<=100 ) {
-      hmEta.analyze(eta1_gen, k1_reco, k1_gen, eta2_gen,  k2_reco, k2_gen, sigmaRelPt1, sigmaRelPt2);
-      hmPt.analyze(pt1_gen, k1_reco, k1_gen, pt2_gen, k2_reco, k2_gen, sigmaRelPt1, sigmaRelPt2);
+      hmEta.analyze(eta1_gen, k1_reco, k1_gen, eta2_gen, k2_reco, k2_gen, sigmaRelPt1, sigmaRelPt2);
+      hmPt.analyze (pt1_gen , k1_reco, k1_gen, pt2_gen , k2_reco, k2_gen, sigmaRelPt1, sigmaRelPt2);
       hmPhi.analyze(phi1_gen, k1_reco, k1_gen, phi2_gen, k2_reco, k2_gen, sigmaRelPt1, sigmaRelPt2);
+
+      hm2dEtaPt.analyze(eta1_gen, pt1_gen, k1_reco, k1_gen, 
+			eta2_gen, pt2_gen, k2_reco, k2_gen, 
+			sigmaRelPt1, sigmaRelPt2);
+
+
 	//      }
 
     }//loop over tree entries
@@ -1054,6 +1261,8 @@ int main(int argc, char *argv[]){
     hmEta.draw("Eta");
     hmPt.draw("pT");   
     hmPhi.draw("Phi");   
+
+    hm2dEtaPt.draw("pT","Eta");
     
   }//check if tree has any entry
 
@@ -1061,11 +1270,6 @@ int main(int argc, char *argv[]){
   //close & write 
   fin->Close();
   if ( fin!=0 ) delete fin;
-
-
-  fout->cd();
-  /* TODO #4  h2_SigmaKvsEtaPt_all->Write(); */
-  fout->Close();
 
   return 0;
   
