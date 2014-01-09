@@ -1,6 +1,6 @@
 Fitting with resolution, scale, bgr function # 45 50 0 - Iteration 0
  Scale fit parameters:
-  Results of the fit: parameter 13 has value 0.00017 +-0 + 0 - 0
+  Results of the fit: parameter 13 has value 0. +-0 + 0 - 0
   Results of the fit: parameter 14 has value 0.00111583+-6.25657e-06 + 0 - 0
   Results of the fit: parameter 15 has value -0.00827517+-0.00543034 + 0 - 0
   Results of the fit: parameter 16 has value 7.52007e-06+-3.55707e-05 + 0 - 0
