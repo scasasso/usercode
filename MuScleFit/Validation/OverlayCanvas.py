@@ -29,7 +29,7 @@ def main():
 ### m(mumu) vs. Eta
 
     # dictionary for Z
-    dict_Eta = {'ScalePdg_mc_Eta_afterCorrection_V0':ROOT.kBlack,\
+    dict_Eta = {'ScalePdg_mc_Eta_Z_afterCorrection_V0':ROOT.kBlack,\
     #            'ScalePdg_mc_Eta_afterCorrection_V1':ROOT.kBlue, \
     #            'ScalePdg_mc_Eta_Z_afterCorrection_V2':ROOT.kGreen,\
                 'ScalePdg_mc_Eta_Z_afterCorrection_V3':ROOT.kRed}
@@ -90,7 +90,7 @@ def main():
 ### m(mumu) vs. pT
 
     # dictionary for Z
-    dict_Pt = {'ScalePdg_mc_Pt_afterCorrection_V0':ROOT.kBlack,\
+    dict_Pt = {'ScalePdg_mc_Pt_Z_afterCorrection_V0':ROOT.kBlack,\
     #           'ScalePdg_mc_Pt_afterCorrection_V1':ROOT.kBlue, \
     #           'ScalePdg_mc_Pt_Z_afterCorrection_V2':ROOT.kGreen,\
                'ScalePdg_mc_Pt_Z_afterCorrection_V3':ROOT.kRed}
