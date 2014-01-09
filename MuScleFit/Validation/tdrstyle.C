@@ -129,7 +129,7 @@ void setTDRStyle() {
   tdrStyle->SetLabelColor(1, "XYZ");
   tdrStyle->SetLabelFont(40, "XYZ");
   tdrStyle->SetLabelOffset(0.007, "XYZ");
-  tdrStyle->SetLabelSize(0.05, "XYZ");
+  tdrStyle->SetLabelSize(0.036, "XYZ");
 
 // For the axis:
 

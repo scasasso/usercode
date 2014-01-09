@@ -34,14 +34,20 @@ def main():
        recreate = "READ"
 
     if opt.processZ==True:
-        outCfg.write("Z data "+subprocess.check_output(['cmsPfn',ZdataTree]).rstrip()+" "+ZdataTxt+" 70 110 "+recreate+" \n")
-        outCfg.write("Z mc "+subprocess.check_output(['cmsPfn',ZmcTree]).rstrip()+" "+ZmcTxt+" 70 110 "+recreate+" \n")
+#         outCfg.write("Z data "+subprocess.check_output(['cmsPfn',ZdataTree]).rstrip()+" "+ZdataTxt+" 70 110 "+recreate+" \n")
+#         outCfg.write("Z mc "+subprocess.check_output(['cmsPfn',ZmcTree]).rstrip()+" "+ZmcTxt+" 70 110 "+recreate+" \n")
+        outCfg.write("Z data "+ZdataTree+" "+ZdataTxt+" 70 110 "+recreate+" \n")
+        outCfg.write("Z mc "+ZmcTree+" "+ZmcTxt+" 70 110 "+recreate+" \n")
     if opt.processY==True:
-        outCfg.write("Y data "+subprocess.check_output(['cmsPfn',YdataTree]).rstrip()+" "+YdataTxt+" 8.6 11.3 "+recreate+" \n")
-        outCfg.write("Y mc "+subprocess.check_output(['cmsPfn',YmcTree]).rstrip()+" "+YmcTxt+" 8.6 11.3 "+recreate+" \n")
+#         outCfg.write("Y data "+subprocess.check_output(['cmsPfn',YdataTree]).rstrip()+" "+YdataTxt+" 8.6 11.3 "+recreate+" \n")
+#         outCfg.write("Y mc "+subprocess.check_output(['cmsPfn',YmcTree]).rstrip()+" "+YmcTxt+" 8.6 11.3 "+recreate+" \n")
+        outCfg.write("Y data "+YdataTree+" "+YdataTxt+" 8.6 11.3 "+recreate+" \n")
+        outCfg.write("Y mc "+YmcTree+" "+YmcTxt+" 8.6 11.3 "+recreate+" \n")
     if opt.processJPsi==True:
-        outCfg.write("JPsi data "+subprocess.check_output(['cmsPfn',JPsidataTree]).rstrip()+" "+JPsidataTxt+" 2.8 3.4 "+recreate+" \n")
-        outCfg.write("JPsi mc "+subprocess.check_output(['cmsPfn',JPsimcTree]).rstrip()+" "+JPsimcTxt+" 2.8 3.4 "+recreate+" \n")
+#         outCfg.write("JPsi data "+subprocess.check_output(['cmsPfn',JPsidataTree]).rstrip()+" "+JPsidataTxt+" 2.8 3.4 "+recreate+" \n")
+#         outCfg.write("JPsi mc "+subprocess.check_output(['cmsPfn',JPsimcTree]).rstrip()+" "+JPsimcTxt+" 2.8 3.4 "+recreate+" \n")
+        outCfg.write("JPsi data "+JPsidataTree+" "+JPsidataTxt+" 2.8 3.4 "+recreate+" \n")
+        outCfg.write("JPsi mc "+JPsimcTree+" "+JPsimcTxt+" 2.8 3.4 "+recreate+" \n")
 
     outCfg.write("# stupid std::ifstream: this file should not end with an empty line!")
 
