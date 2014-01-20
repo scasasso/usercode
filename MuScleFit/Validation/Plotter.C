@@ -8,6 +8,7 @@
 #include "TAxis.h"
 #include "TLine.h"
 #include "TLegend.h"
+#include "TPaveText.h"
 #include "TROOT.h"
 
 
@@ -20,7 +21,9 @@
 
 using namespace std;
 
-Double_t computeError(Double_t, Double_t, Double_t, Double_t);
+Double_t computeErrorScale(Double_t, Double_t, Double_t);
+
+Double_t computeErrorResol(Double_t, Double_t, Double_t, Double_t);
 
 Double_t computeErrorPdg(Double_t, Double_t);
 
@@ -303,10 +306,13 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t e2_mass = mass_Z_pt_mc_Err[i][j];
 	Double_t e1_sigma = sigma_Z_pt_data_Err[i][j];
 	Double_t e2_sigma = sigma_Z_pt_mc_Err[i][j];
-	Double_t dMass = (mass_Z_pt_data[i][j] - mass_Z_pt_mc[i][j])/mass_Z_pt_data[i][j];
-	Double_t dMassErr = computeError(e1_mass,e2_mass,mass_Z_pt_data[i][j],mass_Z_pt_mc[i][j]);
-	Double_t dSigma = (sigma_Z_pt_data[i][j] - sigma_Z_pt_mc[i][j])/sigma_Z_pt_data[i][j];
-	Double_t dSigmaErr = computeError(e1_sigma,e2_sigma,sigma_Z_pt_data[i][j],sigma_Z_pt_mc[i][j]);
+	// Double_t dMass = (mass_Z_pt_data[i][j] - mass_Z_pt_mc[i][j])/mass_Z_pt_data[i][j]; //buggy
+	Double_t dMass = (mass_Z_pt_data[i][j] - mass_Z_pt_mc[i][j])/mass_Z;
+	// Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Z_pt_data[i][j],mass_Z_pt_mc[i][j]); //buggy
+	Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Z);
+	// Double_t dSigma = (sigma_Z_pt_data[i][j] - sigma_Z_pt_mc[i][j])/sigma_Z_pt_data[i][j]; //buggy
+	Double_t dSigma = (sigma_Z_pt_data[i][j] - sigma_Z_pt_mc[i][j])/sigma_Z_pt_mc[i][j];
+	Double_t dSigmaErr = computeErrorResol(e1_sigma,e2_sigma,sigma_Z_pt_data[i][j],sigma_Z_pt_mc[i][j]);
 	dMass_Z_pt[i][j] = dMass; dMass_Z_pt_Err[i][j] = dMassErr;
 	dSigma_Z_pt[i][j] = dSigma; dSigma_Z_pt_Err[i][j] = dSigmaErr;
 	// cout<<"Mass_data["<<i<<"]["<<j<<"] = "<<mass_Z_pt_data[i][j]<<endl;
@@ -330,10 +336,13 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t e2_mass = mass_Z_eta_mc_Err[i][j];
 	Double_t e1_sigma = sigma_Z_eta_data_Err[i][j];
 	Double_t e2_sigma = sigma_Z_eta_mc_Err[i][j];
-	Double_t dMass = (mass_Z_eta_data[i][j] - mass_Z_eta_mc[i][j])/mass_Z_eta_data[i][j];
-	Double_t dMassErr = computeError(e1_mass,e2_mass,mass_Z_eta_data[i][j],mass_Z_eta_mc[i][j]);
-	Double_t dSigma = (sigma_Z_eta_data[i][j] - sigma_Z_eta_mc[i][j])/sigma_Z_eta_data[i][j];
-	Double_t dSigmaErr = computeError(e1_sigma,e2_sigma,sigma_Z_eta_data[i][j],sigma_Z_eta_mc[i][j]);
+	// Double_t dMass = (mass_Z_eta_data[i][j] - mass_Z_eta_mc[i][j])/mass_Z_eta_data[i][j]; //buggy
+	Double_t dMass = (mass_Z_eta_data[i][j] - mass_Z_eta_mc[i][j])/mass_Z;
+	// Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Z_eta_data[i][j],mass_Z_eta_mc[i][j]); //buggy
+	Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Z);
+	// Double_t dSigma = (sigma_Z_eta_data[i][j] - sigma_Z_eta_mc[i][j])/sigma_Z_eta_data[i][j]; //buggy
+	Double_t dSigma = (sigma_Z_eta_data[i][j] - sigma_Z_eta_mc[i][j])/sigma_Z_eta_mc[i][j];
+	Double_t dSigmaErr = computeErrorResol(e1_sigma,e2_sigma,sigma_Z_eta_data[i][j],sigma_Z_eta_mc[i][j]);
 	dMass_Z_eta[i][j] = dMass; dMass_Z_eta_Err[i][j] = dMassErr;
 	dSigma_Z_eta[i][j] = dSigma; dSigma_Z_eta_Err[i][j] = dSigmaErr;
 	// cout<<"Mass_data["<<i<<"]["<<j<<"] = "<<mass_Z_eta_data[i][j]<<endl;
@@ -360,10 +369,13 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t e2_mass = mass_Y_pt_mc_Err[i][j];
 	Double_t e1_sigma = sigma_Y_pt_data_Err[i][j];
 	Double_t e2_sigma = sigma_Y_pt_mc_Err[i][j];
-	Double_t dMass = (mass_Y_pt_data[i][j] - mass_Y_pt_mc[i][j])/mass_Y_pt_data[i][j];
-	Double_t dMassErr = computeError(e1_mass,e2_mass,mass_Y_pt_data[i][j],mass_Y_pt_mc[i][j]);
-	Double_t dSigma = (sigma_Y_pt_data[i][j] - sigma_Y_pt_mc[i][j])/sigma_Y_pt_data[i][j];
-	Double_t dSigmaErr = computeError(e1_sigma,e2_sigma,sigma_Y_pt_data[i][j],sigma_Y_pt_mc[i][j]);
+	// Double_t dMass = (mass_Y_pt_data[i][j] - mass_Y_pt_mc[i][j])/mass_Y_pt_data[i][j]; //buggy
+	Double_t dMass = (mass_Y_pt_data[i][j] - mass_Y_pt_mc[i][j])/mass_Y;
+	// Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Y_pt_data[i][j],mass_Y_pt_mc[i][j]); //buggy
+	Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Y);
+	// Double_t dSigma = (sigma_Y_pt_data[i][j] - sigma_Y_pt_mc[i][j])/sigma_Y_pt_data[i][j]; //buggy
+	Double_t dSigma = (sigma_Y_pt_data[i][j] - sigma_Y_pt_mc[i][j])/sigma_Y_pt_mc[i][j];
+	Double_t dSigmaErr = computeErrorResol(e1_sigma,e2_sigma,sigma_Y_pt_data[i][j],sigma_Y_pt_mc[i][j]);
 	dMass_Y_pt[i][j] = dMass; dMass_Y_pt_Err[i][j] = dMassErr;
 	dSigma_Y_pt[i][j] = dSigma; dSigma_Y_pt_Err[i][j] = dSigmaErr;
 	// cout<<"Mass_data["<<i<<"]["<<j<<"] = "<<mass_Y_pt_data[i][j]<<endl;
@@ -387,10 +399,13 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t e2_mass = mass_Y_eta_mc_Err[i][j];
 	Double_t e1_sigma = sigma_Y_eta_data_Err[i][j];
 	Double_t e2_sigma = sigma_Y_eta_mc_Err[i][j];
-	Double_t dMass = (mass_Y_eta_data[i][j] - mass_Y_eta_mc[i][j])/mass_Y_eta_data[i][j];
-	Double_t dMassErr = computeError(e1_mass,e2_mass,mass_Y_eta_data[i][j],mass_Y_eta_mc[i][j]);
-	Double_t dSigma = (sigma_Y_eta_data[i][j] - sigma_Y_eta_mc[i][j])/sigma_Y_eta_data[i][j];
-	Double_t dSigmaErr = computeError(e1_sigma,e2_sigma,sigma_Y_eta_data[i][j],sigma_Y_eta_mc[i][j]);
+	// Double_t dMass = (mass_Y_eta_data[i][j] - mass_Y_eta_mc[i][j])/mass_Y_eta_data[i][j]; //buggy
+	Double_t dMass = (mass_Y_eta_data[i][j] - mass_Y_eta_mc[i][j])/mass_Y;
+	// Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Y_eta_data[i][j],mass_Y_eta_mc[i][j]); //buggy
+	Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Y);
+	// Double_t dSigma = (sigma_Y_eta_data[i][j] - sigma_Y_eta_mc[i][j])/sigma_Y_eta_data[i][j]; //buggy
+	Double_t dSigma = (sigma_Y_eta_data[i][j] - sigma_Y_eta_mc[i][j])/sigma_Y_eta_mc[i][j];
+	Double_t dSigmaErr = computeErrorResol(e1_sigma,e2_sigma,sigma_Y_eta_data[i][j],sigma_Y_eta_mc[i][j]);
 	dMass_Y_eta[i][j] = dMass; dMass_Y_eta_Err[i][j] = dMassErr;
 	dSigma_Y_eta[i][j] = dSigma; dSigma_Y_eta_Err[i][j] = dSigmaErr;
 	// cout<<"Mass_data["<<i<<"]["<<j<<"] = "<<mass_Y_eta_data[i][j]<<endl;
@@ -417,10 +432,13 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t e2_mass = mass_JPsi_pt_mc_Err[i][j];
 	Double_t e1_sigma = sigma_JPsi_pt_data_Err[i][j];
 	Double_t e2_sigma = sigma_JPsi_pt_mc_Err[i][j];
-	Double_t dMass = (mass_JPsi_pt_data[i][j] - mass_JPsi_pt_mc[i][j])/mass_JPsi_pt_data[i][j];
-	Double_t dMassErr = computeError(e1_mass,e2_mass,mass_JPsi_pt_data[i][j],mass_JPsi_pt_mc[i][j]);
-	Double_t dSigma = (sigma_JPsi_pt_data[i][j] - sigma_JPsi_pt_mc[i][j])/sigma_JPsi_pt_data[i][j];
-	Double_t dSigmaErr = computeError(e1_sigma,e2_sigma,sigma_JPsi_pt_data[i][j],sigma_JPsi_pt_mc[i][j]);
+	// Double_t dMass = (mass_JPsi_pt_data[i][j] - mass_JPsi_pt_mc[i][j])/mass_JPsi_pt_data[i][j]; //buggy
+	Double_t dMass = (mass_JPsi_pt_data[i][j] - mass_JPsi_pt_mc[i][j])/mass_JPsi;
+	// Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_JPsi_pt_data[i][j],mass_JPsi_pt_mc[i][j]); //buggy
+	Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_JPsi);
+	// Double_t dSigma = (sigma_JPsi_pt_data[i][j] - sigma_JPsi_pt_mc[i][j])/sigma_JPsi_pt_data[i][j];
+	Double_t dSigma = (sigma_JPsi_pt_data[i][j] - sigma_JPsi_pt_mc[i][j])/sigma_JPsi_pt_mc[i][j];
+	Double_t dSigmaErr = computeErrorResol(e1_sigma,e2_sigma,sigma_JPsi_pt_data[i][j],sigma_JPsi_pt_mc[i][j]);
 	dMass_JPsi_pt[i][j] = dMass; dMass_JPsi_pt_Err[i][j] = dMassErr;
 	dSigma_JPsi_pt[i][j] = dSigma; dSigma_JPsi_pt_Err[i][j] = dSigmaErr;
 	// cout<<"Mass_data["<<i<<"]["<<j<<"] = "<<mass_JPsi_pt_data[i][j]<<endl;
@@ -444,10 +462,13 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t e2_mass = mass_JPsi_eta_mc_Err[i][j];
 	Double_t e1_sigma = sigma_JPsi_eta_data_Err[i][j];
 	Double_t e2_sigma = sigma_JPsi_eta_mc_Err[i][j];
-	Double_t dMass = (mass_JPsi_eta_data[i][j] - mass_JPsi_eta_mc[i][j])/mass_JPsi_eta_data[i][j];
-	Double_t dMassErr = computeError(e1_mass,e2_mass,mass_JPsi_eta_data[i][j],mass_JPsi_eta_mc[i][j]);
-	Double_t dSigma = (sigma_JPsi_eta_data[i][j] - sigma_JPsi_eta_mc[i][j])/sigma_JPsi_eta_data[i][j];
-	Double_t dSigmaErr = computeError(e1_sigma,e2_sigma,sigma_JPsi_eta_data[i][j],sigma_JPsi_eta_mc[i][j]);
+	// Double_t dMass = (mass_JPsi_eta_data[i][j] - mass_JPsi_eta_mc[i][j])/mass_JPsi_eta_data[i][j]; //buggy
+	Double_t dMass = (mass_JPsi_eta_data[i][j] - mass_JPsi_eta_mc[i][j])/mass_JPsi;
+	// Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_JPsi_eta_data[i][j],mass_JPsi_eta_mc[i][j]); //buggy
+	Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_JPsi);
+	// Double_t dSigma = (sigma_JPsi_eta_data[i][j] - sigma_JPsi_eta_mc[i][j])/sigma_JPsi_eta_data[i][j]; //buggy
+	Double_t dSigma = (sigma_JPsi_eta_data[i][j] - sigma_JPsi_eta_mc[i][j])/sigma_JPsi_eta_mc[i][j];
+	Double_t dSigmaErr = computeErrorResol(e1_sigma,e2_sigma,sigma_JPsi_eta_data[i][j],sigma_JPsi_eta_mc[i][j]);
 	dMass_JPsi_eta[i][j] = dMass; dMass_JPsi_eta_Err[i][j] = dMassErr;
 	dSigma_JPsi_eta[i][j] = dSigma; dSigma_JPsi_eta_Err[i][j] = dSigmaErr;
 	// cout<<"Mass_data["<<i<<"]["<<j<<"] = "<<mass_JPsi_eta_data[i][j]<<endl;
@@ -505,25 +526,25 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   const Int_t markerStyleList_Y[6]    = {28, 34, 33, 13, 14, 15};
   const Int_t markerStyleList_JPsi[6] = {26, 33, 32, 27, 22, 15};
 
-  TLegend* legScalePt = new TLegend(0.55,0.75,0.95,0.9);
+  TLegend* legScalePt = new TLegend(0.55,0.70,0.95,0.90);
   legScalePt->SetFillColor(0);
   legScalePt->SetTextFont(42);
-  legScalePt->SetTextSize(0.03);
+  legScalePt->SetTextSize(0.035);
 
-  TLegend* legScaleEta = new TLegend(0.55,0.75,0.95,0.9);
+  TLegend* legScaleEta = new TLegend(0.55,0.70,0.95,0.90);
   legScaleEta->SetFillColor(0);
   legScaleEta->SetTextFont(42);
-  legScaleEta->SetTextSize(0.03);
+  legScaleEta->SetTextSize(0.035);
 
-  TLegend* legResolPt = new TLegend(0.55,0.75,0.95,0.9);
+  TLegend* legResolPt = new TLegend(0.55,0.20,0.95,0.40);
   legResolPt->SetFillColor(0);
   legResolPt->SetTextFont(42);
-  legResolPt->SetTextSize(0.03);
+  legResolPt->SetTextSize(0.035);
 
-  TLegend* legResolEta = new TLegend(0.55,0.75,0.95,0.9);
+  TLegend* legResolEta = new TLegend(0.55,0.70,0.95,0.90);
   legResolEta->SetFillColor(0);
   legResolEta->SetTextFont(42);
-  legResolEta->SetTextSize(0.03);
+  legResolEta->SetTextSize(0.035);
 
   // Shift x-axis for nice plotting
   Double_t ptOffset_Z = 2.; Double_t etaOffset_Z = 0.05;
@@ -747,11 +768,13 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
       tge_dMass_JPsi_eta[i] = new tge(nEtaBin_JPsi, xEta_JPsi_eta_shift[i], dMass_JPsi_eta[i], 0, dMass_JPsi_eta_Err[i]);
       tge_dMass_JPsi_eta[i]->SetMarkerStyle(markerStyleList_JPsi[i]);
       tge_dMass_JPsi_eta[i]->SetMarkerColor(colorList_JPsi[i]);
+      tge_dMass_JPsi_eta[i]->SetLineColor(colorList_JPsi[i]);
       legScaleEta->AddEntry(tge_dMass_JPsi_eta[i], legLabels_JPsi_eta[i], "P");
       //tge_dSigma_JPsi_eta[i] = new tge(nEtaBin_JPsi, xEta_JPsi_eta_shift[i], dSigma_JPsi_eta[i], xEta_JPsi_eta_Err, dSigma_JPsi_eta_Err[i]);
       tge_dSigma_JPsi_eta[i] = new tge(nEtaBin_JPsi, xEta_JPsi_eta_shift[i], dSigma_JPsi_eta[i], 0, dSigma_JPsi_eta_Err[i]);
       tge_dSigma_JPsi_eta[i]->SetMarkerStyle(markerStyleList_JPsi[i]);
       tge_dSigma_JPsi_eta[i]->SetMarkerColor(colorList_JPsi[i]);
+      tge_dSigma_JPsi_eta[i]->SetLineColor(colorList_JPsi[i]);
       legResolEta->AddEntry(tge_dSigma_JPsi_eta[i], legLabels_JPsi_eta[i], "P");
       mg_dMass_eta->Add(tge_dMass_JPsi_eta[i]);
       mg_dSigma_eta->Add(tge_dSigma_JPsi_eta[i]);
@@ -774,20 +797,37 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 
 
   // Plotting
+
+  TPaveText *cmsprel = new TPaveText(0.2, 0.95, 0.99, 0.99, "NDC");
+  cmsprel->SetTextSize(0.035);
+  cmsprel->SetTextFont(42);
+  cmsprel->SetFillColor(0);
+  cmsprel->SetBorderSize(0);
+  cmsprel->SetMargin(0.01);
+  cmsprel->SetTextAlign(12); // align left
+  cmsprel->AddText(0.0,0.5,"CMS Preliminary");
+  cmsprel->AddText(0.53,0.5,"#sqrt{s} = 8 TeV, L=19.5 fb^{-1}");
+
+
   TCanvas* cScalePt = new TCanvas("cScalePt","cScalePt");
   cScalePt->SetGridy();
   cScalePt->cd();
   mg_dMass_pt->Draw("AP");
   cScalePt->SaveAs("ScalePt"+append+".png");
+  cScalePt->SaveAs("ScalePt"+append+".pdf");
+  cScalePt->SaveAs("ScalePt"+append+".eps");
   cScalePt->SaveAs("ScalePt"+append+".root"); 
   mg_dMass_pt->GetYaxis()->SetTitle("#DeltaM/M (data-MC)");
   //mg_dMass_pt->GetYaxis()->SetTitleOffset(1.4);
   mg_dMass_pt->GetXaxis()->SetTitle("p_{T} (GeV)");
   //mg_dMass_pt->GetXaxis()->SetTitleOffset(1.2);
-  mg_dMass_pt->GetYaxis()->SetRangeUser(-0.005,0.005);
+  mg_dMass_pt->GetYaxis()->SetRangeUser(-0.003,0.003);
   mg_dMass_pt->GetXaxis()->SetRangeUser(0.,70.);
   legScalePt->Draw("same");
+  cmsprel->Draw("same");
   cScalePt->SaveAs("ScalePt"+append+".png");
+  cScalePt->SaveAs("ScalePt"+append+".pdf");
+  cScalePt->SaveAs("ScalePt"+append+".eps");
   cScalePt->SaveAs("ScalePt"+append+".root");
 
 
@@ -799,10 +839,12 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   //mg_dMass_eta->GetYaxis()->SetTitleOffset(1.4);
   mg_dMass_eta->GetXaxis()->SetTitle("|#eta|");
   //mg_dMass_eta->GetXaxis()->SetTitleOffset(1.2);
-  mg_dMass_eta->GetYaxis()->SetRangeUser(-0.005,0.005);
+  mg_dMass_eta->GetYaxis()->SetRangeUser(-0.003,0.003);
   mg_dMass_eta->GetXaxis()->SetRangeUser(0.,2.5);
   legScaleEta->Draw("same");
   cScaleEta->SaveAs("ScaleEta"+append+".png");
+  cScaleEta->SaveAs("ScaleEta"+append+".pdf");
+  cScaleEta->SaveAs("ScaleEta"+append+".eps");
   cScaleEta->SaveAs("ScaleEta"+append+".root");
 
   TCanvas* cResolPt = new TCanvas("cResolPt","cResolPt");
@@ -813,10 +855,12 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   //mg_dSigma_pt->GetYaxis()->SetTitleOffset(1.4);
   mg_dSigma_pt->GetXaxis()->SetTitle("p_{T} (GeV)");
   //mg_dSigma_pt->GetXaxis()->SetTitleOffset(1.2);
-  mg_dSigma_pt->GetYaxis()->SetRangeUser(-0.4,0.4);
+  mg_dSigma_pt->GetYaxis()->SetRangeUser(-0.2,0.2);
   mg_dSigma_pt->GetXaxis()->SetRangeUser(0.,70.);
   legResolPt->Draw("same");
   cResolPt->SaveAs("ResolPt"+append+".png");
+  cResolPt->SaveAs("ResolPt"+append+".pdf");
+  cResolPt->SaveAs("ResolPt"+append+".eps");
   cResolPt->SaveAs("ResolPt"+append+".root");
 
   TCanvas* cResolEta = new TCanvas("cResolEta","cResolEta");
@@ -827,10 +871,12 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   //mg_dSigma_eta->GetYaxis()->SetTitleOffset(1.4);
   mg_dSigma_eta->GetXaxis()->SetTitle("|#eta|");
   //mg_dSigma_eta->GetXaxis()->SetTitleOffset(1.2);
-  mg_dSigma_eta->GetYaxis()->SetRangeUser(-0.4,0.4);
+  mg_dSigma_eta->GetYaxis()->SetRangeUser(-0.2,0.2);
   mg_dSigma_eta->GetXaxis()->SetRangeUser(0.,2.5);
   legResolEta->Draw("same");
   cResolEta->SaveAs("ResolEta"+append+".png");
+  cResolEta->SaveAs("ResolEta"+append+".pdf");
+  cResolEta->SaveAs("ResolEta"+append+".eps");
   cResolEta->SaveAs("ResolEta"+append+".root");
 
   TCanvas* cScalePdg_data_Pt = new TCanvas("cScalePdg_data_Pt","cScalePdg_data_Pt");
@@ -845,6 +891,8 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   mg_dMassPdg_data_pt->GetXaxis()->SetRangeUser(0.,70.);
   legScalePt->Draw("same");
   cScalePdg_data_Pt->SaveAs("ScalePdg_data_Pt"+append+".png");
+  cScalePdg_data_Pt->SaveAs("ScalePdg_data_Pt"+append+".pdf");
+  cScalePdg_data_Pt->SaveAs("ScalePdg_data_Pt"+append+".eps");
   cScalePdg_data_Pt->SaveAs("ScalePdg_data_Pt"+append+".root");
 
   TCanvas* cScalePdg_data_Eta = new TCanvas("cScalePdg_data_Eta","cScalePdg_data_Eta");
@@ -859,6 +907,8 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   mg_dMassPdg_data_eta->GetXaxis()->SetRangeUser(0.,2.5);
   legScaleEta->Draw("same");
   cScalePdg_data_Eta->SaveAs("ScalePdg_data_Eta"+append+".png");
+  cScalePdg_data_Eta->SaveAs("ScalePdg_data_Eta"+append+".pdf");
+  cScalePdg_data_Eta->SaveAs("ScalePdg_data_Eta"+append+".eps");
   cScalePdg_data_Eta->SaveAs("ScalePdg_data_Eta"+append+".root"); 
 
   TCanvas* cScalePdg_mc_Pt = new TCanvas("cScalePdg_mc_Pt","cScalePdg_mc_Pt");
@@ -873,6 +923,8 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   mg_dMassPdg_mc_pt->GetXaxis()->SetRangeUser(0.,70.);
   legScalePt->Draw("same");
   cScalePdg_mc_Pt->SaveAs("ScalePdg_mc_Pt"+append+".png");
+  cScalePdg_mc_Pt->SaveAs("ScalePdg_mc_Pt"+append+".pdf");
+  cScalePdg_mc_Pt->SaveAs("ScalePdg_mc_Pt"+append+".eps");
   cScalePdg_mc_Pt->SaveAs("ScalePdg_mc_Pt"+append+".root");
 
   TCanvas* cScalePdg_mc_Eta = new TCanvas("cScalePdg_mc_Eta","cScalePdg_mc_Eta");
@@ -887,6 +939,8 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   mg_dMassPdg_mc_eta->GetXaxis()->SetRangeUser(0.,2.5);
   legScaleEta->Draw("same");
   cScalePdg_mc_Eta->SaveAs("ScalePdg_mc_Eta"+append+".png");
+  cScalePdg_mc_Eta->SaveAs("ScalePdg_mc_Eta"+append+".pdf");
+  cScalePdg_mc_Eta->SaveAs("ScalePdg_mc_Eta"+append+".eps");
   cScalePdg_mc_Eta->SaveAs("ScalePdg_mc_Eta"+append+".root"); 
  
 
@@ -894,11 +948,15 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 } // end main
 
 
-
-Double_t computeError(Double_t e1, Double_t e2, Double_t v1, Double_t v2){
-  return sqrt( pow( (v2*e1)/(v1*v1), 2 ) + pow( e2/v1, 2 ) );
+Double_t computeErrorScale(Double_t e_data, Double_t e_mc, Double_t v_pdg){
+  return sqrt( pow(e_data,2) + pow(e_mc,2) )/v_pdg;
 }
 
-Double_t computeErrorPdg(Double_t e1, Double_t nominalMass){
-  return e1/nominalMass;
+Double_t computeErrorResol(Double_t e_data, Double_t e_mc, Double_t v_data, Double_t v_mc){
+  return fabs((v_data-v_mc)/v_mc)*sqrt( pow(e_data/v_data,2) + pow(e_mc/v_mc,2) );
+}
+
+
+Double_t computeErrorPdg(Double_t e, Double_t nominalMass){
+  return e/nominalMass;
 }
