@@ -21,7 +21,9 @@
 
 using namespace std;
 
-Double_t computeError(Double_t, Double_t, Double_t, Double_t);
+Double_t computeErrorScale(Double_t, Double_t, Double_t);
+
+Double_t computeErrorResol(Double_t, Double_t, Double_t, Double_t);
 
 Double_t computeErrorPdg(Double_t, Double_t);
 
@@ -304,10 +306,13 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t e2_mass = mass_Z_pt_mc_Err[i][j];
 	Double_t e1_sigma = sigma_Z_pt_data_Err[i][j];
 	Double_t e2_sigma = sigma_Z_pt_mc_Err[i][j];
-	Double_t dMass = (mass_Z_pt_data[i][j] - mass_Z_pt_mc[i][j])/mass_Z_pt_data[i][j];
-	Double_t dMassErr = computeError(e1_mass,e2_mass,mass_Z_pt_data[i][j],mass_Z_pt_mc[i][j]);
-	Double_t dSigma = (sigma_Z_pt_data[i][j] - sigma_Z_pt_mc[i][j])/sigma_Z_pt_data[i][j];
-	Double_t dSigmaErr = computeError(e1_sigma,e2_sigma,sigma_Z_pt_data[i][j],sigma_Z_pt_mc[i][j]);
+	// Double_t dMass = (mass_Z_pt_data[i][j] - mass_Z_pt_mc[i][j])/mass_Z_pt_data[i][j]; //buggy
+	Double_t dMass = (mass_Z_pt_data[i][j] - mass_Z_pt_mc[i][j])/mass_Z;
+	// Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Z_pt_data[i][j],mass_Z_pt_mc[i][j]); //buggy
+	Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Z);
+	// Double_t dSigma = (sigma_Z_pt_data[i][j] - sigma_Z_pt_mc[i][j])/sigma_Z_pt_data[i][j]; //buggy
+	Double_t dSigma = (sigma_Z_pt_data[i][j] - sigma_Z_pt_mc[i][j])/sigma_Z_pt_mc[i][j];
+	Double_t dSigmaErr = computeErrorResol(e1_sigma,e2_sigma,sigma_Z_pt_data[i][j],sigma_Z_pt_mc[i][j]);
 	dMass_Z_pt[i][j] = dMass; dMass_Z_pt_Err[i][j] = dMassErr;
 	dSigma_Z_pt[i][j] = dSigma; dSigma_Z_pt_Err[i][j] = dSigmaErr;
 	// cout<<"Mass_data["<<i<<"]["<<j<<"] = "<<mass_Z_pt_data[i][j]<<endl;
@@ -331,10 +336,13 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t e2_mass = mass_Z_eta_mc_Err[i][j];
 	Double_t e1_sigma = sigma_Z_eta_data_Err[i][j];
 	Double_t e2_sigma = sigma_Z_eta_mc_Err[i][j];
-	Double_t dMass = (mass_Z_eta_data[i][j] - mass_Z_eta_mc[i][j])/mass_Z_eta_data[i][j];
-	Double_t dMassErr = computeError(e1_mass,e2_mass,mass_Z_eta_data[i][j],mass_Z_eta_mc[i][j]);
-	Double_t dSigma = (sigma_Z_eta_data[i][j] - sigma_Z_eta_mc[i][j])/sigma_Z_eta_data[i][j];
-	Double_t dSigmaErr = computeError(e1_sigma,e2_sigma,sigma_Z_eta_data[i][j],sigma_Z_eta_mc[i][j]);
+	// Double_t dMass = (mass_Z_eta_data[i][j] - mass_Z_eta_mc[i][j])/mass_Z_eta_data[i][j]; //buggy
+	Double_t dMass = (mass_Z_eta_data[i][j] - mass_Z_eta_mc[i][j])/mass_Z;
+	// Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Z_eta_data[i][j],mass_Z_eta_mc[i][j]); //buggy
+	Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Z);
+	// Double_t dSigma = (sigma_Z_eta_data[i][j] - sigma_Z_eta_mc[i][j])/sigma_Z_eta_data[i][j]; //buggy
+	Double_t dSigma = (sigma_Z_eta_data[i][j] - sigma_Z_eta_mc[i][j])/sigma_Z_eta_mc[i][j];
+	Double_t dSigmaErr = computeErrorResol(e1_sigma,e2_sigma,sigma_Z_eta_data[i][j],sigma_Z_eta_mc[i][j]);
 	dMass_Z_eta[i][j] = dMass; dMass_Z_eta_Err[i][j] = dMassErr;
 	dSigma_Z_eta[i][j] = dSigma; dSigma_Z_eta_Err[i][j] = dSigmaErr;
 	// cout<<"Mass_data["<<i<<"]["<<j<<"] = "<<mass_Z_eta_data[i][j]<<endl;
@@ -361,10 +369,13 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t e2_mass = mass_Y_pt_mc_Err[i][j];
 	Double_t e1_sigma = sigma_Y_pt_data_Err[i][j];
 	Double_t e2_sigma = sigma_Y_pt_mc_Err[i][j];
-	Double_t dMass = (mass_Y_pt_data[i][j] - mass_Y_pt_mc[i][j])/mass_Y_pt_data[i][j];
-	Double_t dMassErr = computeError(e1_mass,e2_mass,mass_Y_pt_data[i][j],mass_Y_pt_mc[i][j]);
-	Double_t dSigma = (sigma_Y_pt_data[i][j] - sigma_Y_pt_mc[i][j])/sigma_Y_pt_data[i][j];
-	Double_t dSigmaErr = computeError(e1_sigma,e2_sigma,sigma_Y_pt_data[i][j],sigma_Y_pt_mc[i][j]);
+	// Double_t dMass = (mass_Y_pt_data[i][j] - mass_Y_pt_mc[i][j])/mass_Y_pt_data[i][j]; //buggy
+	Double_t dMass = (mass_Y_pt_data[i][j] - mass_Y_pt_mc[i][j])/mass_Y;
+	// Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Y_pt_data[i][j],mass_Y_pt_mc[i][j]); //buggy
+	Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Y);
+	// Double_t dSigma = (sigma_Y_pt_data[i][j] - sigma_Y_pt_mc[i][j])/sigma_Y_pt_data[i][j]; //buggy
+	Double_t dSigma = (sigma_Y_pt_data[i][j] - sigma_Y_pt_mc[i][j])/sigma_Y_pt_mc[i][j];
+	Double_t dSigmaErr = computeErrorResol(e1_sigma,e2_sigma,sigma_Y_pt_data[i][j],sigma_Y_pt_mc[i][j]);
 	dMass_Y_pt[i][j] = dMass; dMass_Y_pt_Err[i][j] = dMassErr;
 	dSigma_Y_pt[i][j] = dSigma; dSigma_Y_pt_Err[i][j] = dSigmaErr;
 	// cout<<"Mass_data["<<i<<"]["<<j<<"] = "<<mass_Y_pt_data[i][j]<<endl;
@@ -388,10 +399,13 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t e2_mass = mass_Y_eta_mc_Err[i][j];
 	Double_t e1_sigma = sigma_Y_eta_data_Err[i][j];
 	Double_t e2_sigma = sigma_Y_eta_mc_Err[i][j];
-	Double_t dMass = (mass_Y_eta_data[i][j] - mass_Y_eta_mc[i][j])/mass_Y_eta_data[i][j];
-	Double_t dMassErr = computeError(e1_mass,e2_mass,mass_Y_eta_data[i][j],mass_Y_eta_mc[i][j]);
-	Double_t dSigma = (sigma_Y_eta_data[i][j] - sigma_Y_eta_mc[i][j])/sigma_Y_eta_data[i][j];
-	Double_t dSigmaErr = computeError(e1_sigma,e2_sigma,sigma_Y_eta_data[i][j],sigma_Y_eta_mc[i][j]);
+	// Double_t dMass = (mass_Y_eta_data[i][j] - mass_Y_eta_mc[i][j])/mass_Y_eta_data[i][j]; //buggy
+	Double_t dMass = (mass_Y_eta_data[i][j] - mass_Y_eta_mc[i][j])/mass_Y;
+	// Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Y_eta_data[i][j],mass_Y_eta_mc[i][j]); //buggy
+	Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_Y);
+	// Double_t dSigma = (sigma_Y_eta_data[i][j] - sigma_Y_eta_mc[i][j])/sigma_Y_eta_data[i][j]; //buggy
+	Double_t dSigma = (sigma_Y_eta_data[i][j] - sigma_Y_eta_mc[i][j])/sigma_Y_eta_mc[i][j];
+	Double_t dSigmaErr = computeErrorResol(e1_sigma,e2_sigma,sigma_Y_eta_data[i][j],sigma_Y_eta_mc[i][j]);
 	dMass_Y_eta[i][j] = dMass; dMass_Y_eta_Err[i][j] = dMassErr;
 	dSigma_Y_eta[i][j] = dSigma; dSigma_Y_eta_Err[i][j] = dSigmaErr;
 	// cout<<"Mass_data["<<i<<"]["<<j<<"] = "<<mass_Y_eta_data[i][j]<<endl;
@@ -418,10 +432,13 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t e2_mass = mass_JPsi_pt_mc_Err[i][j];
 	Double_t e1_sigma = sigma_JPsi_pt_data_Err[i][j];
 	Double_t e2_sigma = sigma_JPsi_pt_mc_Err[i][j];
-	Double_t dMass = (mass_JPsi_pt_data[i][j] - mass_JPsi_pt_mc[i][j])/mass_JPsi_pt_data[i][j];
-	Double_t dMassErr = computeError(e1_mass,e2_mass,mass_JPsi_pt_data[i][j],mass_JPsi_pt_mc[i][j]);
-	Double_t dSigma = (sigma_JPsi_pt_data[i][j] - sigma_JPsi_pt_mc[i][j])/sigma_JPsi_pt_data[i][j];
-	Double_t dSigmaErr = computeError(e1_sigma,e2_sigma,sigma_JPsi_pt_data[i][j],sigma_JPsi_pt_mc[i][j]);
+	// Double_t dMass = (mass_JPsi_pt_data[i][j] - mass_JPsi_pt_mc[i][j])/mass_JPsi_pt_data[i][j]; //buggy
+	Double_t dMass = (mass_JPsi_pt_data[i][j] - mass_JPsi_pt_mc[i][j])/mass_JPsi;
+	// Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_JPsi_pt_data[i][j],mass_JPsi_pt_mc[i][j]); //buggy
+	Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_JPsi);
+	// Double_t dSigma = (sigma_JPsi_pt_data[i][j] - sigma_JPsi_pt_mc[i][j])/sigma_JPsi_pt_data[i][j];
+	Double_t dSigma = (sigma_JPsi_pt_data[i][j] - sigma_JPsi_pt_mc[i][j])/sigma_JPsi_pt_mc[i][j];
+	Double_t dSigmaErr = computeErrorResol(e1_sigma,e2_sigma,sigma_JPsi_pt_data[i][j],sigma_JPsi_pt_mc[i][j]);
 	dMass_JPsi_pt[i][j] = dMass; dMass_JPsi_pt_Err[i][j] = dMassErr;
 	dSigma_JPsi_pt[i][j] = dSigma; dSigma_JPsi_pt_Err[i][j] = dSigmaErr;
 	// cout<<"Mass_data["<<i<<"]["<<j<<"] = "<<mass_JPsi_pt_data[i][j]<<endl;
@@ -445,10 +462,13 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 	Double_t e2_mass = mass_JPsi_eta_mc_Err[i][j];
 	Double_t e1_sigma = sigma_JPsi_eta_data_Err[i][j];
 	Double_t e2_sigma = sigma_JPsi_eta_mc_Err[i][j];
-	Double_t dMass = (mass_JPsi_eta_data[i][j] - mass_JPsi_eta_mc[i][j])/mass_JPsi_eta_data[i][j];
-	Double_t dMassErr = computeError(e1_mass,e2_mass,mass_JPsi_eta_data[i][j],mass_JPsi_eta_mc[i][j]);
-	Double_t dSigma = (sigma_JPsi_eta_data[i][j] - sigma_JPsi_eta_mc[i][j])/sigma_JPsi_eta_data[i][j];
-	Double_t dSigmaErr = computeError(e1_sigma,e2_sigma,sigma_JPsi_eta_data[i][j],sigma_JPsi_eta_mc[i][j]);
+	// Double_t dMass = (mass_JPsi_eta_data[i][j] - mass_JPsi_eta_mc[i][j])/mass_JPsi_eta_data[i][j]; //buggy
+	Double_t dMass = (mass_JPsi_eta_data[i][j] - mass_JPsi_eta_mc[i][j])/mass_JPsi;
+	// Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_JPsi_eta_data[i][j],mass_JPsi_eta_mc[i][j]); //buggy
+	Double_t dMassErr = computeErrorScale(e1_mass,e2_mass,mass_JPsi);
+	// Double_t dSigma = (sigma_JPsi_eta_data[i][j] - sigma_JPsi_eta_mc[i][j])/sigma_JPsi_eta_data[i][j]; //buggy
+	Double_t dSigma = (sigma_JPsi_eta_data[i][j] - sigma_JPsi_eta_mc[i][j])/sigma_JPsi_eta_mc[i][j];
+	Double_t dSigmaErr = computeErrorResol(e1_sigma,e2_sigma,sigma_JPsi_eta_data[i][j],sigma_JPsi_eta_mc[i][j]);
 	dMass_JPsi_eta[i][j] = dMass; dMass_JPsi_eta_Err[i][j] = dMassErr;
 	dSigma_JPsi_eta[i][j] = dSigma; dSigma_JPsi_eta_Err[i][j] = dSigmaErr;
 	// cout<<"Mass_data["<<i<<"]["<<j<<"] = "<<mass_JPsi_eta_data[i][j]<<endl;
@@ -928,11 +948,15 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
 } // end main
 
 
-
-Double_t computeError(Double_t e1, Double_t e2, Double_t v1, Double_t v2){
-  return sqrt( pow( (v2*e1)/(v1*v1), 2 ) + pow( e2/v1, 2 ) );
+Double_t computeErrorScale(Double_t e_data, Double_t e_mc, Double_t v_pdg){
+  return sqrt( pow(e_data,2) + pow(e_mc,2) )/v_pdg;
 }
 
-Double_t computeErrorPdg(Double_t e1, Double_t nominalMass){
-  return e1/nominalMass;
+Double_t computeErrorResol(Double_t e_data, Double_t e_mc, Double_t v_data, Double_t v_mc){
+  return fabs((v_data-v_mc)/v_mc)*sqrt( pow(e_data/v_data,2) + pow(e_mc/v_mc,2) );
+}
+
+
+Double_t computeErrorPdg(Double_t e, Double_t nominalMass){
+  return e/nominalMass;
 }
