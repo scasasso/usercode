@@ -531,7 +531,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   legScalePt->SetTextFont(42);
   legScalePt->SetTextSize(0.035);
 
-  TLegend* legScaleEta = new TLegend(0.55,0.70,0.95,0.90);
+  TLegend* legScaleEta = new TLegend(0.25,0.20,0.65,0.40);
   legScaleEta->SetFillColor(0);
   legScaleEta->SetTextFont(42);
   legScaleEta->SetTextSize(0.035);
@@ -887,7 +887,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   //mg_dMassPdg_data_pt->GetYaxis()->SetTitleOffset(1.4);
   mg_dMassPdg_data_pt->GetXaxis()->SetTitle("p_{T} (GeV)");
   //mg_dMassPdg_data_pt->GetXaxis()->SetTitleOffset(1.2);
-  mg_dMassPdg_data_pt->GetYaxis()->SetRangeUser(-0.005,0.005);
+  mg_dMassPdg_data_pt->GetYaxis()->SetRangeUser(-0.006,0.006);
   mg_dMassPdg_data_pt->GetXaxis()->SetRangeUser(0.,70.);
   legScalePt->Draw("same");
   cScalePdg_data_Pt->SaveAs("ScalePdg_data_Pt"+append+".png");
@@ -903,7 +903,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   //mg_dMassPdg_data_eta->GetYaxis()->SetTitleOffset(1.4);
   mg_dMassPdg_data_eta->GetXaxis()->SetTitle("#eta");
   //mg_dMassPdg_data_eta->GetXaxis()->SetTitleOffset(1.2);
-  mg_dMassPdg_data_eta->GetYaxis()->SetRangeUser(-0.005,0.005);
+  mg_dMassPdg_data_eta->GetYaxis()->SetRangeUser(-0.006,0.006);
   mg_dMassPdg_data_eta->GetXaxis()->SetRangeUser(0.,2.5);
   legScaleEta->Draw("same");
   cScalePdg_data_Eta->SaveAs("ScalePdg_data_Eta"+append+".png");
@@ -919,7 +919,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   //mg_dMassPdg_mc_pt->GetYaxis()->SetTitleOffset(1.4);
   mg_dMassPdg_mc_pt->GetXaxis()->SetTitle("p_{T} (GeV)");
   //mg_dMassPdg_mc_pt->GetXaxis()->SetTitleOffset(1.2);
-  mg_dMassPdg_mc_pt->GetYaxis()->SetRangeUser(-0.005,0.005);
+  mg_dMassPdg_mc_pt->GetYaxis()->SetRangeUser(-0.006,0.006);
   mg_dMassPdg_mc_pt->GetXaxis()->SetRangeUser(0.,70.);
   legScalePt->Draw("same");
   cScalePdg_mc_Pt->SaveAs("ScalePdg_mc_Pt"+append+".png");
@@ -935,7 +935,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   //mg_dMassPdg_mc_eta->GetYaxis()->SetTitleOffset(1.4);
   mg_dMassPdg_mc_eta->GetXaxis()->SetTitle("#eta");
   //mg_dMassPdg_mc_eta->GetXaxis()->SetTitleOffset(1.2);
-  mg_dMassPdg_mc_eta->GetYaxis()->SetRangeUser(-0.005,0.005);
+  mg_dMassPdg_mc_eta->GetYaxis()->SetRangeUser(-0.006,0.006);
   mg_dMassPdg_mc_eta->GetXaxis()->SetRangeUser(0.,2.5);
   legScaleEta->Draw("same");
   cScalePdg_mc_Eta->SaveAs("ScalePdg_mc_Eta"+append+".png");
