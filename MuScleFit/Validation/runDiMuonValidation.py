@@ -34,52 +34,48 @@ def main():
        recreate = "READ"
 
     if opt.processZ==True:
-        outCfg.write("Z data "+subprocess.check_output(['cmsPfn',ZdataTree]).rstrip()+" "+ZdataTxt+" 70 110 "+recreate+" \n")
-        outCfg.write("Z mc "+subprocess.check_output(['cmsPfn',ZmcTree]).rstrip()+" "+ZmcTxt+" 70 110 "+recreate+" \n")
+        outCfg.write("Z data "+ZdataTree+" "+ZdataTxt+" 70 110 "+recreate+" \n")
+        outCfg.write("Z mc "+ZmcTree+" "+ZmcTxt+" 70 110 "+recreate+" \n")
     if opt.processY==True:
-        outCfg.write("Y data "+subprocess.check_output(['cmsPfn',YdataTree]).rstrip()+" "+YdataTxt+" 8.6 11.3 "+recreate+" \n")
-        outCfg.write("Y mc "+subprocess.check_output(['cmsPfn',YmcTree]).rstrip()+" "+YmcTxt+" 8.6 11.3 "+recreate+" \n")
+        outCfg.write("Y data "+YdataTree+" "+YdataTxt+" 8.6 11.3 "+recreate+" \n")
+        outCfg.write("Y mc "+YmcTree+" "+YmcTxt+" 8.6 11.3 "+recreate+" \n")
     if opt.processJPsi==True:
-        outCfg.write("JPsi data "+subprocess.check_output(['cmsPfn',JPsidataTree]).rstrip()+" "+JPsidataTxt+" 2.8 3.4 "+recreate+" \n")
-        outCfg.write("JPsi mc "+subprocess.check_output(['cmsPfn',JPsimcTree]).rstrip()+" "+JPsimcTxt+" 2.8 3.4 "+recreate+" \n")
+        outCfg.write("JPsi data "+JPsidataTree+" "+JPsidataTxt+" 2.8 3.4 "+recreate+" \n")
+        outCfg.write("JPsi mc "+JPsimcTree+" "+JPsimcTxt+" 2.8 3.4 "+recreate+" \n")
 
     outCfg.write("# stupid std::ifstream: this file should not end with an empty line!")
 
     outCfg.close()
 
-    '''
-    Create the output root files with TH3s'''
+    # Create the output root files with TH3s
     validateString = "./validate "+outCfgName
     if opt.quiet == True:
         validateString += " >& /dev/null"
+        print "Validate command will be issued in silent mode, don't panic or Ctrl+C or Ctrl+Z if you do not see outpout in your shell ..."
     os.system(validateString)
 
 
-    '''
-    Merge with hadd to have a single root file'''
-    if os.path.exists('h3_afterCorrection.root') == True:
-        os.system("rm h3_afterCorrection.root")
+    # Merge with hadd to have a single root file
+    if os.path.exists('h3_afterCorrection.root'): os.system("rm h3_afterCorrection.root")
+    if os.path.exists('h3_beforeCorrection.root'): os.system("rm h3_beforeCorrection.root")    
         
     os.system("hadd h3_afterCorrection.root `ls $TMPDIR/h3_*afterCorrection.root`")
+    os.system("hadd h3_beforeCorrection.root `ls $TMPDIR/h3_*beforeCorrection.root`")
 
 
-    '''
-    Run the Fitter'''
-
+    # Run the Fitter
     os.system("root -b -q -l 'Fitter.C+(\"h3_afterCorrection.root\",\"TGEs_afterCorrection.root\",\"_afterCorrection\")'")
+    os.system("root -b -q -l 'Fitter.C+(\"h3_beforeCorrection.root\",\"TGEs_beforeCorrection.root\",\"_beforeCorrection\")'")
 
-    '''
-    Run the Plotter'''
+
+    # Run the Plotter
     os.system("root -b -q -l 'Plotter.C+(\"TGEs_afterCorrection.root\",\"_afterCorrection\")'")
+    os.system("root -b -q -l 'Plotter.C+(\"TGEs_beforeCorrection.root\",\"_beforeCorrection\")'")    
 
-    '''
-    Cosmetics'''
+    # Create output directory and mv plots there
     os.system("mkdir "+opt.outDir)
-    os.system("mv *afterCorrection*.root *afterCorrection*.png "+opt.outDir)
+    os.system("mv *Correction*.root *Correction*.png *Correction*.pdf *Correction*.eps "+opt.outDir)
 
-    
-    
-
-
+        
 if __name__ == '__main__':
     main()

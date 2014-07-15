@@ -855,7 +855,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   //mg_dSigma_pt->GetYaxis()->SetTitleOffset(1.4);
   mg_dSigma_pt->GetXaxis()->SetTitle("p_{T} (GeV)");
   //mg_dSigma_pt->GetXaxis()->SetTitleOffset(1.2);
-  mg_dSigma_pt->GetYaxis()->SetRangeUser(-0.2,0.2);
+  mg_dSigma_pt->GetYaxis()->SetRangeUser(-0.4,0.4);
   mg_dSigma_pt->GetXaxis()->SetRangeUser(0.,70.);
   legResolPt->Draw("same");
   cResolPt->SaveAs("ResolPt"+append+".png");
@@ -871,7 +871,7 @@ void Plotter(const TString& inputFile = "TGEs.root", const TString& append = "_r
   //mg_dSigma_eta->GetYaxis()->SetTitleOffset(1.4);
   mg_dSigma_eta->GetXaxis()->SetTitle("|#eta|");
   //mg_dSigma_eta->GetXaxis()->SetTitleOffset(1.2);
-  mg_dSigma_eta->GetYaxis()->SetRangeUser(-0.2,0.2);
+  mg_dSigma_eta->GetYaxis()->SetRangeUser(-0.4,0.4);
   mg_dSigma_eta->GetXaxis()->SetRangeUser(0.,2.5);
   legResolEta->Draw("same");
   cResolEta->SaveAs("ResolEta"+append+".png");

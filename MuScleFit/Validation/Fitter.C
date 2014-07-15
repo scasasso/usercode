@@ -38,6 +38,7 @@
 #include "RooBernstein.h"
 #include "RooGenericPdf.h"
 #include "RooFFTConvPdf.h"
+#include "RooMsgService.h"
 
 // Plain C++ stuff
 #include <iostream>
@@ -425,6 +426,8 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
 
   typedef TGraphErrors tge;
 
+  RooMsgService::instance().setGlobalKillBelow(RooFit::WARNING) ;
+
   // Eta/Pt bins (fine version)
   const UInt_t nEtaBin_Z = 4;
   const UInt_t nEtaBin_Y = 3;
@@ -636,7 +639,7 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
     }// loop over eta bins
     
     c_ZvsPt_data->SaveAs("fits_ZvsPt_data"+append+".png");  
-    c_ZvsPt_data->SaveAs("fits_ZvsPt_data"+append+".root");  
+    c_ZvsPt_data->SaveAs("fits_ZvsPt_data"+append+".pdf");  
     
     // Fit the Z vs. eta (data)
     padCounter = 0;
@@ -658,7 +661,7 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
     }// loop over eta bins
     
     c_ZvsEta_data->SaveAs("fits_ZvsEta_data"+append+".png");  
-    c_ZvsEta_data->SaveAs("fits_ZvsEta_data"+append+".root");  
+    c_ZvsEta_data->SaveAs("fits_ZvsEta_data"+append+".pdf");  
 
     // Fit the Z vs. pt (mc)
     padCounter=0;
@@ -680,7 +683,7 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
     }// loop over eta bins
     
     c_ZvsPt_mc->SaveAs("fits_ZvsPt_mc"+append+".png");  
-    c_ZvsPt_mc->SaveAs("fits_ZvsPt_mc"+append+".root");  
+    c_ZvsPt_mc->SaveAs("fits_ZvsPt_mc"+append+".pdf");  
     
     // Fit the Z vs. eta (mc)
     padCounter = 0;
@@ -702,7 +705,7 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
     }// loop over eta bins
 
    c_ZvsEta_mc->SaveAs("fits_ZvsEta_mc"+append+".png");  
-   c_ZvsEta_mc->SaveAs("fits_ZvsEta_mc"+append+".root");  
+   c_ZvsEta_mc->SaveAs("fits_ZvsEta_mc"+append+".pdf");  
 
    }// process the Z
 
@@ -728,7 +731,7 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
      }// loop over eta bins
      
      c_YvsPt_data->SaveAs("fits_YvsPt_data"+append+".png");  
-     c_YvsPt_data->SaveAs("fits_YvsPt_data"+append+".root");  
+     c_YvsPt_data->SaveAs("fits_YvsPt_data"+append+".pdf");  
      
      // Fit the Y vs. eta (data)
      padCounter = 0;
@@ -750,7 +753,7 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
      }// loop over eta bins
      
     c_YvsEta_data->SaveAs("fits_YvsEta_data"+append+".png");  
-    c_YvsEta_data->SaveAs("fits_YvsEta_data"+append+".root");  
+    c_YvsEta_data->SaveAs("fits_YvsEta_data"+append+".pdf");  
     
     // Fit the Y vs. pt (mc)
     padCounter=0;
@@ -772,7 +775,7 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
     }// loop over eta bins
     
     c_YvsPt_mc->SaveAs("fits_YvsPt_mc"+append+".png");  
-    c_YvsPt_mc->SaveAs("fits_YvsPt_mc"+append+".root");  
+    c_YvsPt_mc->SaveAs("fits_YvsPt_mc"+append+".pdf");  
     
     // Fit the Y vs. eta (mc)
     padCounter = 0;
@@ -794,7 +797,7 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
     }// loop over eta bins
     
     c_YvsEta_mc->SaveAs("fits_YvsEta_mc"+append+".png"); 
-    c_YvsEta_mc->SaveAs("fits_YvsEta_mc"+append+".root");      
+    c_YvsEta_mc->SaveAs("fits_YvsEta_mc"+append+".pdf");      
     
    }// process the Y
 
@@ -820,7 +823,7 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
      }// loop over eta bins
      
      c_JPsivsPt_data->SaveAs("fits_JPsivsPt_data"+append+".png");  
-     c_JPsivsPt_data->SaveAs("fits_JPsivsPt_data"+append+".root");  
+     c_JPsivsPt_data->SaveAs("fits_JPsivsPt_data"+append+".pdf");  
      
      // Fit the JPsi vs. eta (data)
      padCounter = 0;
@@ -842,7 +845,7 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
      }// loop over eta bins
      
      c_JPsivsEta_data->SaveAs("fits_JPsivsEta_data"+append+".png");  
-     c_JPsivsEta_data->SaveAs("fits_JPsivsEta_data"+append+".root");  
+     c_JPsivsEta_data->SaveAs("fits_JPsivsEta_data"+append+".pdf");  
 
      // Fit the JPsi vs. pt (mc)
      padCounter=0;
@@ -864,7 +867,7 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
      }// loop over eta bins
 
      c_JPsivsPt_mc->SaveAs("fits_JPsivsPt_mc"+append+".png");  
-     c_JPsivsPt_mc->SaveAs("fits_JPsivsPt_mc"+append+".root");  
+     c_JPsivsPt_mc->SaveAs("fits_JPsivsPt_mc"+append+".pdf");  
 
      // Fit the JPsi vs. eta (mc)
      padCounter = 0;
@@ -886,7 +889,7 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
      }// loop over eta bins
 
      c_JPsivsEta_mc->SaveAs("fits_JPsivsEta_mc"+append+".png");  
-     c_JPsivsEta_mc->SaveAs("fits_JPsivsEta_mc"+append+".root");  
+     c_JPsivsEta_mc->SaveAs("fits_JPsivsEta_mc"+append+".pdf");  
 
    }// process the JPsi
 
@@ -905,12 +908,12 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
 
      fZMM = new FitZMM(*h3_Z_data,etaLow,etaUp,ptLow,ptUp,c_Z_data,false);
      c_Z_data->SaveAs("c_Z_data"+append+".png");
-     c_Z_data->SaveAs("c_Z_data"+append+".root");
+     c_Z_data->SaveAs("c_Z_data"+append+".pdf");
      if ( fZMM!=0 ) delete fZMM;
 
      fZMM = new FitZMM(*h3_Z_mc,etaLow,etaUp,ptLow,ptUp,c_Z_mc,true);
      c_Z_mc->SaveAs("c_Z_mc"+append+".png");  
-     c_Z_mc->SaveAs("c_Z_mc"+append+".root");  
+     c_Z_mc->SaveAs("c_Z_mc"+append+".pdf");  
      if ( fZMM!=0 ) delete fZMM;
    }//process the Z
 
@@ -923,12 +926,12 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
 
      fYMM = new FitYMM(*h3_Y_data,etaLow,etaUp,ptLow,ptUp,c_Y_data,false);
      c_Y_data->SaveAs("c_Y_data"+append+".png");
-     c_Y_data->SaveAs("c_Y_data"+append+".root");
+     c_Y_data->SaveAs("c_Y_data"+append+".pdf");
      if ( fYMM!=0 ) delete fYMM;
 
      fYMM = new FitYMM(*h3_Y_mc,etaLow,etaUp,ptLow,ptUp,c_Y_mc,true);
      c_Y_mc->SaveAs("c_Y_mc"+append+".png");  
-     c_Y_mc->SaveAs("c_Y_mc"+append+".root");  
+     c_Y_mc->SaveAs("c_Y_mc"+append+".pdf");  
      if ( fYMM!=0 ) delete fYMM;
    }// process the Y
 
@@ -941,12 +944,12 @@ void Fitter(const TString& inputFile = "test.root", const TString& outFile = "TG
 
      fJPsiMM = new FitJPsiMM(*h3_JPsi_data,etaLow,etaUp,ptLow,ptUp,c_JPsi_data,false);
      c_JPsi_data->SaveAs("c_JPsi_data"+append+".png");
-     c_JPsi_data->SaveAs("c_JPsi_data"+append+".root");
+     c_JPsi_data->SaveAs("c_JPsi_data"+append+".pdf");
      if ( fJPsiMM!=0 ) delete fJPsiMM;
 
      fJPsiMM = new FitJPsiMM(*h3_JPsi_mc,etaLow,etaUp,ptLow,ptUp,c_JPsi_mc,true);
      c_JPsi_mc->SaveAs("c_JPsi_mc"+append+".png");  
-     c_JPsi_mc->SaveAs("c_JPsi_mc"+append+".root");  
+     c_JPsi_mc->SaveAs("c_JPsi_mc"+append+".pdf");  
      if ( fJPsiMM!=0 ) delete fJPsiMM;
    }//process the JPsi
 

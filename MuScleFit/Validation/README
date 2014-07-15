@@ -26,7 +26,7 @@ The validation can be also run step-by-step, following the instructions below:
    hadd h3_afterCorrection.root `ls $TMPDIR/h3_*afterCorrection.root` 
    (eventually: hadd h3_beforeCorrection.root `ls $TMPDIR/h3_*beforeCorrection.root` )
 5. set up RooFit on lxplus (eventually changing ROOT and gcc version editing the script):
-   ./RootSetup.sh	
+   source RootSetup.sh	
 6. root -b -q -l "Fitter.C+(\"h3_afterCorrection.root\",\"TGEs_afterCorrection.root\",\"_afterCorrection\")"
 7. root -b -q -l "Plotter.C+(\"TGEs_afterCorrection.root\",\"_afterCorrection\")"
 
