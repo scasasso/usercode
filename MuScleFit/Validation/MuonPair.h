@@ -1,20 +1,14 @@
 #ifndef MuonPair_h
 #define MuonPair_h
 
-#include <TObject.h>
+#include "TObject.h"
 #include "Muon.h"
 
-
-/**
- * Simple class used to save the muon pairs in a root tree. <br>
- * Includes the information on the run and event number.
- */
 
 class MuonPair : public TObject
 {
 public:
   MuonPair() :
-    //initialize 2 object of class muon
     mu1(lorentzVector(0,0,0,0),-1),
     mu2(lorentzVector(0,0,0,0),1),
     run(0),
@@ -45,6 +39,8 @@ public:
       
       ClassDef(MuonPair, 3)
 	};
+#if !defined(__CINT__) || defined(__MAKECINT__) 
 ClassImp(MuonPair)
+#endif
 
 #endif

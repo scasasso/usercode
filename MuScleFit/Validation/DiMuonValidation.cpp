@@ -5,8 +5,10 @@
 // hadd h3_beforeCorrection.root `ls h3_*beforeCorrection.root`
 // hadd h3_afterCorrection.root `ls h3_*afterCorrection.root` 
 
-#include "../MuScleFitCorrector_v4_2/MuScleFitCorrector.h"
+// #include "../MuScleFitCorrector_v4_2/MuScleFitCorrector.h"
+#include "../MuScleFitCorrector_dev_binned_function/MuScleFitCorrector.h"
 #include "MuonPair.h"
+#include "GenMuonPair.h"
 #include "LinkDef.h"
 
 #include "TFile.h"
@@ -35,7 +37,12 @@ private:
   string _resonanceId;
   string _evtType;
   MuScleFitCorrector *_corrector;
+  string fileMode;        // "RECREATE", "READ"
+  string fileNameTreeIn;
+  string fileNameTreeCutIn;
+  string fileNameTreeOut;
   TFile *_fileTreeIn;
+  TFile *_fileTreeOut;
   TFile *_fileTHOut[2];
   TH3F *_h3_MassVsEtaPt_beforeCorrection;
   TH3F *_h3_MassVsEtaPt_afterCorrection;
@@ -46,9 +53,7 @@ private:
 
 DiMuonValidator::DiMuonValidator(string line){
   string minMass, maxMass;
-  string fileNameTreeIn;
   string fileNameCorrectionIn;
-  string fileMode;        // "RECREATE", "READ"
 
   // parse a line of the cfg file, e.g.
   // Z DATA root://eoscms//eos/cms/store/caf/user/emiglior/Alignment/ZMuMu/MuScleFit/Run2012C/CMSSW_53X/zmumuTree_53X.root MuScleFit_2012ABC_DATA_53X.txt 70 110 RECREATE
@@ -61,9 +66,15 @@ DiMuonValidator::DiMuonValidator(string line){
   _corrector = new MuScleFitCorrector(fileNameCorrectionIn.c_str());
 
   // root file with the pre-correction input Tree
-  string fileNameTreeCutIn = string("/tmp/$USER/")+_resonanceId+string("_")+_evtType+string(".root");
+  fileNameTreeCutIn = string("/tmp/$USER/")+_resonanceId+string("_")+_evtType+string(".root");
 
   if ( fileMode == "RECREATE" ) {
+
+    fileNameTreeOut = fileNameTreeCutIn.c_str();
+    string toBeReplaced = ".root";
+    string replacer = "_afterCorrections.root";
+    std::string::size_type pos = fileNameTreeOut.find(toBeReplaced);
+    if ( pos != string::npos ) fileNameTreeOut.replace(pos,toBeReplaced.length(),replacer);
 
     TChain *chain = new TChain("T");
     chain->Add(fileNameTreeIn.c_str());
@@ -138,9 +149,15 @@ void DiMuonValidator::Fill(){
 
 
   TTree *treeIN =(TTree*)_fileTreeIn->Get("T"); //input tree named T
+  TTree *treeOUT;
   
   // MuonPairs
   MuonPair *mupairIN_= 0;  
+  GenMuonPair *genmupairIN_= 0;  
+
+  // Muon pair vector after correction
+  std::vector<MuonPair> v_corrmuPairOUT_;
+  std::vector<GenMuonPair> v_genmuPairOUT_;
 
   // pre-correction
   TLorentzVector* muNeg_BC=0;
@@ -151,16 +168,18 @@ void DiMuonValidator::Fill(){
   TLorentzVector* muNeg_AC=0;
   TLorentzVector* muPos_AC=0;
   TLorentzVector* MuMu_AC=0;  
-  
+
   // loop on the TTree
   if ( treeIN!=0 ) {              
     
-    treeIN->SetBranchAddress("event", &mupairIN_); //select generated event    
-    
+    treeIN->SetBranchAddress("event", &mupairIN_); 
+
+    if (_evtType == "MC") treeIN->SetBranchAddress("genEvent", &genmupairIN_); 
+
     int nentries=treeIN->GetEntries();
     cout<<"Looping over tree entries ...";
     for(int entry=0; entry<nentries;  entry++){ 
-    //    for(int entry=0; entry<100000;  entry++){ 
+    // for(int entry=0; entry<5000;  entry++){ 
       treeIN->GetEntry(entry);
       if (entry%100000==0)cout<<"Reading muon pair n. "<<entry<<endl;
 
@@ -176,7 +195,7 @@ void DiMuonValidator::Fill(){
 	_corrector->applyPtCorrection(*muPos_AC,+1);
 	
 	// for MC apply extra smearing
-	if ( _evtType=="mc" ) {
+	if ( _evtType=="MC" ) {
 	  _corrector->applyPtSmearing(*muNeg_AC,-1,false);
 	  _corrector->applyPtSmearing(*muPos_AC,+1,false);
 	}
@@ -190,6 +209,14 @@ void DiMuonValidator::Fill(){
 	_h3_MassVsEtaPt_afterCorrection->Fill(fabs(muNeg_AC->Eta()), muNeg_AC->Pt(), MuMu_AC->M()); 
 	_h1_Mass_afterCorrection->Fill(MuMu_AC->M()); 
 
+
+	lorentzVector *muNeg_AC_LV = new lorentzVector(muNeg_AC->Px(),muNeg_AC->Py(),muNeg_AC->Pz(),muNeg_AC->E());
+	lorentzVector *muPos_AC_LV = new lorentzVector(muPos_AC->Px(),muPos_AC->Py(),muPos_AC->Pz(),muPos_AC->E());
+	MuonPair *corrMuPair = new MuonPair(*muNeg_AC_LV, *muPos_AC_LV, mupairIN_->run, mupairIN_->event);
+	v_corrmuPairOUT_.push_back(*corrMuPair);
+	if (_evtType == "MC") v_genmuPairOUT_.push_back(*genmupairIN_);
+
+
 	// clean up everything for the next iteration
 	if ( muNeg_BC != 0 ) delete muNeg_BC; 
 	if ( muPos_BC != 0 ) delete muPos_BC; 
@@ -201,6 +228,36 @@ void DiMuonValidator::Fill(){
     }//loop over tree entries
     
   }//check if tree has any entry
+
+  if (fileMode == "RECREATE") {
+
+    _fileTreeOut = TFile::Open(fileNameTreeOut.c_str(),"RECREATE");
+    treeOUT = new TTree("T", "Muon pairs");
+
+    MuonPair *corrmuPairOUT_ = new MuonPair;
+    GenMuonPair * genmuPairOUT_ = new GenMuonPair;
+    treeOUT->Branch("event", "MuonPair", &corrmuPairOUT_);
+    if (_evtType == "MC") treeOUT->Branch("genEvent", "GenMuonPair", &genmuPairOUT_);
+    std::vector<MuonPair>::const_iterator muonPairIt = v_corrmuPairOUT_.begin();
+    unsigned int iev = 0;
+    for( ; muonPairIt != v_corrmuPairOUT_.end(); ++muonPairIt, ++iev ) {
+      // std::cout << "### DEBUG: looping over entries in the vector of muon pairs: mu1 = " << muonPairIt->mu1 << ", mu2 = " << muonPairIt->mu2 << std::endl; 
+      if (muonPairIt->mu1.pt()!=0.) {
+	corrmuPairOUT_->copy(*muonPairIt);
+	if (_evtType == "MC"){
+	  genmuPairOUT_->copy((v_genmuPairOUT_)[iev]);
+	}
+	treeOUT->Fill();
+      }
+    }// loop over MuonPairs
+    
+    _fileTreeOut->Write();
+    _fileTreeOut->Close();
+    
+    
+  }// RECREATE
+
+  
 
   if ( treeIN !=0 ) delete treeIN;
 }

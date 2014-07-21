@@ -4,13 +4,12 @@
 #include "Math/PtEtaPhiE4D.h"
 #include "Math/PtEtaPhiM4D.h"
 #include "Math/LorentzVector.h"
-typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > lorentzVector;
-
 #include "TObject.h"
+
 #include <iostream>
 
-//Adding a stupid comment 
-// Another one
+typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > lorentzVector;
+
 
   class MuScleFitMuon : public TObject
   {

@@ -12,7 +12,7 @@ $(EXECUTABLE): $(OBJECTS)
 .cpp.o:
 	$(CC) -I. $(CCFLAG) -o $@ $<
 
-dict.cpp: Muon.h MuonPair.h LinkDef.h
+dict.cpp: Muon.h MuonPair.h GenMuonPair.h LinkDef.h
 	rootcint -f $@ -c $^
 
 all: $(SOURCES) $(EXECUTABLE) 

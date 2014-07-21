@@ -6,6 +6,7 @@
 
 #pragma link C++ class MuScleFitMuon+;
 #pragma link C++ class MuonPair+;
+#pragma link C++ class GenMuonPair+;
 
 //based on http://root.cern.ch/root/html/tutorials/math/mathcoreVectorFloatIO.C.html
 //#pragma link C++ class ROOT::Math::PxPyPzE4D<double>+; 
